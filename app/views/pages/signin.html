@@ -2,11 +2,11 @@
   <header class="navbar col-md-12 white-50 no-radius box-shadow-md item top fixed">
     <div class="brand pull-left m-b-sm m-t-sm">
       <a href="/#" title="Qualitrix">
-        <img class="w-md" src="images/logo/logo-title.png" title="{{'app.name.name'|trans}}">
+        <img class="w-md" src="images/logo/logo-title.png" title="Qualitrix">
       </a>
     </div>
     <div class="client-brand pull-right m-b-sm m-t-sm">
-      <a href="http://web.pqp.com.co/" title="{{'app.client.name'|trans}}" target="_blank">
+      <a href="http://web.pqp.com.co/" title="Productos Químicos Panamericanos S.A." target="_blank">
         <img class="w-sm" src="images/logo/logo-pqp-title.png" title="Productos Químicos Panamericanos S.A.">
       </a>
     </div>
@@ -14,26 +14,35 @@
   <div class="center-block w-xxl w-auto-sm p-v-md m-t-lg">
     <div class="navbar">
       <div class="p-lg panel md-whiteframe-z1 text-color m m-t-lg login-form-panel white-60">
-        <div class="m-b text-sm text-center text.black-lt">Entrar al Sistema</div>
-        <form name="form" novalidate="true">
-        <div class="md-form-group">
+        <div class="m-b text-lg text-center text.black-lt">Entrar al Sistema</div>
+        <form name="form" novalidate ng-submit="login()">
+        <div class="md-form-group p-v-xs">
           <div class="input-group">
-            <div class="input-group-addon"><i class="fa fa-user"></i></div>
-            <input type="password" class="form-control" ng-model="user.password" required placeholder="Usuario">
+            <div class="input-group-addon"><i class="fa fa-user">&nbsp;</i></div>
+            <input type="text" class="form-control" ng-model="data.username" ng-required="true" autofocus placeholder="Usuario">
           </div>
         </div>
-        <div class="md-form-group">
+        <div ng-show="form.username.$invalid" class="text-danger-dk p-b-sm text-right">
+          <i class="icon mdi-navigation-close i-20"></i>
+          <span>Para identificarte, es necesario que indiques tu usuario</span>
+        </div>
+        <div class="md-form-group p-v-xs">
           <div class="input-group">
             <div class="input-group-addon"><i class="fa fa-key"></i></div>
-            <input type="password" class="form-control" ng-model="user.password"  placeholder="Contraseña">
+            <input type="password" class="form-control" ng-model="data.password" ng-minlength="4" ng-required="true" placeholder="Contraseña">
           </div>
         </div>
-        <!--<div class="md-form-group text-danger-dk">-->
-          <!--<i class="icon mdi-navigation-close i-20"></i>-->
-          <!--<span>{{ error.message|trans }}</span>-->
-        <!--</div>-->
-        <button type="submit" md-ink-ripple type="submit" class="md-btn md-raised blue-A200 btn-block p-h-md">Entrar</button>
-        <div class="p-v-lg text-center">
+        <div ng-show="form.username.$invalid" class="text-danger-dk p-b-sm text-right">
+          <i class="icon mdi-navigation-close i-20"></i>
+          <span>Para estar seguros que eres tu, indica por favor tu contraseña</span>
+        </div>
+        <div ng-show="data.error" class="text-danger-dk p-v-sm text-center">
+          <i class="icon mdi-navigation-close i-20"></i>
+          <span>{{data.errorMessage}}</span>
+        </div>
+        <button type="submit" md-ink-ripple type="submit"
+                class="md-btn md-raised blue-A200 btn-block p-h-md m-v-md waves" ng-disabled="form.$invalid">Entrar</button>
+        <div class="p-v-sm text-center">
           <div class=""><button ui-sref="access.forgot-password" class="md-btn text.black-lt">¿Olvidó su contraseña?</button></div>
         </div>
         </form>
@@ -43,7 +52,7 @@
 </div>
 <style>
   body{
-    background: url(images/login/chemical03.jpg) center center no-repeat fixed;
+    background: url(images/login/chemical0{{ background }}.jpg) center center no-repeat fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;

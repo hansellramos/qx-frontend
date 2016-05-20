@@ -7,7 +7,7 @@
  * # MainCtrl
  * Controller of the app
  */
-angular.module('app')  
+angular.module('app')
   .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll',
     function (             $scope,   $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll ) {
       // add 'ie' classes to html
@@ -16,7 +16,7 @@ angular.module('app')
       isSmartDevice( $window ) && angular.element($window.document.body).addClass('smart');
       // config
       $scope.app = {
-        name: 'Materil',
+        name: 'Qualitrix',
         version: '1.0.3',
         // for chart colors
         color: {
@@ -86,7 +86,7 @@ angular.module('app')
       }
 
       function hex(x) {
-        var hexDigits = new Array("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"); 
+        var hexDigits = new Array("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f");
         return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
       }
 
@@ -112,6 +112,33 @@ angular.module('app')
       $scope.closeAside = function () {
         $timeout(function() { $document.find('#aside').length && $mdSidenav('aside').close(); });
       }
-
     }
-  ]);
+  ])
+.controller('AuthController', ['$scope', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'LoginService', 'APPLICATION',
+  function (                    $scope,   $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll,   LoginService,   APPLICATION ) {
+    $scope.data = {error:false, errorMessage:'', username:'hansell.ramos',password:'komodo'};
+    $scope.login = function(){
+      LoginService.login({
+        token: 'login',
+        username: $scope.data.username,
+        password: $scope.data.password,
+        _device: APPLICATION.CONFIG.DEVICE_KEY
+      }, function (response) {
+        localStorage.setItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY, response.data.token);
+        LoginService.info({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+            , function (data) {
+              localStorage.setItem(APPLICATION.CONFIG.AUTH.TOKEN_DATA, JSON.stringify(data.response.data));
+              localStorage.setItem(APPLICATION.CONFIG.AUTH.USER_DATA, JSON.stringify(data.response.data.user));
+              $state.go('app.dashboard');
+            });
+      }, function (errorResponse) {
+        debugger;
+        $scope.data.error = true;
+        $scope.data.errorMessage = errorResponse.data.message;
+      });
+    }
+
+    $scope.background = Math.floor(Math.random() * 9);
+
+  }])
+;

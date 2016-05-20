@@ -433,11 +433,12 @@ angular.module('app')
                     })
                     .state('access', {
                         url: '/access',
-                        template: '<div class="indigo bg-big"><div ui-view class="fade-in-down smooth"></div></div>'
+                        template: '<div class="bg-big"><div ui-view class="fade-in-down smooth"></div></div>'
                     })
                     .state('access.signin', {
                         url: '/signin',
-                        templateUrl: 'views/pages/signin.html'
+                        templateUrl: 'views/pages/signin.html',
+                        controller: 'AuthController'
                     })
                     .state('access.signup', {
                         url: '/signup',

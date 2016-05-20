@@ -5821,6 +5821,22 @@ a.text-dark:hover {
   padding-bottom: 32px;
 }
 
+.p-b-xs{
+  padding-bottom: 4px;
+}
+
+.p-b-sm{
+  padding-bottom: 8px;
+}
+
+.p-b-md{
+  padding-bottom: 16px;
+}
+
+.p-b-lg{
+  padding-bottom: 32px;
+}
+
 .padding {
   padding: 32px 32px;
 }
