@@ -2990,6 +2990,13 @@ a.list-group-item.hover {
   background-color: #212121;
 }
 
+.white-60{
+  background-color: rgba(255,255,255,0.6);
+}
+.white-50{
+  background-color: rgba(255,255,255,0.5);
+}
+
 .red,
 .red-500,
 .red-600,
