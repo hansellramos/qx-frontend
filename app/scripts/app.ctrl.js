@@ -8,8 +8,8 @@
  * Controller of the app
  */
 angular.module('app')
-  .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll',
-    function (             $scope,   $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll ) {
+  .controller('AppCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'APPLICATION', 'LoginService',
+    function (             $scope,   $translate,   $state,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll ,  APPLICATION,   LoginService) {
       // add 'ie' classes to html
       var isIE = !!navigator.userAgent.match(/MSIE/i) || !!navigator.userAgent.match(/Trident.*rv:11\./);
       isIE && angular.element($window.document.body).addClass('ie');
@@ -41,6 +41,33 @@ angular.module('app')
         search: {
           content: '',
           show: false
+        },
+        auth:getCurrentUser()
+      }
+
+      $scope.signout = function(){
+        LoginService.logout({
+          token:localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)
+        },function(response){
+          localStorage.removeItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY);
+          localStorage.removeItem(APPLICATION.CONFIG.AUTH.TOKEN_DATA);
+          localStorage.removeItem(APPLICATION.CONFIG.AUTH.USER_DATA);
+          $state.go('access.signin');
+        },function(errorResponse){
+          alert('Error');
+        });
+      }
+
+      function getCurrentUser(){
+        var user = localStorage.getItem(APPLICATION.CONFIG.AUTH.USER_DATA);
+        if(user){
+          user = JSON.parse(user);
+          return {
+            name:(user.firstname+ ' '+ user.lastname).trim(),
+            email:''
+          };
+        }else{
+          return 'N/N';
         }
       }
 

@@ -18,16 +18,16 @@
     <div class="box-cell scrollable hover">
       <div class="box-inner">
         <div class="p hidden-folded" ng-class="$state.current.data.theme ? $state.current.data.theme.primary+'-50' : app.setting.theme.primary+'-50'" style="background-image:url(images/bg.png); background-size:cover">
-          <div class="rounded w-64 bg-white inline pos-rlt">
+          <div ng-show="true" class="rounded w-64 bg-white inline pos-rlt">
             <img src="images/a0.jpg" class="img-responsive rounded">
           </div>
           <a class="block m-t-sm" ui-toggle-class="hide, show" target="#nav, #account">
-            <span class="block font-bold">John Smith</span>
+            <span class="block font-bold">{{app.auth.name}}</span>
             <span class="pull-right auto">
               <i class="fa inline fa-caret-down"></i>
               <i class="fa none fa-caret-up"></i>
             </span>
-            john.smith@gmail.com
+            <span ng-show="false">app.auth.email</span>
           </a>
         </div>
         <div id="nav" ng-include="'views/partials/aside.nav.uikit.html'"></div>
@@ -37,26 +37,26 @@
               <li>
                 <a md-ink-ripple ui-sref="page.profile">
                   <i class="icon mdi-action-perm-contact-cal i-20"></i>
-                  <span>My Profile</span>
+                  <span>Mi Perfil</span>
                 </a>
               </li>
               <li>
                 <a md-ink-ripple ui-sref="page.settings">
                   <i class="icon mdi-action-settings i-20"></i>
-                  <span>Settings</span>
+                  <span>Configuraciones</span>
                 </a>
               </li>
               <li>
-                <a md-ink-ripple ui-sref="access.lockme">
+                <a md-ink-ripple ng-click="signout()">
                   <i class="icon mdi-action-exit-to-app i-20"></i>
-                  <span>Logout</span>
+                  <span>Salir</span>
                 </a>
               </li>
               <li class="m-v-sm b-b b"></li>
               <li>
                 <a md-ink-ripple ui-fullscreen>
                   <i class="icon mdi-navigation-fullscreen i-24"></i>
-                  <span>Fullscreen</span>
+                  <span>Pantalla Completa</span>
                 </a>
               </li>
               <li>
@@ -64,7 +64,7 @@
                   <label class="md-check">
                     <input type="checkbox" ng-model="app.setting.asideFolded">
                     <i class="{{app.setting.theme.accent}} no-icon"></i>
-                    <span class="hidden-folded">Folded aside</span>
+                    <span class="hidden-folded">Miniminzar Panel</span>
                   </label>
                 </div>
               </li>
