@@ -61,6 +61,11 @@ var app =
                             SESSION_TIMELIFE: 'SESSION_TIMELIFE'
                         }
                     }
+                    , MESSAGES : {
+                        AUTH : {
+                            NO_CONNECTION : 'No ha sido posible identificarte por problemas en el servidor, por favor intenta dentro de unos momentos.'
+                        }
+                    }
                 }
             })
     ;

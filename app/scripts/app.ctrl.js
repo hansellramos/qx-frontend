@@ -114,31 +114,39 @@ angular.module('app')
       }
     }
   ])
-.controller('AuthController', ['$scope', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'LoginService', 'APPLICATION',
-  function (                    $scope,   $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll,   LoginService,   APPLICATION ) {
+.controller('AuthController', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'LoginService', 'APPLICATION',
+  function (                    $scope,   $translate,   $state,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll,   LoginService,   APPLICATION ) {
     $scope.data = {error:false, errorMessage:'', username:'hansell.ramos',password:'komodo'};
     $scope.login = function(){
+      $scope.requesting = 'Validando...';
       LoginService.login({
         token: 'login',
         username: $scope.data.username,
         password: $scope.data.password,
         _device: APPLICATION.CONFIG.DEVICE_KEY
       }, function (response) {
+        debugger;
+        $scope.requesting = 'Identificando...';
         localStorage.setItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY, response.data.token);
         LoginService.info({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
-            , function (data) {
-              localStorage.setItem(APPLICATION.CONFIG.AUTH.TOKEN_DATA, JSON.stringify(data.response.data));
-              localStorage.setItem(APPLICATION.CONFIG.AUTH.USER_DATA, JSON.stringify(data.response.data.user));
+            , function (response) {
+              debugger;
+              localStorage.setItem(APPLICATION.CONFIG.AUTH.TOKEN_DATA, JSON.stringify(response.data.token));
+              localStorage.setItem(APPLICATION.CONFIG.AUTH.USER_DATA, JSON.stringify(response.data.token.user));
               $state.go('app.dashboard');
-            });
-      }, function (errorResponse) {
-        debugger;
-        $scope.data.error = true;
-        $scope.data.errorMessage = errorResponse.data.message;
-      });
+            },errorNotResponse);
+      }, errorNotResponse);
     }
 
     $scope.background = Math.floor(Math.random() * 9);
+    $scope.requesting = '';
+
+    function errorNotResponse(errorResponse){
+      $scope.requesting = '';
+      debugger;
+      $scope.data.error = true;
+      $scope.data.errorMessage = errorResponse.status != 0 ? errorResponse.data.message : APPLICATION.ENUM.MESSAGES.AUTH.NO_CONNECTION;
+    }
 
   }])
 ;

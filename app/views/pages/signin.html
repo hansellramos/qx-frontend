@@ -41,7 +41,9 @@
           <span>{{data.errorMessage}}</span>
         </div>
         <button type="submit" md-ink-ripple type="submit"
-                class="md-btn md-raised blue-A200 btn-block p-h-md m-v-md waves" ng-disabled="form.$invalid">Entrar</button>
+                class="md-btn md-raised blue-A200 btn-block p-h-md m-v-md waves" ng-disabled="form.$invalid || requesting!=''">
+          {{requesting==''?'Entrar':requesting}}
+        </button>
         <div class="p-v-sm text-center">
           <div class=""><button ui-sref="access.forgot-password" class="md-btn text.black-lt">¿Olvidó su contraseña?</button></div>
         </div>
