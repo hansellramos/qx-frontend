@@ -49,7 +49,7 @@ angular.module('app')
         LoginService.logout({
           token:localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)
         },function(response){
-          localStorage.removeItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY);
+          localStorage.removeItem(APPLICdATION.CONFIG.AUTH.TOKEN_KEY);
           localStorage.removeItem(APPLICATION.CONFIG.AUTH.TOKEN_DATA);
           localStorage.removeItem(APPLICATION.CONFIG.AUTH.USER_DATA);
           $state.go('access.signin');

@@ -1,33 +1,29 @@
 <div class="box bg-white">
   <div class="navbar md-whiteframe-z1 no-radius" ng-class="$state.current.data.theme ? $state.current.data.theme.primary : app.setting.theme.primary">
-      <!-- brand -->
-      <a class="navbar-brand">
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve" style="
+    <!-- brand -->
+    <a class="navbar-brand">
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve" style="
               width: 24px; height: 24px;">
             <path d="M 50 0 L 100 14 L 92 80 Z" fill="rgba(139, 195, 74, 0.5)"></path>
             <path d="M 92 80 L 50 0 L 50 100 Z" fill="rgba(139, 195, 74, 0.8)"></path>
             <path d="M 8 80 L 50 0 L 50 100 Z" fill="#f3f3f3"></path>
             <path d="M 50 0 L 8 80 L 0 14 Z" fill="rgba(220, 220, 220, 0.6)"></path>
           </svg>
-        <img src="images/logo.png" alt="." style="max-height: 36px; display:none">
-        <span class="hidden-folded m-l inline">{{app.name}}</span>
-      </a>
-      <!-- / brand -->
+      <img src="images/logo.png" alt="." style="max-height: 36px; display:none">
+      <span class="hidden-folded m-l inline">{{app.name}}</span>
+    </a>
+    <!-- / brand -->
   </div>
   <div class="box-row">
     <div class="box-cell scrollable hover">
       <div class="box-inner">
         <div class="p hidden-folded" ng-class="$state.current.data.theme ? $state.current.data.theme.primary+'-50' : app.setting.theme.primary+'-50'" style="background-image:url(images/bg.png); background-size:cover">
-          <div ng-show="true" class="rounded w-64 bg-white inline pos-rlt">
-            <img src="images/a0.jpg" class="img-responsive rounded">
-          </div>
           <a class="block m-t-sm" ui-toggle-class="hide, show" target="#nav, #account">
-            <span class="block font-bold">{{app.auth.name}}</span>
             <span class="pull-right auto">
               <i class="fa inline fa-caret-down"></i>
               <i class="fa none fa-caret-up"></i>
             </span>
-            <span ng-show="false">app.auth.email</span>
+            <span>{{app.auth.name}}</span>
           </a>
         </div>
         <div id="nav" ng-include="'views/partials/aside.nav.uikit.html'"></div>
