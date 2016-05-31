@@ -64,6 +64,8 @@ var app =
                     , MESSAGES : {
                         AUTH : {
                             NO_CONNECTION : 'No ha sido posible identificarte por problemas en el servidor, por favor intenta dentro de unos momentos.'
+                            , NOT_AUTHENTICATED: 'Aún no te has identificado, por favor inicia sesión antes de continuar.'
+                            , SESSION_ENDED: 'Hemos cerrado tu sessión dada la falta de actividad, por favor identifícate nuevamente para continuar.'
                         }
                     }
                 }

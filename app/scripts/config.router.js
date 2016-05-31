@@ -53,6 +53,12 @@ angular.module('app')
                         data: {title: 'Dashboard', folded: true},
                         resolve: load(['scripts/controllers/chart.js', 'scripts/controllers/vectormap.js'])
                     })
+                    .state('app.subsidiary', {
+                        url: '/subsidiary',
+                        templateUrl: 'views/modules/subsidiary/index.html',
+                        data: {title: 'Subsidiary'},
+                        controller: 'SubsidiaryCtrl'
+                    })
                     .state('app.analysis', {
                         url: '/analysis',
                         templateUrl: 'views/pages/dashboard.analysis.html',
@@ -438,7 +444,10 @@ angular.module('app')
                     .state('access.signin', {
                         url: '/signin',
                         templateUrl: 'views/pages/signin.html',
-                        controller: 'AuthController'
+                        controller: 'AuthController',
+                        params :{
+                            message: ''
+                        }
                     })
                     .state('access.signup', {
                         url: '/signup',

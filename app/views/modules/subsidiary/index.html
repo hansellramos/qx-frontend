@@ -1,0 +1,40 @@
+  <div class="panel panel-default">
+    <div class="panel-heading">Client side Pagination</div>
+    <div class="panel-body">
+      <form>
+        <label>items by page</label>
+        <input class="input-sm form-control" name="items" id="items" type="number" ng-model="itemsByPage" >
+      </form>
+    </div>
+    <table st-table="rowCollectionPage" class="table table-striped">
+      <thead>
+        <tr>
+          <th st-sort="name">Nombre</th>
+          <th st-sort="reference">Referencia</th>
+          <th st-sort=""></th>
+        </tr>
+        <tr>
+          <th>
+            <input st-search="'name'" placeholder="buscar por nombre" class="input-sm form-control" type="search"/>
+          </th>
+          <th>
+            <input st-search placeholder="buscar por referencia" class="input-sm form-control" type="search"/>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="item in items">
+          <td>{{item.name}}</td>
+          <td>{{item.reference}}</td>
+          <td><a ng-href="edit/{{item.id}}">Editar</a></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="5" class="text-center">
+            <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7" class="no-margin"></div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
