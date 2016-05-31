@@ -9,7 +9,6 @@
   "repository": "",
   "author": "Flatfull",
   "license": "Envato REGULAR LICENSE",
-  "dependencies": {},
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-bower-install-simple": "^0.9.3",
@@ -24,6 +23,7 @@
     "grunt-swig": "^0.2.1",
     "gruntfile-gtx": "^0.3.0",
     "http-server": "^0.6.1",
-    "require-directory": "^2.0.0"
+    "require-directory": "^2.0.0",
+    "angular-utils-pagination": "^0.11.1"
   }
 }

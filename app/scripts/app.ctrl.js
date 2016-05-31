@@ -156,13 +156,11 @@ angular.module('app')
                     } else {
                         session = JSON.parse(session);
                         if (session.expires <= (new Date()).getTime()) {
-                            debugger;
                             removeSessionData();
                             $state.go('access.signin',{message:APPLICATION.ENUM.MESSAGES.AUTH.SESSION_ENDED});
                         } else {
                             LoginService.info({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                                 , function (response) {
-                                    debugger;
                                     localStorage.setItem(APPLICATION.CONFIG.AUTH.TOKEN_DATA, JSON.stringify(response.data.token));
                                     localStorage.setItem(APPLICATION.CONFIG.AUTH.USER_DATA, JSON.stringify(response.data.token.user));
                                     $scope.app.auth = getCurrentUser();
@@ -175,7 +173,7 @@ angular.module('app')
                 }
                 setTimeout(function () {
                     verifyActiveSession();
-                }, 10000);
+                }, 60000);
             }
 
             function removeSessionData() {
@@ -203,12 +201,10 @@ angular.module('app')
                     password: $scope.data.password,
                     _device: APPLICATION.CONFIG.DEVICE_KEY
                 }, function (response) {
-                    debugger;
                     $scope.requesting = 'Identificando...';
                     localStorage.setItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY, response.data.token);
                     LoginService.info({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                         , function (response) {
-                            debugger;
                             localStorage.setItem(APPLICATION.CONFIG.AUTH.TOKEN_DATA, JSON.stringify(response.data.token));
                             localStorage.setItem(APPLICATION.CONFIG.AUTH.USER_DATA, JSON.stringify(response.data.token.user));
                             $state.go('app.dashboard');
@@ -229,9 +225,26 @@ angular.module('app')
         }])
     .controller('SubsidiaryCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'SubsidiaryService', 'APPLICATION',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, SubsidiaryService, APPLICATION) {
-            $scope.items = [];
-            $scope.predicates = ['name', 'reference', 'active'];
 
+            $scope.items = [];
+            $scope.sortKey= 'id';
+            $scope.reverse = false;
+            $scope.pageSize = 10;
+            $scope.sort = function(keyname){
+                if(keyname == $scope.sortKey){
+                    if(!$scope.reverse){
+                        $scope.reverse = !$scope.reverse;
+                    }else{
+                        $scope.sortKey = 'id';
+                        $scope.reverse = false;
+                    }
+                }else{
+                    $scope.sortKey = keyname;
+                    $scope.reverse = false;
+                }
+            }
+
+            /*
             $scope.remove = function (row) {
 
             };
@@ -246,22 +259,29 @@ angular.module('app')
 
             $scope.add = function () {
 
-            }
+            }*/
 
             $scope.get = function () {
-                SubsidiaryService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                SubsidiaryService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {
-                        debugger;
+                        var items = [];
+                        for (var i = 0; i < response.length; i++) {
+                            items.push({
+                                id: response[i]._id,
+                                name: response[i].name,
+                                reference: response[i].reference,
+                                active: response[i].active
+                            });
+                        }
+                        $scope.items = items;
                     }
                     , function (errorResponse) {
                         debugger;
-                    })
-            }
+                        console.log(errorResponse);
+                    });
+            };
 
-            $scope.selectedPredicate = $scope.predicates[0];
+            $scope.get();
 
-            $scope.rowCollection = [];
-
-            $scope.itemsByPage = 10;
         }])
 ;

@@ -1,29 +1,30 @@
   <div class="panel panel-default">
-    <div class="panel-heading">Client side Pagination</div>
-    <div class="panel-body">
-      <form>
-        <label>items by page</label>
-        <input class="input-sm form-control" name="items" id="items" type="number" ng-model="itemsByPage" >
-      </form>
-    </div>
-    <table st-table="rowCollectionPage" class="table table-striped">
+    <div class="panel-heading">Sucursales</div>
+    <table class="table table-striped">
       <thead>
         <tr>
-          <th st-sort="name">Nombre</th>
-          <th st-sort="reference">Referencia</th>
-          <th st-sort=""></th>
-        </tr>
-        <tr>
-          <th>
-            <input st-search="'name'" placeholder="buscar por nombre" class="input-sm form-control" type="search"/>
+          <th ng-click="sort('name')">
+            Nombre
+            <span class="glyphicon sort-icon" ng-show="sortKey=='name'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
-          <th>
-            <input st-search placeholder="buscar por referencia" class="input-sm form-control" type="search"/>
+          <th ng-click="sort('reference')">
+            Referencia
+            <span class="glyphicon sort-icon" ng-show="sortKey=='reference'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
+          <th></th>
         </tr>
+      <tr>
+        <th>
+          <input ng-model="search.name" class="form-control" placeholder="Buscar por nombre">
+        </th>
+        <th>
+          <input ng-model="search.reference" class="form-control" placeholder="Buscar por referencia">
+        </th>
+        <th></th>
+      </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="item in items">
+        <tr dir-paginate="item in items|orderBy:sortKey:reverse|filter:search:strict|itemsPerPage:pageSize">
           <td>{{item.name}}</td>
           <td>{{item.reference}}</td>
           <td><a ng-href="edit/{{item.id}}">Editar</a></td>
@@ -31,8 +32,13 @@
       </tbody>
       <tfoot>
         <tr>
-          <td colspan="5" class="text-center">
-            <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7" class="no-margin"></div>
+          <td colspan="3" class="text-center">
+            <label style="float: left;">Elementos por página: <input type="number" ng-model="pageSize" style="width: 50px; text-align: right;"></label>
+            <dir-pagination-controls style="float: right;"
+                    max-size="10"
+                    direction-links="true"
+                    boundary-links="true">
+            </dir-pagination-controls>
           </td>
         </tr>
       </tfoot>
