@@ -36,6 +36,7 @@ var app =
                         RESOURCES: {
                             AUTH: 'auth/',
                             SUBSIDIARY: 'subsidiaries/',
+                            STORE: 'stores/',
                             USER: 'users/',
                         }
                     }

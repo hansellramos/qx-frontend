@@ -57,8 +57,13 @@ angular.module('app')
                         url: '/subsidiary',
                         templateUrl: 'views/modules/subsidiary/index.html',
                         data: {title: 'Sucursales'},
-                        controller: 'SubsidiaryCtrl',
-                        resolve: load(['smart-table'])
+                        controller: 'SubsidiaryCtrl'
+                    })
+                    .state('app.store', {
+                        url: '/store',
+                        templateUrl: 'views/modules/store/index.html',
+                        data: {title: 'Bodegas/Tiendas'},
+                        controller: 'StoreCtrl'
                     })
                     .state('app.analysis', {
                         url: '/analysis',
