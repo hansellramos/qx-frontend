@@ -280,7 +280,8 @@ angular.module('app')
                         $scope.reverse = !$scope.reverse;
                     } else {
                         $scope.sortKey = 'id';
-                        $scope.reverse = false;s
+                        $scope.reverse = false;
+                        s
                     }
                 } else {
                     $scope.sortKey = keyname;
@@ -298,6 +299,52 @@ angular.module('app')
                                 name: response[i].name,
                                 reference: response[i].reference,
                                 subsidiary: response[i].subsidiary[0].name,
+                                active: response[i].active
+                            });
+                        }
+                        $scope.items = items;
+                    }
+                    , function (errorResponse) {
+                        debugger;
+                        console.log(errorResponse);
+                    });
+            };
+
+            $scope.get();
+
+        }])
+    .controller('StoreCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ProductService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ProductService, APPLICATION) {
+
+            $scope.items = [];
+            $scope.sortKey = 'id';
+            $scope.reverse = false;
+            $scope.pageSize = 10;
+            $scope.sort = function (keyname) {
+                if (keyname == $scope.sortKey) {
+                    if (!$scope.reverse) {
+                        $scope.reverse = !$scope.reverse;
+                    } else {
+                        $scope.sortKey = 'id';
+                        $scope.reverse = false;
+                        s
+                    }
+                } else {
+                    $scope.sortKey = keyname;
+                    $scope.reverse = false;
+                }
+            }
+
+            $scope.get = function () {
+                ProductService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function (response) {
+                        var items = [];
+                        for (var i = 0; i < response.length; i++) {
+                            items.push({
+                                id: response[i]._id,
+                                name: response[i].name,
+                                reference: response[i].reference,
+                                store: response[i].store[0].name+' ('+response[i].store[0].reference+')',
                                 active: response[i].active
                             });
                         }

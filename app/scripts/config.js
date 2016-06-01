@@ -37,6 +37,7 @@ var app =
                             AUTH: 'auth/',
                             SUBSIDIARY: 'subsidiaries/',
                             STORE: 'stores/',
+                            PRODUCT: 'products/',
                             USER: 'users/',
                         }
                     }
