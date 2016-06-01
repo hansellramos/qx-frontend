@@ -71,6 +71,12 @@ angular.module('app')
                         data: {title: 'Productos'},
                         controller: 'ProductCtrl'
                     })
+                    .state('app.record', {
+                        url: '/record',
+                        templateUrl: 'views/modules/record/index.html',
+                        data: {title: 'Muestras'},
+                        controller: 'RecordCtrl'
+                    })
                     .state('app.external', {
                         url: '/external',
                         templateUrl: 'views/modules/external/index.html',

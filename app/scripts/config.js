@@ -38,6 +38,7 @@ var app =
                             SUBSIDIARY: 'subsidiaries/',
                             STORE: 'stores/',
                             PRODUCT: 'products/',
+                            RECORD: 'records/',
                             EXTERNAL: 'externals/',
                             USER: 'users/',
                         }

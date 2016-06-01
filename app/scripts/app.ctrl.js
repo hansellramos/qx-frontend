@@ -359,7 +359,98 @@ angular.module('app')
             $scope.get();
 
         }])
+    .controller('RecordCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'SubsidiaryService', 'StoreService', 'ProductService', 'RecordService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, SubsidiaryService, StoreService, ProductService, RecordService, APPLICATION) {
 
+            $scope.products = [];
+            $scope.product = false;
+            $scope.stores = [];
+            $scope.store = false;
+            $scope.subsidiaries = [];
+            $scope.subsidiary = false;
+            $scope.loading = false;
+
+            $scope.items = [];
+            $scope.sortKey = 'id';
+            $scope.reverse = true;
+            $scope.pageSize = 10;
+            $scope.sort = function (keyname) {
+                if (keyname == $scope.sortKey) {
+                    if (!$scope.reverse) {
+                        $scope.reverse = !$scope.reverse;
+                    } else {
+                        $scope.sortKey = 'id';
+                        $scope.reverse = false;
+                    }
+                } else {
+                    $scope.sortKey = keyname;
+                    $scope.reverse = false;
+                }
+            }
+
+            $scope.get = function () {
+                $scope.loading = true;
+                RecordService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), product:$scope.product}
+                    , function (response) {
+                        var items = [];
+                        for (var i = 0; i < response.length; i++) {
+                            items.push({
+                                id: response[i]._id
+                                , reference: response[i].reference
+                                , analysis_date: response[i].analysis_date
+                                , elaboration_date: response[i].elaboration_date
+                                , due_date: response[i].due_date
+                                , reception_date: response[i].reception_date
+                                , user: response[i].user[0].firstname + ' '+response[i].user[0].lastname
+                                , veredict: response[i].veredict
+                                , remission: response[i].remission
+                                , quantity: response[i].quantity
+                                , existing_quantity: response[i].existing_quantity
+                                , supplier: response[i].supplier[0].name
+                                , satisfies: response[i].satisfies
+                                , active: response[i].active
+                                , clause: response[i].clause
+                            });
+                        }
+                        $scope.items = items;
+                        $scope.loading = false;
+                    }
+                    , function (errorResponse) {
+                        debugger;
+                        console.log(errorResponse);
+                        $scope.loading = false;
+                    });
+            };
+
+            function initializeData(){
+                $scope.subsidiaries = [];
+                SubsidiaryService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function(response){
+                        for (var i = 0; i < response.length; i++) {
+                            $scope.subsidiaries.push({id:response[i]._id, name:response[i].name+' ('+response[i].reference+')'});
+                        }
+                });
+
+                $scope.stores = [];
+                StoreService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function(response){
+                        for (var i = 0; i < response.length; i++) {
+                            $scope.stores.push({id:response[i]._id, name:response[i].name+' ('+response[i].reference+')', subsidiary:response[i].subsidiary[0]._id});
+                        }
+                    });
+
+                $scope.products = [];
+                ProductService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function(response){
+                        for (var i = 0; i < response.length; i++) {
+                            $scope.products.push({id:response[i]._id, name:response[i].name+' ('+response[i].reference+')', store:response[i].store[0]._id});
+                        }
+                    });
+            }
+
+            initializeData();
+
+        }])
     .controller('ExternalCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'APPLICATION',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, APPLICATION) {
 
