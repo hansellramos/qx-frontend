@@ -69,7 +69,13 @@ angular.module('app')
                         url: '/product',
                         templateUrl: 'views/modules/product/index.html',
                         data: {title: 'Productos'},
-                        controller: 'StoreCtrl'
+                        controller: 'ProductCtrl'
+                    })
+                    .state('app.external', {
+                        url: '/external',
+                        templateUrl: 'views/modules/external/index.html',
+                        data: {title: 'Proveedores/Clientes'},
+                        controller: 'ExternalCtrl'
                     })
                     .state('app.analysis', {
                         url: '/analysis',

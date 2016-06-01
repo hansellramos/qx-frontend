@@ -26,4 +26,8 @@ angular
         return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.PRODUCT + ':token/:id'
             , {token: '@token', id: '@id'})
     }])
+    .factory('ExternalService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
+        return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.EXTERNAL + ':token/:id'
+            , {token: '@token', id: '@id'})
+    }])
 ;
