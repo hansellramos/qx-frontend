@@ -359,8 +359,8 @@ angular.module('app')
             $scope.get();
 
         }])
-    .controller('RecordCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'SubsidiaryService', 'StoreService', 'ProductService', 'RecordService', 'APPLICATION',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, SubsidiaryService, StoreService, ProductService, RecordService, APPLICATION) {
+    .controller('RecordCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'SubsidiaryService', 'StoreService', 'ProductService', 'RecordService', 'APPLICATION', '$sce','$interval',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, SubsidiaryService, StoreService, ProductService, RecordService, APPLICATION, $sce, $interval) {
 
             $scope.products = [];
             $scope.product = false;
@@ -390,7 +390,7 @@ angular.module('app')
 
             $scope.get = function () {
                 $scope.loading = true;
-                RecordService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), product:$scope.product}
+                RecordService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), product:$scope.product._id}
                     , function (response) {
                         var items = [];
                         for (var i = 0; i < response.length; i++) {
@@ -401,6 +401,7 @@ angular.module('app')
                                 , elaboration_date: response[i].elaboration_date
                                 , due_date: response[i].due_date
                                 , reception_date: response[i].reception_date
+                                , properties: response[i].properties
                                 , user: response[i].user[0].firstname + ' '+response[i].user[0].lastname
                                 , veredict: response[i].veredict
                                 , remission: response[i].remission
@@ -439,14 +440,30 @@ angular.module('app')
                         }
                     });
 
-                $scope.products = [];
                 ProductService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function(response){
                         for (var i = 0; i < response.length; i++) {
-                            $scope.products.push({id:response[i]._id, name:response[i].name+' ('+response[i].reference+')', store:response[i].store[0]._id});
+                            var ps = [];
+                            for(var j = 0; j < response[i].properties.length;j++){
+                                ps.push({id:response[i].properties[j].id, name:$sce.trustAsHtml(response[i].properties[j].name)});
+                            }
+                            var p = {_id:response[i]._id, name:response[i].name+' ('+response[i].reference+')', store:response[i].store[0]._id, properties:ps};
+                            $scope.products.push(p);
                         }
                     });
             }
+
+            $scope.determinateValue = 30;
+            $scope.determinateValue2 = 30;
+
+            $interval(function() {
+                $scope.determinateValue += 1;
+                $scope.determinateValue2 += 1.5;
+                if ($scope.determinateValue > 100) {
+                    $scope.determinateValue = 30;
+                    $scope.determinateValue2 = 30;
+                }
+            }, 100, 0, true);
 
             initializeData();
 

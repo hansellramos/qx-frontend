@@ -11,32 +11,32 @@
       </div>
     </div>
     <table class="table table-striped">
-      <thead>
-        <tr>
-          <td>
-            <md-select ng-model="subsidiary" placeholder="Seleccione Sucursal">
-              <md-option ng-repeat="subsidiary in subsidiaries" ng-value="subsidiary.id">{{ subsidiary.name }}</md-option>
-            </md-select>
-          </td>
-          <td>
-            <md-select ng-model="store" placeholder="Seleccione Tienda/Bodega">
-              <md-option ng-repeat="store in stores|filter:subsidiary|orderBy:'+name'" ng-value="store.id">{{ store.name }}</md-option>
-            </md-select>
-          </td>
-          <td>
-            <md-select ng-model="product" placeholder="Seleccione Producto" ng-change="get()">
-              <md-option ng-repeat="product in products|filter:store|orderBy:'+name'" ng-value="product.id">{{ product.name }}</md-option>
-            </md-select>
-          </td>
-        </tr>
-      </thead>
+      <tr>
+        <td>
+          <md-select ng-model="subsidiary" placeholder="Seleccione Sucursal">
+            <md-option ng-repeat="subsidiary in subsidiaries" ng-value="subsidiary.id">{{ subsidiary.name }}</md-option>
+          </md-select>
+        </td>
+        <td>
+          <md-select ng-model="store" placeholder="Seleccione Tienda/Bodega">
+            <md-option ng-repeat="store in stores|filter:subsidiary|orderBy:'+name'" ng-value="store.id">{{ store.name }}</md-option>
+          </md-select>
+        </td>
+        <td>
+          <md-select ng-model="product" placeholder="Seleccione Producto" ng-change="get()">
+            <md-option ng-repeat="product in products|filter:store|orderBy:'+name'" ng-value="product">{{ product.name }} ({{product.reference}})</md-option>
+          </md-select>
+        </td>
+      </tr>
+    </table>
+    <table class="table table-striped" style="display: block; overflow: auto;">
       <thead ng-show="product">
         <tr>
-          <th ng-click="sort('reference')">
+          <th ng-click="sort('reference')" >
             Referencia
             <span class="glyphicon sort-icon" ng-show="sortKey=='reference'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
-          <th ng-click="sort('analisys_date')">
+          <th ng-click="sort('analisys_date')" >
             Fecha Análisis
             <span class="glyphicon sort-icon" ng-show="sortKey=='analisys_date'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
@@ -44,39 +44,42 @@
             Fecha Elaboración
             <span class="glyphicon sort-icon" ng-show="sortKey=='elaboration_date'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
-          <th ng-click="sort('due_date')">
+          <th ng-click="sort('due_date')" >
             Fecha Vencimiento
             <span class="glyphicon sort-icon" ng-show="sortKey=='due_date'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
-          <th ng-click="sort('reception_date')">
+          <th ng-click="sort('reception_date')" >
             Fecha Recepción
             <span class="glyphicon sort-icon" ng-show="sortKey=='reception_date'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
-          <th ng-click="sort('user')">
+          <th ng-repeat="property in product.properties" >
+            <div ng-bind-html="property.name"></div>
+          </th>
+          <th ng-click="sort('user')" >
             Usuario
             <span class="glyphicon sort-icon" ng-show="sortKey=='user'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
-          <th ng-click="sort('veredict')">
+          <th ng-click="sort('veredict')" >
             Desición
             <span class="glyphicon sort-icon" ng-show="sortKey=='veredict'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
-          <th ng-click="sort('remission')">
+          <th ng-click="sort('remission')" >
             Remisión
             <span class="glyphicon sort-icon" ng-show="sortKey=='remission'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
-          <th ng-click="sort('quantity')">
+          <th ng-click="sort('quantity')" >
             Cantidad
             <span class="glyphicon sort-icon" ng-show="sortKey=='quantity'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
-          <th ng-click="sort('existing_quantity')">
+          <th ng-click="sort('existing_quantity')" >
             Cantidad Existente
             <span class="glyphicon sort-icon" ng-show="sortKey=='existing_quantity'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
-          <th ng-click="sort('supplier')">
+          <th ng-click="sort('supplier')" >
             Proveedor
             <span class="glyphicon sort-icon" ng-show="sortKey=='supplier'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
-          <th ng-click="sort('satisfies')">
+          <th ng-click="sort('satisfies')" >
             Cumple
             <span class="glyphicon sort-icon" ng-show="sortKey=='satisfies'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
@@ -97,6 +100,9 @@
         </th>
         <th>
           <input ng-model="search.reception_date" class="form-control" placeholder="Buscar por fecha de recepción">
+        </th>
+        <th colspan="{{product.properties.length}}">
+          <input ng-show="true" ng-model="search.properties.value" class="form-control" placeholder="Buscar por propiedad">
         </th>
         <th>
           <input ng-model="search.user" class="form-control" placeholder="Buscar por usuario">
@@ -127,6 +133,9 @@
           <td>{{item.elaboration_date| date:'yyyy-MM-dd'}}</td>
           <td>{{item.due_date| date:'yyyy-MM-dd'}}</td>
           <td>{{item.reception_date| date:'yyyy-MM-dd'}}</td>
+          <td ng-repeat="property in product.properties">
+            <span ng-repeat="p in item.properties|filter:property.id">{{p.value}}</span>
+          </td>
           <td>{{item.user}}</td>
           <td>{{item.veredict}}</td>
           <td>{{item.remission}}</td>
@@ -134,20 +143,23 @@
           <td>{{item.existing_quantity}}</td>
           <td>{{item.supplier}}</td>
           <td>{{item.satisfies}}</td>
-          <td><a ng-href="#/app/record/{{item.id}}">Detalle</a></td>
+          <td>
+            <a ng-href="#/app/record/{{item.id}}">Detalle</a>
+          </td>
         </tr>
       </tbody>
       <tbody ng-show="product && loading">
         <tr>
-          <td>
-            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+          <td colspan="{{13+product.properties.length}}" class="text-center">
+            <md-progress-linear class="md-warn m-b" md-mode="buffer" value="{{determinateValue}}" md-buffer-value="{{determinateValue2}}">
+            </md-progress-linear>
           </td>
         </tr>
       </tbody>
       <tfoot ng-show="product">
         <tr>
-          <td colspan="3" class="text-center">
-            <label style="float: left;">Elementos por página: <input type="number" ng-model="pageSize" style="width: 50px; text-align: right;"></label>
+          <td colspan="{{13+product.properties.length}}" class="text-center">
+            <label style="float: left;">Elementos por página: <input type="number" ng-model="pageSize" style="width: 50px; text-align: right;"> {{items.length}} Registros en Total</label>
             <dir-pagination-controls style="float: right;"
                     max-size="10"
                     direction-links="true"
