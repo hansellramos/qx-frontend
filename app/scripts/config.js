@@ -39,6 +39,7 @@ var app =
                             STORE: 'stores/',
                             PRODUCT: 'products/',
                             RECORD: 'records/',
+                            CERTIFICATE: 'certificates/',
                             EXTERNAL: 'externals/',
                             USER: 'users/',
                         }

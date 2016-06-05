@@ -327,7 +327,6 @@ angular.module('app')
                     } else {
                         $scope.sortKey = 'id';
                         $scope.reverse = false;
-                        s
                     }
                 } else {
                     $scope.sortKey = keyname;
@@ -467,6 +466,68 @@ angular.module('app')
 
             initializeData();
 
+        }])
+
+    .controller('CertificateCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'CertificateService', 'APPLICATION', '$sce', 'ngDialog',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, CertificateService, APPLICATION, $sce, ngDialog) {
+
+            $scope.items = [];
+            $scope.sortKey = 'id';
+            $scope.reverse = true;
+            $scope.pageSize = 10;
+            $scope.sort = function (keyname) {
+                if (keyname == $scope.sortKey) {
+                    if (!$scope.reverse) {
+                        $scope.reverse = !$scope.reverse;
+                    } else {
+                        $scope.sortKey = 'id';
+                        $scope.reverse = false;
+                    }
+                } else {
+                    $scope.sortKey = keyname;
+                    $scope.reverse = false;
+                }
+            }
+
+            $scope.get = function () {
+                CertificateService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function (response) {
+                        var items = [];
+                        for (var i = 0; i < response.length; i++) {
+                            items.push({
+                                id: response[i]._id,
+                                no: response[i].id,
+                                customer: response[i].customer.length > 0 ? response[i].customer[0].name : 'N/R',
+                                quantity: response[i].quantity,
+                                presentation: response[i].presentation,
+                                remission: response[i].remission,
+                                product: response[i].product[0].name+' ('+response[i].product[0].reference+')',
+                                user: response[i].creator[0].firstname+' '+response[i].creator[0].lastname,
+                                active: response[i].active
+                            });
+                        }
+                        $scope.items = items;
+                    }
+                    , function (errorResponse) {
+                        debugger;
+                        console.log(errorResponse);
+                    });
+            };
+
+            $scope.showDetail = function(id){
+
+            }
+
+            $scope.get();
+
+        }])
+    .controller('CertificateDetailCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'CertificateService', 'APPLICATION', '$sce',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, CertificateService, APPLICATION, $sce) {
+            $scope.item = null;
+            $scope.param = $state.params;
+            $scope.get = function () {
+
+            }
         }])
     .controller('ExternalCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'APPLICATION',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, APPLICATION) {

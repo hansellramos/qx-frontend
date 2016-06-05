@@ -30,6 +30,10 @@ angular
         return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.RECORD + ':token/:product/:id'
             , {token: '@token', product:'@product', id: '@id'})
     }])
+    .factory('CertificateService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
+        return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.CERTIFICATE + ':token/:id'
+            , {token: '@token', id: '@id'})
+    }])
     .factory('ExternalService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
         return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.EXTERNAL + ':token/:id'
             , {token: '@token', id: '@id'})

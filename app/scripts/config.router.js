@@ -77,6 +77,12 @@ angular.module('app')
                         data: {title: 'Muestras'},
                         controller: 'RecordCtrl'
                     })
+                    .state('app.certificate', {
+                        url: '/certificate',
+                        templateUrl: 'views/modules/certificate/index.html',
+                        data: {title: 'Certificados'},
+                        controller: 'CertificateCtrl'
+                    })
                     .state('app.external', {
                         url: '/external',
                         templateUrl: 'views/modules/external/index.html',

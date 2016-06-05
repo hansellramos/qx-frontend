@@ -1,0 +1,94 @@
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      Certificados
+      <div style="float: right">
+        <button class="md-btn md-fab m-b blue" ng-click="">
+          <i class="mdi-content-add i-24"></i>
+        </button>
+        <button class="md-btn md-fab m-b bg-white" ng-click="get()">
+          <i class="mdi-navigation-refresh i-24"></i>
+        </button>
+      </div>
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th ng-click="sort('id')">
+            No.
+            <span class="glyphicon sort-icon" ng-show="sortKey=='id'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+          </th>
+          <th ng-click="sort('remission')">
+            Orden de Despacho
+            <span class="glyphicon sort-icon" ng-show="sortKey=='remission'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+          </th>
+          <th ng-click="sort('customer')">
+            Cliente
+            <span class="glyphicon sort-icon" ng-show="sortKey=='cursomer'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+          </th>
+          <th ng-click="sort('product')">
+            Producto
+            <span class="glyphicon sort-icon" ng-show="sortKey=='product'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+          </th>
+          <th ng-click="sort('quantity')">
+            Cantidad
+            <span class="glyphicon sort-icon" ng-show="sortKey=='quantity'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+          </th>
+          <th ng-click="sort('presentation')">
+            Presentación
+            <span class="glyphicon sort-icon" ng-show="sortKey=='presentation'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+          </th>
+          <th ng-click="sort('user')">
+            Usuario
+            <span class="glyphicon sort-icon" ng-show="sortKey=='user'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+          </th>
+          <th></th>
+        </tr>
+      <tr>
+        <th>
+          <input ng-model="search.id" class="form-control" placeholder="Buscar por no. certificado">
+        </th>
+        <th>
+          <input ng-model="search.remission" class="form-control" placeholder="Buscar por orden de despacho">
+        </th>
+        <th>
+          <input ng-model="search.customer" class="form-control" placeholder="Buscar por cliente">
+        </th>
+        <th>
+          <input ng-model="search.product" class="form-control" placeholder="Buscar por producto">
+        </th>
+        <th></th>
+        <th>
+          <input ng-model="search.presentation" class="form-control" placeholder="Buscar por presentacion">
+        </th>
+        <th>
+          <input ng-model="search.user" class="form-control" placeholder="Buscar por usuario">
+        </th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr dir-paginate="item in items|orderBy:sortKey:reverse|filter:search:strict|itemsPerPage:pageSize">
+          <td>{{item.no}}</td>
+          <td>{{item.remission}}</td>
+          <td>{{item.customer}}</td>
+          <td>{{item.product}}</td>
+          <td>{{item.quantity}}</td>
+          <td>{{item.presentation}}</td>
+          <td>{{item.user}}</td>
+          <td><a ng-click="showDetail(item)" ng-href="#">Detalle</a></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="8" class="text-center">
+            <label style="float: left;">Elementos por página: <input type="number" ng-model="pageSize" style="width: 50px; text-align: right;"></label>
+            <dir-pagination-controls style="float: right;"
+                    max-size="10"
+                    direction-links="true"
+                    boundary-links="true">
+            </dir-pagination-controls>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
