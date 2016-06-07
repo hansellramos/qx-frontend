@@ -472,9 +472,12 @@ angular.module('app')
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, CertificateService, APPLICATION, $sce, ngDialog) {
 
             $scope.items = [];
+            $scope.item = null;
+            $scope.itemLoading = false;
             $scope.sortKey = 'id';
             $scope.reverse = true;
             $scope.pageSize = 10;
+
             $scope.sort = function (keyname) {
                 if (keyname == $scope.sortKey) {
                     if (!$scope.reverse) {
@@ -497,6 +500,7 @@ angular.module('app')
                             items.push({
                                 id: response[i]._id,
                                 no: response[i].id,
+                                created: response[i].created,
                                 customer: response[i].customer.length > 0 ? response[i].customer[0].name : 'N/R',
                                 quantity: response[i].quantity,
                                 presentation: response[i].presentation,
@@ -514,20 +518,43 @@ angular.module('app')
                     });
             };
 
-            $scope.showDetail = function(id){
+            $scope.showDetail = function(item){
+                $scope.item = item;
+                $scope.itemLoading = true;
+                CertificateService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:item.id}
+                , function(response){
+                        $scope.item = response;
+                        var properties = [];
+                        for(var i = 0; i < response.properties.length;i++){
+                            var p = response.properties[i];
+                            properties.push({id: p.id, name:$sce.trustAsHtml(p.name)});
+                        }
+                        $scope.item.properties = properties;
+                        $scope.itemLoading = false;
+                    }
+                , function(errorResponse){
+                        debugger;
+                        $scope.errorMesagge = "Error consultando elemento";
+                        $scope.itemLoading = false;
+                    });
+                ngDialog.open({
+                    template: 'detail',
+                    scope: $scope,
+                    width: window.innerWidth < 800 ? window.innerWidth-24 : window.innerWidth-384
+                });
+            }
 
+            $scope.showPrint = function(item){
+                $scope.item = item;
+                ngDialog.open({
+                    template: 'print',
+                    scope: $scope,
+                    width: window.innerWidth < 800 ? window.innerWidth-24 : window.innerWidth-384
+                });
             }
 
             $scope.get();
 
-        }])
-    .controller('CertificateDetailCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'CertificateService', 'APPLICATION', '$sce',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, CertificateService, APPLICATION, $sce) {
-            $scope.item = null;
-            $scope.param = $state.params;
-            $scope.get = function () {
-
-            }
         }])
     .controller('ExternalCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'APPLICATION',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, APPLICATION) {

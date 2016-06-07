@@ -5557,6 +5557,10 @@ a.text-dark:hover {
   margin: 0;
 }
 
+.m-auto{
+  margin: auto;
+}
+
 .m {
   margin: 16px;
 }
@@ -6185,7 +6189,7 @@ a.text-dark:hover {
   height: 64px;
 }
 
-.w-xxl {
+.w-xxs {
   width: 60px;
 }
 
@@ -6217,6 +6221,38 @@ a.text-dark:hover {
   width: 320px;
 }
 
+.mw-xxs {
+  min-width: 60px !important;
+}
+
+.w-xs {
+  min-width: 90px !important;
+}
+
+.w-sm {
+  min-width: 120px !important;
+}
+
+.mw {
+  min-width: 180px !important;
+}
+
+.mw-md {
+  min-width: 200px !important;
+}
+
+.mw-lg {
+  min-width: 240px !important;
+}
+
+.mw-xl {
+  min-width: 280px !important;
+}
+
+.mw-xxl {
+  min-width: 320px !important;
+}
+
 .w-full {
   width: 100%;
 }
@@ -6231,6 +6267,22 @@ a.text-dark:hover {
 
 .h-full {
   height: 100%;
+}
+
+.ngdialog.ngdialog-theme-default .ngdialog-content{
+  padding: 0px;
+}
+.ngdialog{
+  z-index: 35;
+}
+
+.table-scroll-x{
+  display: block;
+  overflow: auto;
+}
+
+.table-scroll-x th, .table-scroll-x td{
+  min-width: 150px;
 }
 
 @media (max-width: 991px) {

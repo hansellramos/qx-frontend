@@ -16,6 +16,7 @@ angular
     'ngMessages',
     'ngResource',
     'ngSanitize',
+    'ngDialog',
     'ngTouch',
     'ngMaterial',
     'ngStorage',
