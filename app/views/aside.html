@@ -18,7 +18,7 @@
     <div class="box-cell scrollable hover">
       <div class="box-inner">
         <div class="p hidden-folded" ng-class="$state.current.data.theme ? $state.current.data.theme.primary+'-50' : app.setting.theme.primary+'-50'" style="background-image:url(images/bg.png); background-size:cover">
-          <a class="block m-t-sm" ui-toggle-class="hide, show" target="#nav, #account">
+          <a class="block m-t-sm" ui-toggle-class="hide, show" target="#nav, #account, #menu">
             <span class="pull-right auto">
               <i class="fa inline fa-caret-down"></i>
               <i class="fa none fa-caret-up"></i>
@@ -26,8 +26,8 @@
             <span>{{app.auth.name}}</span>
           </a>
         </div>
-        <div id="nav" ng-include="'views/partials/aside.nav.menu.html'"></div>
-        <div id="nav" ng-include="'views/partials/aside.nav.uikit.html'"></div>
+        <div id="menu" ng-include="'views/partials/aside.nav.menu.html'"></div>
+        <div id="nav" ng-show="false" ng-include="'views/partials/aside.nav.uikit.html'"></div>
         <div id="account" class="hide m-v-xs">
           <nav>
             <ul class="nav">
