@@ -74,19 +74,19 @@
       </tr>
       </thead>
       <tbody>
-        <tr dir-paginate="item in items|orderBy:sortKey:reverse|filter:search:strict|itemsPerPage:pageSize">
-          <td class="text-right pointer" ng-click="showDetail(item)">{{item.no|number:0}}</td>
-          <td>{{item.created|date:'yyyy-MM-dd HH:mm'}}</td>
-          <td class="text-right">{{item.remission|number:0}}</td>
-          <td>{{item.customer}}</td>
-          <td>{{item.product}}</td>
-          <td class="text-right">{{item.quantity|number:0}}</td>
-          <td>{{item.presentation}}</td>
-          <td>{{item.user}}</td>
+        <tr dir-paginate="_item in items|orderBy:sortKey:reverse|filter:search:strict|itemsPerPage:pageSize">
+          <td class="text-right pointer" ng-click="showDetail(_item)">{{_item.no|number:0}}</td>
+          <td>{{_item.created|date:'yyyy-MM-dd HH:mm'}}</td>
+          <td class="text-right">{{_item.remission|number:0}}</td>
+          <td>{{_item.customer}}</td>
+          <td>{{_item.product}}</td>
+          <td class="text-right">{{_item.quantity|number:0}}</td>
+          <td>{{_item.presentation}}</td>
+          <td>{{_item.user}}</td>
           <td class="mw-md">
             <div class="btn-group btn-group-justified m-b">
-              <a href class="btn btn-rounded btn-accent btn-icon" ng-click="showPrint(item)"><i class="icon glyphicon glyphicon-print i-16"></i></a>
-              <a href class="btn btn-rounded btn-info btn-icon" ng-click="showDetail(item)"><i class="icon glyphicon glyphicon-search i-16"></i></a>
+              <a href class="btn btn-rounded btn-accent btn-icon" ng-click="showPrint(_item)"><i class="icon glyphicon glyphicon-print i-16"></i></a>
+              <a href class="btn btn-rounded btn-info btn-icon" ng-click="showDetail(_item)"><i class="icon glyphicon glyphicon-search i-16"></i></a>
               <a href class="btn btn-rounded btn-danger btn-icon"><i class="icon glyphicon glyphicon-trash i-16"></i></a>
               <a href class="btn btn-rounded btn-warning btn-icon"><i class="icon fa fa-pencil-square-o i-16"></i></a>
             </div>
@@ -118,6 +118,9 @@
         </div>
         <div ng-show="item && !itemLoading">
           <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center font-bold text-1x indigo-100 panel p-sm m-v-sm">Datos Generales</div>
+          </div>
+          <div class="row">
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
               <strong>Fecha y Hora:</strong> {{item.created|date:'yyyy-MM-dd HH:mm'}}
             </div>
@@ -146,12 +149,24 @@
             </div>
           </div>
           <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center font-bold text-1x indigo-100 panel p-sm m-v-sm">Propiedades</div>
+          </div>
+          <div class="row">
             <table class="table table-striped table-scroll-x">
               <thead>
-                <th ng-repeat="property in item.properties">
-                  <div ng-bind-html="property.name"></div>
-                </th>
+                <tr>
+                  <th ng-repeat="property in item.properties">
+                    <div ng-bind-html="property.name"></div>
+                  </th>
+                </tr>
               </thead>
+              <tbody>
+                <tr ng-repeat="references in item.references">
+                  <td ng-repeat="property in item.properties">
+                    <span ng-repeat="value in item.values|filter:property.id:strict">{{value.value}}</span>
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>

@@ -187,6 +187,7 @@ angular.module('app')
     .controller('AuthController', ['$scope', '$translate', '$stateParams', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'LoginService', 'APPLICATION',
         function ($scope, $translate, $stateParams, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, LoginService, APPLICATION) {
             $scope.data = {error: false, errorMessage: ''
+                , username: 'hansell.ramos', password: 'komodo'
             };
             if ($stateParams.message) {
                 $scope.data.error = true;
@@ -529,6 +530,16 @@ angular.module('app')
                         for(var i = 0; i < response.properties.length;i++){
                             var p = response.properties[i];
                             properties.push({id: p.id, name:$sce.trustAsHtml(p.name)});
+                            if(p.name == 'Lote'){
+                                $scope.item.referenceProperty = p;
+                            }
+                        }
+                        $scope.item.references = [];
+                        for(var i = 0; i < response.values.length;i++){
+                            var v = response.values[i];
+                            if($scope.item.references.indexOf(v.record_reference)<0){
+                                $scope.item.references.push(v.record_reference);
+                            }
                         }
                         $scope.item.properties = properties;
                         $scope.itemLoading = false;
