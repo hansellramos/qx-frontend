@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="app" ng-controller="AppCtrl">
 <head>
   <meta charset="utf-8" />
-  <title>Qualitrix | Productos Químicos Panamericanos S.A. | Control de Calidad</title>
+  <title>{{$rootScope.name}}</title>
   <meta name="description" content="material, material design, angular material, app, web app, responsive, responsive layout, admin, admin panel, admin dashboard, flat, flat ui, ui kit, AngularJS, ui route, charts, widgets, components" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
@@ -20,8 +20,8 @@
   <link rel="stylesheet" href="styles/font.css" type="text/css" />
   <link rel="stylesheet" href="styles/app.css" type="text/css" />
 </head>
-<body ng-app="app">
-  <div class="app" ui-view ng-controller="AppCtrl"></div>
+<body>
+  <div class="app" ui-view></div>
 <!-- jQuery -->
   <script src="../libs/jquery/jquery/dist/jquery.js"></script>
   <script src="../libs/jquery/bootstrap/dist/js/bootstrap.js"></script>

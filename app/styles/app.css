@@ -6294,6 +6294,55 @@ a.text-dark:hover {
   margin: 0;
 }
 
+.font-1x, .font-md{
+  font-size: 1em;
+}
+.font-2x, .font-lg{
+  font-size: 2em;
+}
+.font-4x, .font-xl{
+  font-size: 4em;
+}
+.font-xs{
+  font-size: 0.5em;
+}
+.font-sm{
+  font-size: 0.75em;
+}
+.font-w100{
+  font-weight: 100;
+}
+.font-w200{
+  font-weight: 200;
+}
+.font-w300{
+  font-weight: 300;
+}
+.font-w400{
+  font-weight: 400;
+}
+.font-w500{
+  font-weight: 500;
+}
+.font-w600{
+  font-weight: 600;
+}
+.font-w700{
+  font-weight: 700;
+}
+.font-w800{
+  font-weight: 800;
+}
+.font-w900{
+  font-weight: 900;
+}
+.f-l{
+  float: left;
+}
+.f-r{
+  float: right;
+}
+
 @media (max-width: 991px) {
   .w-auto-sm {
     width: auto;

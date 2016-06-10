@@ -8,15 +8,15 @@
  * Controller of the app
  */
 angular.module('app')
-    .controller('AppCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'APPLICATION', 'LoginService', 'ngDialog',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, APPLICATION, LoginService, ngDialog) {
+    .controller('AppCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'APPLICATION', 'LoginService', 'ngDialog', 'Page',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, APPLICATION, LoginService, ngDialog, Page) {
             // add 'ie' classes to html
             var isIE = !!navigator.userAgent.match(/MSIE/i) || !!navigator.userAgent.match(/Trident.*rv:11\./);
             isIE && angular.element($window.document.body).addClass('ie');
             isSmartDevice($window) && angular.element($window.document.body).addClass('smart');
             // config
             $scope.app = {
-                name: 'Qualitrix',
+                name: 'Qualitrix | Productos Químicos Panamericanos S.A. | Control de Calidad',
                 version: '1.0.3',
                 // for chart colors
                 color: {
@@ -44,6 +44,7 @@ angular.module('app')
                 },
                 auth: getCurrentUser()
             }
+            $rootScope.name = $scope.app.name;
 
             $scope.signout = function () {
                 LoginService.logout({
@@ -552,14 +553,15 @@ angular.module('app')
             $scope.get();
 
         }])
-    .controller('CertificatePrintController', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'CertificateService', 'APPLICATION',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, CertificateService, APPLICATION) {
+    .controller('CertificatePrintController', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'CertificateService', 'APPLICATION', 'Page',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, CertificateService, APPLICATION, Page) {
             $scope.item = null;
             $scope.itemLoading = true;
             $scope._width = 1;
             CertificateService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params.id}
                 , function(response){
                     $scope.item = response;
+                    $rootScope.name = "PQP Certificado de Calidad No "+$scope.item.id;
                     $scope.itemLoading = false;
                     $scope._width = 80/($scope.item.properties.length-2);
                     setTimeout(function(){window.print();},500);
