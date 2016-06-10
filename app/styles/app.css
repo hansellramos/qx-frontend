@@ -6290,6 +6290,10 @@ a.text-dark:hover {
   min-width: 150px;
 }
 
+.table-scroll-x p, .properties p{
+  margin: 0;
+}
+
 @media (max-width: 991px) {
   .w-auto-sm {
     width: auto;

@@ -8,8 +8,8 @@
  * Controller of the app
  */
 angular.module('app')
-    .controller('AppCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'APPLICATION', 'LoginService',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, APPLICATION, LoginService) {
+    .controller('AppCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'APPLICATION', 'LoginService', 'ngDialog',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, APPLICATION, LoginService, ngDialog) {
             // add 'ie' classes to html
             var isIE = !!navigator.userAgent.match(/MSIE/i) || !!navigator.userAgent.match(/Trident.*rv:11\./);
             isIE && angular.element($window.document.body).addClass('ie');
@@ -49,7 +49,7 @@ angular.module('app')
                 LoginService.logout({
                     token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)
                 }, function (response) {
-                    localStorage.removeItem(APPLICdATION.CONFIG.AUTH.TOKEN_KEY);
+                    localStorage.removeItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY);
                     localStorage.removeItem(APPLICATION.CONFIG.AUTH.TOKEN_DATA);
                     localStorage.removeItem(APPLICATION.CONFIG.AUTH.USER_DATA);
                     $state.go('access.signin');
@@ -166,6 +166,7 @@ angular.module('app')
                                     $scope.app.auth = getCurrentUser();
                                 }, function (errorResponse) {
                                     removeSessionData();
+                                    ngDialog.closeAll();
                                     $state.go('access.signin', {message: APPLICATION.ENUM.MESSAGES.AUTH.SESSION_ENDED});
                                 });
                         }
@@ -475,6 +476,7 @@ angular.module('app')
 
             $scope.items = [];
             $scope.item = null;
+            $scope.itemPrintPage = null;
             $scope.itemLoading = false;
             $scope.sortKey = 'id';
             $scope.reverse = true;
@@ -495,6 +497,7 @@ angular.module('app')
             }
 
             $scope.get = function () {
+                $scope.itemLoading = true;
                 CertificateService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {
                         var items = [];
@@ -513,6 +516,7 @@ angular.module('app')
                             });
                         }
                         $scope.items = items;
+                        $scope.itemLoading = false;
                     }
                     , function (errorResponse) {
                         debugger;
@@ -526,22 +530,6 @@ angular.module('app')
                 CertificateService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:item.id}
                 , function(response){
                         $scope.item = response;
-                        var properties = [];
-                        for(var i = 0; i < response.properties.length;i++){
-                            var p = response.properties[i];
-                            properties.push({id: p.id, name:$sce.trustAsHtml(p.name)});
-                            if(p.name == 'Lote'){
-                                $scope.item.referenceProperty = p;
-                            }
-                        }
-                        $scope.item.references = [];
-                        for(var i = 0; i < response.values.length;i++){
-                            var v = response.values[i];
-                            if($scope.item.references.indexOf(v.record_reference)<0){
-                                $scope.item.references.push(v.record_reference);
-                            }
-                        }
-                        $scope.item.properties = properties;
                         $scope.itemLoading = false;
                     }
                 , function(errorResponse){
@@ -558,15 +546,29 @@ angular.module('app')
 
             $scope.showPrint = function(item){
                 $scope.item = item;
-                ngDialog.open({
-                    template: 'print',
-                    scope: $scope,
-                    width: window.innerWidth < 800 ? window.innerWidth-24 : window.innerWidth-384
-                });
+                $scope.itemPrintPage = window.open("#/print/certificate/"+item.id,this.target,'width=800,height=600');
             }
 
             $scope.get();
 
+        }])
+    .controller('CertificatePrintController', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'CertificateService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, CertificateService, APPLICATION) {
+            $scope.item = null;
+            $scope.itemLoading = true;
+            $scope._width = 1;
+            CertificateService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params.id}
+                , function(response){
+                    $scope.item = response;
+                    $scope.itemLoading = false;
+                    $scope._width = 80/($scope.item.properties.length-2);
+                    setTimeout(function(){window.print();},500);
+                }
+                , function(errorResponse){
+                    debugger;
+                    $scope.errorMesagge = "Error consultando elemento";
+                    $scope.itemLoading = false;
+                });
         }])
     .controller('ExternalCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'APPLICATION',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, APPLICATION) {

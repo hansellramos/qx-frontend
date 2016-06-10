@@ -83,7 +83,15 @@ angular.module('app')
                         data: {title: 'Certificados'},
                         controller: 'CertificateCtrl'
                     })
-                    .state('app.external', {
+                    .state('print', {
+                        url: '/print',
+                        template: '<div class="bg-big"><div ui-view class="fade-in-down smooth"></div></div>'
+                    })
+                    .state('print.certificate', {
+                        url: '/certificate/:id',
+                        templateUrl: 'views/modules/certificate/print.html',
+                        controller: 'CertificatePrintController'
+                    }).state('app.external', {
                         url: '/external',
                         templateUrl: 'views/modules/external/index.html',
                         data: {title: 'Proveedores/Clientes'},

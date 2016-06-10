@@ -1,0 +1,111 @@
+<title>Hola Mundo</title>
+<div class="row header">
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+        <img class="w-sm" src="images/logo/logo-pqp-title.png" title="Productos Químicos Panamericanos S.A.">
+    </div>
+    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-center">
+        <h4 class="font-bold">PRODUCTOS QUIMICOS PANAMERICANOS S.A.</h4>
+        <h6 >PLANTA BARRANQUILLA</h6>
+        <h5 class="font-bold">CERTIFICADO DE CALIDAD </h5>
+        <h5 class="font-bold">No. {{item.id}}</h5>
+    </div>
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+
+    </div>
+</div>
+<div class="row" ng-show="itemLoading">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+        <md-progress-circular class="m-auto" md-mode="indeterminate"></md-progress-circular>
+    </div>
+</div>
+<div class="row" ng-show="!itemLoading">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                PRODUCTO: {{item.product[0].name}} ({{item.product[0].reference}})
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                FECHA: {{item.date|date:'yyyy-MM-dd'}}
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                HORA: {{item.date|date:'HH:mm'}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                CLIENTE: {{item.customer[0].name}}
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                REMISIÓN: {{item.remission}}
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                CANTIDAD: {{item.quantity|number:0}} KG
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                PRESENTACIÓN: {{item.presentation}}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" ng-show="!itemLoading">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+        <h6>ESPECIFICACIONES</h6>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+        <table class="properties">
+            <thead>
+                <tr>
+                    <th ng-repeat="property in item.properties">
+                        <div ng-bind-html="property.name"></div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="reference in item.values">
+                    <td ng-repeat="property in item.properties">
+                        <span ng-repeat="v in reference.values|filter:property.property:strict">{{v.value}}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<style>
+    @media print {
+        @page  {
+            size: legal landscape;
+        }
+        #loading-bar, #loading-bar-spinner{
+            display: none;
+        }
+    }
+    @media all {
+        body, .app{
+            overflow: hidden;
+        }
+
+        .properties{
+            width: 100%;
+        }
+        .properties thead tr{
+            border-bottom: 1px double lightgray;
+            border-top: 1px double lightgray;
+        }
+        .properties thead tr, .properties tbody tr{
+
+        }
+        .properties tr td, .properties tr th{
+            width: {{_width}}%;
+        }
+        .properties tr td:nth-child(1), .properties tr th:nth-child(1),
+        .properties tr td:nth-child(2), .properties tr th:nth-child(2)
+        {
+            text-align: right;
+            width: 10%;
+        }
+
+    }
+
+</style>

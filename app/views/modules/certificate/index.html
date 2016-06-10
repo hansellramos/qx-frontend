@@ -161,9 +161,9 @@
                 </tr>
               </thead>
               <tbody>
-                <tr ng-repeat="references in item.references">
+                <tr ng-repeat="reference in item.values">
                   <td ng-repeat="property in item.properties">
-                    <span ng-repeat="value in item.values|filter:property.id:strict">{{value.value}}</span>
+                    <span ng-repeat="v in reference.values|filter:property.property:strict">{{v.value}}</span>
                   </td>
                 </tr>
               </tbody>
