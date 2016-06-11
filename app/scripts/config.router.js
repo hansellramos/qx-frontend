@@ -59,6 +59,12 @@ angular.module('app')
                         data: {title: 'Sucursales'},
                         controller: 'SubsidiaryCtrl'
                     })
+                    .state('app.subsidiaryAdd', {
+                        url: '/subsidiary/add',
+                        templateUrl: 'views/modules/subsidiary/edit.html',
+                        data: {title: 'Nueva Sucursal'},
+                        controller: 'SubsidiaryAddCtrl'
+                    })
                     .state('app.store', {
                         url: '/store',
                         templateUrl: 'views/modules/store/index.html',

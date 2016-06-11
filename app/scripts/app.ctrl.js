@@ -268,8 +268,36 @@ angular.module('app')
                     });
             };
 
+            $scope.add = function(){
+                $state.go('app.subsidiaryAdd');
+            }
+
             $scope.get();
 
+        }])
+    .controller('SubsidiaryAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'SubsidiaryService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, SubsidiaryService, APPLICATION) {
+            $scope.subsidiary = {name:"", reference:"", active:true};
+            $scope.requesting = false;
+
+            $scope._form = {
+                error : {
+                    name: false,
+                    reference: "hola"
+                }
+            };
+
+            $scope._create = function(){
+                SubsidiaryService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.subsidiary, function(response){
+                    debugger;
+                }, function(errorResponse){
+                    debugger;
+                });
+            }
+
+            $scope._goBack = function(){
+                $state.go('app.subsidiary');
+            }
         }])
     .controller('StoreCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'StoreService', 'APPLICATION',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, StoreService, APPLICATION) {

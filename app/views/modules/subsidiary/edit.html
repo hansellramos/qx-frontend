@@ -1,0 +1,50 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Crear Sucursal
+    </div>
+    <div class="panel-body">
+        <form name="form" novalidate ng-submit="_create();form.$setPristine()">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="md-form-group float-label">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="subsidiary.name"
+                               ng-required="true" ng-minlength="3" tabindex="0" autofocus aria-required="true" aria-invalid="true" style=""
+                               name="name">
+                        <label><span class="font-xs text-danger-dk">*</span> Nombre</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="md-form-group float-label">
+                        <input class="md-input ng-pristine ng-seinvalid ng-invalid-required ng-touched" ng-model="subsidiary.reference"
+                               ng-required="true" tabindex="1" aria-required="true" aria-invalid="true" style=""
+                               ng-class="{'b-b-danger':_form.error.reference && !form.reference.$dirty}" name="reference">
+                        <label><span class="font-xs text-danger-dk">*</span> Referencia
+                            <span class="label bg-danger pos-rlt m-r-xs" ng-show="_form.error.reference  && !form.reference.$dirty"><b class="arrow left b-danger pull-in"></b>{{_form.error.reference}}</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <label class="md-switch">
+                        <input type="checkbox" ng-model="subsidiary.active" checked>
+                        <i class="green"></i>
+                        <span ng-class="{'text-success':subsidiary.active, 'text-warning-dk':!subsidiary.active}">
+                            <span ng-show="subsidiary.active">Activo</span>
+                            <span ng-show="!subsidiary.active">Inactivo</span>
+                        </span>
+                    </label>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-danger-dk text-right font-sm">
+                    <span class="font-xs text-danger-dk">*</span> Campos Obligatorios
+                </div>
+            </div>
+            {{form.reference}}
+            <br />
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right">
+                    <button class="btn btn-default" ng-click="_goBack()">Volver</button>
+                    <button class="btn btn-addon btn-primary" ng-disabled="form.$invalid || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Sucursal</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
