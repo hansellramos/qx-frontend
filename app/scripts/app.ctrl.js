@@ -16,7 +16,7 @@ angular.module('app')
             isSmartDevice($window) && angular.element($window.document.body).addClass('smart');
             // config
             $scope.app = {
-                name: 'Qualitrix | Productos Químicos Panamericanos S.A. | Control de Calidad',
+                name: 'Qualitrix',
                 version: '1.0.3',
                 // for chart colors
                 color: {
@@ -282,16 +282,31 @@ angular.module('app')
 
             $scope._form = {
                 error : {
+                    general: false,
                     name: false,
-                    reference: "hola"
+                    reference: false
+                },
+                success: {
+                    general: false
                 }
             };
 
             $scope._create = function(){
-                SubsidiaryService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.subsidiary, function(response){
+                SubsidiaryService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.subsidiary
+                , function(response){
                     debugger;
+                    $scope._form.success.general = {message: response.message};
+                    $scope.subsidiary = {name:"", reference:"", active:true};
+                    $scope.form.$setPristine();
+                    setTimeout(function(){$scope._form.success.general = false;}, 5000);
                 }, function(errorResponse){
-                    debugger;
+                    if(errorResponse.status == 406){ //validations error
+                        if(errorResponse.data.data.fields.reference){
+                            $scope._form.error.reference = errorResponse.data.data.fields.reference;
+                        }
+                    }
+                    $scope._form.error.general = {message: errorResponse.data.message};
+                    setTimeout(function(){$scope._form.error.general = false;}, 5000);
                 });
             }
 

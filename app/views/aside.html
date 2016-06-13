@@ -18,8 +18,8 @@
     <div class="box-cell scrollable hover">
       <div class="box-inner">
         <div class="p hidden-folded" ng-class="$state.current.data.theme ? $state.current.data.theme.primary+'-50' : app.setting.theme.primary+'-50'" style="background-image:url(images/bg.png); background-size:cover">
-          <a class="block m-t-sm" ui-toggle-class="hide, show" target="#nav, #account, #menu">
-            <span class="pull-right auto">
+          <a class="block m-t-sm" ui-toggle-class="hide, show" target="#_nav, #_account, #_menu">
+            <span ng-show="false" class="pull-right auto">
               <i class="fa inline fa-caret-down"></i>
               <i class="fa none fa-caret-up"></i>
             </span>
@@ -28,25 +28,20 @@
         </div>
         <div id="menu" ng-include="'views/partials/aside.nav.menu.html'"></div>
         <div id="nav" ng-show="false" ng-include="'views/partials/aside.nav.uikit.html'"></div>
-        <div id="account" class="hide m-v-xs">
+        <div id="account" class="m-v-xs">
           <nav>
             <ul class="nav">
-              <li>
+              <li ng-show="false" class="m-v-sm b-b b"></li>
+              <li ng-show="false">
                 <a md-ink-ripple ui-sref="page.profile">
                   <i class="icon mdi-action-perm-contact-cal i-20"></i>
                   <span>Mi Perfil</span>
                 </a>
               </li>
-              <li>
+              <li ng-show="false">
                 <a md-ink-ripple ui-sref="page.settings">
                   <i class="icon mdi-action-settings i-20"></i>
                   <span>Configuraciones</span>
-                </a>
-              </li>
-              <li>
-                <a md-ink-ripple ng-click="signout()">
-                  <i class="icon mdi-action-exit-to-app i-20"></i>
-                  <span>Salir</span>
                 </a>
               </li>
               <li class="m-v-sm b-b b"></li>
@@ -67,6 +62,13 @@
               </li>
               <li class="p p-v-sm hidden-folded" ng-show="false">
                 <div ng-include="'views/partials/aside.setting.html'"></div>
+              </li>
+              <li class="m-v-sm b-b b"></li>
+              <li>
+                <a md-ink-ripple ng-click="signout()">
+                  <i class="icon mdi-action-exit-to-app i-20"></i>
+                  <span>Salir</span>
+                </a>
               </li>
             </ul>
           </nav>

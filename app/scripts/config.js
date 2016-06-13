@@ -76,7 +76,7 @@ var app =
                 }
             })
             .factory('Page', function(){
-                var _default = 'Qualitrix | Productos Químicos Panamericanos S.A. | Control de Calidad';
+                var _default = 'Qualitrix';
                 var title =  _default;
                 return {
                     title: function() { return title; },
