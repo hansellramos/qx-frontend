@@ -1,8 +1,8 @@
   <div class="panel panel-default">
     <div class="panel-heading">
-      Sucursales
+      Perfiles
       <div style="float: right">
-        <button class="md-btn md-fab m-b blue" ng-click="add()" ng-show="_p.isAdmin() || _p.hasPermission(_pn.SUBSIDIARY_CREATE)">
+        <button class="md-btn md-fab m-b blue" ng-click="add()" ng-show="_p.isAdmin() || _p.hasPermission(_pn.PROFILE_CREATE)">
           <i class="mdi-content-add i-24"></i>
         </button>
         <button class="md-btn md-fab m-b bg-white" ng-click="get()">
@@ -14,15 +14,16 @@
       <thead>
         <tr>
           <th ng-click="sort('name')">
-            Nombre
+            Usuario
             <span class="glyphicon sort-icon" ng-show="sortKey=='name'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
-          <th ng-click="sort('reference')">
-            Referencia
-            <span class="glyphicon sort-icon" ng-show="sortKey=='reference'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+          <th ng-click="sort('description')">
+            Nombres
+            <span class="glyphicon sort-icon" ng-show="sortKey=='description'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
           <th ng-click="sort('active')" class="text-center">
             Activo
+            <span class="glyphicon sort-icon" ng-show="sortKey=='active'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
           <th></th>
         </tr>
@@ -31,7 +32,7 @@
           <input ng-model="search.name" class="form-control" placeholder="Buscar por nombre">
         </th>
         <th>
-          <input ng-model="search.reference" class="form-control" placeholder="Buscar por referencia">
+          <input ng-model="search.description" class="form-control" placeholder="Buscar por descripción">
         </th>
         <th></th>
         <th></th>
@@ -40,7 +41,7 @@
       <tbody>
         <tr dir-paginate="item in items|orderBy:sortKey:reverse|filter:search:strict|itemsPerPage:pageSize">
           <td>{{item.name}}</td>
-          <td>{{item.reference}}</td>
+          <td>{{item.description}}</td>
           <td class="text-center">
             <i ng-show="!item.active" class="btn-rounded btn-icon icon mdi-action-highlight-remove red i-24 panel-card"></i>
             <i ng-show="item.active" class="btn-rounded btn-icon icon mdi-navigation-check green i-24 panel-card"></i>
@@ -48,8 +49,8 @@
           <td class="mw-md mxw-md">
             <div class="btn-group btn-group-justified m-b">
               <a href class="btn btn-rounded btn-info btn-icon" ng-click="showDetail(_item)"><i class="icon glyphicon glyphicon-search i-16"></i></a>
-              <a href class="btn btn-rounded btn-danger btn-icon" ng-show="_p.isAdmin() || _p.hasPermission(_pn.SUBSIDIARY_DELETE)"><i class="icon glyphicon glyphicon-trash i-16"></i></a>
-              <a href class="btn btn-rounded btn-warning btn-icon" ng-show="_p.isAdmin() || _p.hasPermission(_pn.SUBSIDIARY_UPDATE)"><i class="icon fa fa-pencil-square-o i-16"></i></a>
+              <a href class="btn btn-rounded btn-danger btn-icon" ng-show="_p.isAdmin() || _p.hasPermission(_pn.PROFILE_DELETE)"><i class="icon glyphicon glyphicon-trash i-16"></i></a>
+              <a href class="btn btn-rounded btn-warning btn-icon" ng-show="_p.isAdmin() || _p.hasPermission(_pn.PROFILE_UPDATE)"><i class="icon fa fa-pencil-square-o i-16"></i></a>
             </div>
           </td>
         </tr>

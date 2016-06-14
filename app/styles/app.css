@@ -6258,6 +6258,26 @@ a.text-dark:hover {
   min-width: 320px !important;
 }
 
+.mxw {
+  max-width: 180px !important;
+}
+
+.mxw-md {
+  max-width: 200px !important;
+}
+
+.mxw-lg {
+  max-width: 240px !important;
+}
+
+.mxw-xl {
+  max-width: 280px !important;
+}
+
+.mxw-xxl {
+  max-width: 320px !important;
+}
+
 .w-full {
   width: 100%;
 }

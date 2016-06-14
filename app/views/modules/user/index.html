@@ -1,0 +1,87 @@
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      Usuarios
+      <div style="float: right">
+        <button class="md-btn md-fab m-b blue" ng-click="add()" ng-show="_p.isAdmin() || _p.hasPermission(_pn.USER_CREATE)">
+          <i class="mdi-content-add i-24"></i>
+        </button>
+        <button class="md-btn md-fab m-b bg-white" ng-click="get()">
+          <i class="mdi-navigation-refresh i-24"></i>
+        </button>
+      </div>
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th ng-click="sort('username')">
+            Usuario
+            <span class="glyphicon sort-icon" ng-show="sortKey=='username'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+          </th>
+          <th ng-click="sort('firstname')">
+            Nombres
+            <span class="glyphicon sort-icon" ng-show="sortKey=='firstname'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+          </th>
+          <th ng-click="sort('lastname')">
+            Apellidos
+            <span class="glyphicon sort-icon" ng-show="sortKey=='lastname'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+          </th>
+          <th ng-click="sort('profile.name')">
+            Perfil
+            <span class="glyphicon sort-icon" ng-show="sortKey=='profile.name'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+          </th>
+          <th ng-click="sort('active')" class="text-center">
+            Activo
+            <span class="glyphicon sort-icon" ng-show="sortKey=='active'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+          </th>
+          <th></th>
+        </tr>
+      <tr>
+        <th>
+          <input ng-model="search.username" class="form-control" placeholder="Buscar por usuario">
+        </th>
+        <th>
+          <input ng-model="search.firstname" class="form-control" placeholder="Buscar por nombres">
+        </th>
+        <th>
+          <input ng-model="search.lastname" class="form-control" placeholder="Buscar por apellidos">
+        </th>
+        <th>
+          <input ng-model="search.profile.name" class="form-control" placeholder="Buscar por perfil">
+        </th>
+        <th></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr dir-paginate="item in items|orderBy:sortKey:reverse|filter:search:strict|itemsPerPage:pageSize">
+          <td>{{item.username}}</td>
+          <td>{{item.firstname}}</td>
+          <td>{{item.lastname}}</td>
+          <td>{{item.profile[0].name}}</td>
+          <td class="text-center">
+            <i ng-show="!item.active" class="btn-rounded btn-icon icon mdi-action-highlight-remove red i-24 panel-card"></i>
+            <i ng-show="item.active" class="btn-rounded btn-icon icon mdi-navigation-check green i-24 panel-card"></i>
+          </td>
+          <td class="mw-md mxw-md">
+            <div class="btn-group btn-group-justified m-b">
+              <a href class="btn btn-rounded btn-info btn-icon" ng-click="showDetail(_item)"><i class="icon glyphicon glyphicon-search i-16"></i></a>
+              <a href class="btn btn-rounded btn-danger btn-icon" ng-show="_p.isAdmin() || _p.hasPermission(_pn.USER_DELETE)"><i class="icon glyphicon glyphicon-trash i-16"></i></a>
+              <a href class="btn btn-rounded btn-warning btn-icon" ng-show="_p.isAdmin() || _p.hasPermission(_pn.USER_UPDATE)"><i class="icon fa fa-pencil-square-o i-16"></i></a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" class="text-center">
+            <label style="float: left;">Elementos por página: <input type="number" ng-model="pageSize" style="width: 50px; text-align: right;"></label>
+            <dir-pagination-controls style="float: right;"
+                    max-size="10"
+                    direction-links="true"
+                    boundary-links="true">
+            </dir-pagination-controls>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>

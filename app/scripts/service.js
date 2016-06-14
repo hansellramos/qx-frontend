@@ -38,4 +38,12 @@ angular
         return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.EXTERNAL + ':token/:id'
             , {token: '@token', id: '@id'})
     }])
+    .factory('UserService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
+        return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.USER + ':token/:id'
+            , {token: '@token', id: '@id'})
+    }])
+    .factory('ProfileService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
+        return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.PROFILE + ':token/:id'
+            , {token: '@token', id: '@id'})
+    }])
 ;

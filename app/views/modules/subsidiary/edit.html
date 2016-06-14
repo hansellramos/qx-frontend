@@ -8,7 +8,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                     <div class="md-form-group float-label">
                         <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="subsidiary.name"
-                               ng-required="true" ng-minlength="3" tabindex="0" autofocus aria-required="true" aria-invalid="true" style=""
+                               ng-required="true" ng-minlength="3" tabindex="101" autofocus aria-required="true" aria-invalid="true" style=""
                                name="name">
                         <label><span class="font-xs text-danger-dk">*</span> Nombre</label>
                     </div>
@@ -16,7 +16,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                     <div class="md-form-group float-label">
                         <input class="md-input ng-pristine ng-seinvalid ng-invalid-required ng-touched" ng-model="subsidiary.reference"
-                               ng-required="true" tabindex="1" aria-required="true" aria-invalid="true" style=""
+                               ng-required="true" tabindex="102" aria-required="true" aria-invalid="true" style=""
                                ng-class="{'b-b-danger':_form.error.reference && _form.error.reference.error && _form.error.reference.value==subsidiary.reference}" name="reference">
                         <label><span class="font-xs text-danger-dk">*</span> Referencia
                             &nbsp;<span class="label bg-danger pos-rlt m-r-xs" ng-show="_form.error.reference && _form.error.reference.error && _form.error.reference.value==subsidiary.reference"><b class="arrow left b-danger pull-in"></b>{{_form.error.reference.message}}</span>

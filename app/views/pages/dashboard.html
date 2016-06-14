@@ -6,40 +6,52 @@
       </div>
       <div class="card-body">
         <div class="row">
-          <div class="col-xs-6 col-sm-4 col-md-2 col-lg-2 text-center">
+          <div class="col-xs-6 col-sm-4 col-md-2 col-lg-2 text-center p-sm" ng-show="_p.isAdmin() || _p.hasPermission(_pn.RECORD_LIST)">
             <a md-ink-ripple ui-sref="app.record">
               <i class="icon mdi-maps-layers i-48"></i><br />
               <span class="font-normal">Registros</span>
             </a>
           </div>
-          <div class="col-xs-6 col-sm-4 col-md-2 col-lg-2 text-center">
+          <div class="col-xs-6 col-sm-4 col-md-2 col-lg-2 text-center p-sm" ng-show="_p.isAdmin() || _p.hasPermission(_pn.CERTIFICATE_LIST)">
             <a md-ink-ripple ui-sref="app.certificate">
               <i class="icon fa fa-certificate i-48"></i><br />
               <span class="font-normal">Certificados</span>
             </a>
           </div>
-          <div class="col-xs-6 col-sm-4 col-md-2 col-lg-2 text-center">
+          <div class="col-xs-6 col-sm-4 col-md-2 col-lg-2 text-center p-sm" ng-show="_p.isAdmin() || _p.hasPermission(_pn.PRODUCT_LIST)">
             <a md-ink-ripple ui-sref="app.product">
               <i class="icon fa fa-cube i-48"></i><br />
               <span class="font-normal">Productos</span>
             </a>
           </div>
-          <div class="col-xs-6 col-sm-4 col-md-2 col-lg-2 text-center">
+          <div class="col-xs-6 col-sm-4 col-md-2 col-lg-2 text-center p-sm" ng-show="_p.isAdmin() || _p.hasPermission(_pn.STORE_LIST)">
             <a md-ink-ripple ui-sref="app.store">
               <i class="icon mdi-action-store i-48"></i><br />
               <span class="font-normal">Bodegas/Tiendas</span>
             </a>
           </div>
-          <div class="col-xs-6 col-sm-4 col-md-2 col-lg-2 text-center">
+          <div class="col-xs-6 col-sm-4 col-md-2 col-lg-2 text-center p-sm" ng-show="_p.isAdmin() || _p.hasPermission(_pn.SUBSIDIARY_LIST)">
             <a md-ink-ripple ui-sref="app.subsidiary">
               <i class="icon fa fa-building i-48"></i><br />
               <span class="font-normal">Sucursales</span>
             </a>
           </div>
-          <div class="col-xs-6 col-sm-4 col-md-2 col-lg-2 text-center">
+          <div class="col-xs-6 col-sm-4 col-md-2 col-lg-2 text-center p-sm" ng-show="_p.isAdmin() || _p.hasPermission(_pn.EXTERNAL_LIST)">
             <a md-ink-ripple ui-sref="app.external">
               <i class="icon mdi-maps-local-shipping i-48"></i><br />
               <span class="font-normal">Proveedores/Clientes</span>
+            </a>
+          </div>
+          <div class="col-xs-6 col-sm-4 col-md-2 col-lg-2 text-center p-sm" ng-show="_p.isAdmin() || _p.hasPermission(_pn.USER_LIST)">
+            <a md-ink-ripple ui-sref="app.user">
+              <i class="icon fa fa-users i-48"></i><br />
+              <span class="font-normal">Usuarios</span>
+            </a>
+          </div>
+          <div class="col-xs-6 col-sm-4 col-md-2 col-lg-2 text-center p-sm" ng-show="_p.isAdmin() || _p.hasPermission(_pn.PROFILE_LIST)">
+            <a md-ink-ripple ui-sref="app.profile">
+              <i class="icon mdi-action-assignment-ind i-48"></i><br />
+              <span class="font-normal">Perfiles</span>
             </a>
           </div>
         </div>

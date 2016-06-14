@@ -41,6 +41,10 @@
             Presentación
             <span class="glyphicon sort-icon" ng-show="sortKey=='presentation'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
+          <th ng-click="sort('active')" class="text-center">
+            Activo
+            <span class="glyphicon sort-icon" ng-show="sortKey=='active'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+          </th>
           <th ng-click="sort('user')">
             Usuario
             <span class="glyphicon sort-icon" ng-show="sortKey=='user'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
@@ -67,6 +71,7 @@
         <th>
           <input ng-model="search.presentation" class="form-control" placeholder="Buscar por presentacion">
         </th>
+        <th></th>
         <th>
           <input ng-model="search.user" class="form-control" placeholder="Buscar por usuario">
         </th>
@@ -82,13 +87,16 @@
           <td>{{_item.product}}</td>
           <td class="text-right">{{_item.quantity|number:0}}</td>
           <td>{{_item.presentation}}</td>
+          <td class="text-center">
+            <i ng-show="!_item.active" class="btn-rounded btn-icon icon mdi-action-highlight-remove red i-24 panel-card"></i>
+            <i ng-show="_item.active" class="btn-rounded btn-icon icon mdi-navigation-check green i-24 panel-card"></i>
+          </td>
           <td>{{_item.user}}</td>
           <td class="mw-md">
             <div class="btn-group btn-group-justified m-b">
               <a href class="btn btn-rounded btn-accent btn-icon" ng-click="showPrint(_item)"><i class="icon glyphicon glyphicon-print i-16"></i></a>
               <a href class="btn btn-rounded btn-info btn-icon" ng-click="showDetail(_item)"><i class="icon glyphicon glyphicon-search i-16"></i></a>
-              <a href class="btn btn-rounded btn-danger btn-icon"><i class="icon glyphicon glyphicon-trash i-16"></i></a>
-              <a href class="btn btn-rounded btn-warning btn-icon"><i class="icon fa fa-pencil-square-o i-16"></i></a>
+              <a href class="btn btn-rounded btn-danger btn-icon" ng-show="_p.isAdmin() || _p.hasPermission(_pn.CERTIFICATE_DELETE)"><i class="icon glyphicon glyphicon-trash i-16"></i></a>
             </div>
           </td>
         </tr>

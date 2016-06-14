@@ -9,41 +9,52 @@
         <span class="font-normal">Inicio</span>
       </a>
     </li>
-    <li ui-sref-active="active">
-      <a md-ink-ripple ui-sref="app.subsidiary">
-        <i class="icon fa fa-building i-20"></i>
-        <span class="font-normal">Sucursales</span>
-      </a>
-    </li>
-    <li ui-sref-active="active">
-      <a md-ink-ripple ui-sref="app.store">
-        <i class="icon mdi-action-store i-20"></i>
-        <span class="font-normal">Bodegas/Tiendas</span>
-      </a>
-    </li>
-    <li ui-sref-active="active">
-      <a md-ink-ripple ui-sref="app.product">
-        <i class="icon fa fa-cube i-20"></i>
-        <span class="font-normal">Productos</span>
-      </a>
-    </li>
-    </li>
-    <li ui-sref-active="active">
+    <li ui-sref-active="active" ng-show="_p.isAdmin() || _p.hasPermission(_pn.RECORD_LIST)">
       <a md-ink-ripple ui-sref="app.record">
         <i class="icon mdi-maps-layers i-20"></i>
         <span class="font-normal">Registros</span>
       </a>
     </li>
-    <li ui-sref-active="active">
+    <li ui-sref-active="active" ng-show="_p.isAdmin() || _p.hasPermission(_pn.CERTIFICATE_LIST)">
+      <a md-ink-ripple ui-sref="app.certificate">
+        <i class="icon fa fa-certificate i-20"></i>
+        <span class="font-normal">Certificados</span>
+      </a>
+    </li>
+    <li ui-sref-active="active" ng-show="_p.isAdmin() || _p.hasPermission(_pn.PRODUCT_LIST)">
+      <a md-ink-ripple ui-sref="app.product">
+        <i class="icon fa fa-cube i-20"></i>
+        <span class="font-normal">Productos</span>
+      </a>
+    </li>
+    <li ui-sref-active="active" ng-show="_p.isAdmin() || _p.hasPermission(_pn.STORE_LIST)">
+      <a md-ink-ripple ui-sref="app.store">
+        <i class="icon mdi-action-store i-20"></i>
+        <span class="font-normal">Bodegas/Tiendas</span>
+      </a>
+    </li>
+    <li ui-sref-active="active" ng-show="_p.isAdmin() || _p.hasPermission(_pn.SUBSIDIARY_LIST)">
+      <a md-ink-ripple ui-sref="app.subsidiary">
+        <i class="icon fa fa-building i-20"></i>
+        <span class="font-normal">Sucursales</span>
+      </a>
+    </li>
+    <li ui-sref-active="active" ng-show="_p.isAdmin() || _p.hasPermission(_pn.EXTERNAL_LIST)">
       <a md-ink-ripple ui-sref="app.external">
         <i class="icon mdi-maps-local-shipping i-20"></i>
         <span class="font-normal">Proveedores/Clientes</span>
       </a>
     </li>
-    <li ui-sref-active="active">
-      <a md-ink-ripple ui-sref="app.certificate">
-        <i class="icon fa fa-certificate i-20"></i>
-        <span class="font-normal">Certificados</span>
+    <li ui-sref-active="active" ng-show="_p.isAdmin() || _p.hasPermission(_pn.USER_LIST)">
+      <a md-ink-ripple ui-sref="app.user">
+        <i class="icon fa fa-users i-20"></i>
+        <span class="font-normal">Usuarios</span>
+      </a>
+    </li>
+    <li ui-sref-active="active" ng-show="_p.isAdmin() || _p.hasPermission(_pn.PROFILE_LIST)">
+      <a md-ink-ripple ui-sref="app.profile">
+        <i class="icon mdi-action-assignment-ind i-20"></i>
+        <span class="font-normal">Perfiles</span>
       </a>
     </li>
   </ul>

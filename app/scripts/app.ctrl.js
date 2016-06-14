@@ -8,8 +8,8 @@
  * Controller of the app
  */
 angular.module('app')
-    .controller('AppCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'APPLICATION', 'LoginService', 'ngDialog', 'Page',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, APPLICATION, LoginService, ngDialog, Page) {
+    .controller('AppCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'APPLICATION', 'LoginService', 'ngDialog', 'Permissions',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, APPLICATION, LoginService, ngDialog, Permissions) {
             // add 'ie' classes to html
             var isIE = !!navigator.userAgent.match(/MSIE/i) || !!navigator.userAgent.match(/Trident.*rv:11\./);
             isIE && angular.element($window.document.body).addClass('ie');
@@ -44,15 +44,14 @@ angular.module('app')
                 },
                 auth: getCurrentUser()
             }
-            $rootScope.name = $scope.app.name;
+            $scope._p = Permissions;
+            $scope._pn = APPLICATION.ENUM.PERMISSIONS;
 
             $scope.signout = function () {
                 LoginService.logout({
                     token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)
                 }, function (response) {
-                    localStorage.removeItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY);
-                    localStorage.removeItem(APPLICATION.CONFIG.AUTH.TOKEN_DATA);
-                    localStorage.removeItem(APPLICATION.CONFIG.AUTH.USER_DATA);
+                    removeSessionData();
                     $state.go('access.signin');
                 }, function (errorResponse) {
                     alert('Error');
@@ -164,6 +163,8 @@ angular.module('app')
                                 , function (response) {
                                     localStorage.setItem(APPLICATION.CONFIG.AUTH.TOKEN_DATA, JSON.stringify(response.data.token));
                                     localStorage.setItem(APPLICATION.CONFIG.AUTH.USER_DATA, JSON.stringify(response.data.token.user));
+                                    Permissions.setPermissions(response.data.token.user.permissions);
+                                    Permissions.setIsAdmin(response.data.token.user.isAdmin);
                                     $scope.app.auth = getCurrentUser();
                                 }, function (errorResponse) {
                                     removeSessionData();
@@ -175,13 +176,14 @@ angular.module('app')
                 }
                 setTimeout(function () {
                     verifyActiveSession();
-                }, 60000);
+                }, 30000);
             }
 
             function removeSessionData() {
                 localStorage.removeItem(APPLICATION.CONFIG.AUTH.TOKEN_DATA);
                 localStorage.removeItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY);
                 localStorage.removeItem(APPLICATION.CONFIG.AUTH.USER_DATA);
+                Permissions.clear();
             }
 
         }
@@ -189,7 +191,7 @@ angular.module('app')
     .controller('AuthController', ['$scope', '$translate', '$stateParams', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'LoginService', 'APPLICATION',
         function ($scope, $translate, $stateParams, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, LoginService, APPLICATION) {
             $scope.data = {error: false, errorMessage: ''
-                , username: 'hansell.ramos', password: 'komodo'
+                , username: 'admin', password: 'Komodo123!'
             };
             if ($stateParams.message) {
                 $scope.data.error = true;
@@ -231,7 +233,7 @@ angular.module('app')
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, SubsidiaryService, APPLICATION) {
 
             $scope.items = [];
-            $scope.sortKey = 'id';
+            $scope.sortKey = 'name';
             $scope.reverse = false;
             $scope.pageSize = 10;
             $scope.sort = function (keyname) {
@@ -318,7 +320,7 @@ angular.module('app')
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, StoreService, APPLICATION) {
 
             $scope.items = [];
-            $scope.sortKey = 'id';
+            $scope.sortKey = 'name';
             $scope.reverse = false;
             $scope.pageSize = 10;
             $scope.sort = function (keyname) {
@@ -364,7 +366,7 @@ angular.module('app')
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ProductService, APPLICATION) {
 
             $scope.items = [];
-            $scope.sortKey = 'id';
+            $scope.sortKey = 'name';
             $scope.reverse = false;
             $scope.pageSize = 10;
             $scope.sort = function (keyname) {
@@ -619,7 +621,7 @@ angular.module('app')
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, APPLICATION) {
 
             $scope.items = [];
-            $scope.sortKey = 'id';
+            $scope.sortKey = 'name';
             $scope.reverse = false;
             $scope.pageSize = 10;
             $scope.sort = function (keyname) {
@@ -629,7 +631,6 @@ angular.module('app')
                     } else {
                         $scope.sortKey = 'id';
                         $scope.reverse = false;
-                        s
                     }
                 } else {
                     $scope.sortKey = keyname;
@@ -650,6 +651,76 @@ angular.module('app')
                             });
                         }
                         $scope.items = items;
+                    }
+                    , function (errorResponse) {
+                        debugger;
+                        console.log(errorResponse);
+                    });
+            };
+
+            $scope.get();
+
+        }])
+    .controller('UserCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'UserService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, UserService, APPLICATION) {
+
+            $scope.items = [];
+            $scope.sortKey = 'lastname';
+            $scope.reverse = false;
+            $scope.pageSize = 10;
+            $scope.sort = function (keyname) {
+                if (keyname == $scope.sortKey) {
+                    if (!$scope.reverse) {
+                        $scope.reverse = !$scope.reverse;
+                    } else {
+                        $scope.sortKey = 'id';
+                        $scope.reverse = false;
+                    }
+                } else {
+                    $scope.sortKey = keyname;
+                    $scope.reverse = false;
+                }
+            }
+
+            $scope.get = function () {
+                UserService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function (response) {
+                        $scope.items = response;
+                    }
+                    , function (errorResponse) {
+                        debugger;
+                        console.log(errorResponse);
+                    });
+            };
+
+            $scope.get();
+
+        }])
+    .controller('ProfileCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ProfileService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ProfileService, APPLICATION) {
+
+            $scope.items = [];
+            $scope.sortKey = 'name';
+            $scope.reverse = false;
+            $scope.pageSize = 10;
+            $scope.sort = function (keyname) {
+                if (keyname == $scope.sortKey) {
+                    if (!$scope.reverse) {
+                        $scope.reverse = !$scope.reverse;
+                    } else {
+                        $scope.sortKey = 'id';
+                        $scope.reverse = false;
+                    }
+                } else {
+                    $scope.sortKey = keyname;
+                    $scope.reverse = false;
+                }
+            }
+
+            $scope.get = function () {
+                ProfileService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function (response) {
+                        $scope.items = response;
                     }
                     , function (errorResponse) {
                         debugger;

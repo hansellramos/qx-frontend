@@ -97,11 +97,24 @@ angular.module('app')
                         url: '/certificate/:id',
                         templateUrl: 'views/modules/certificate/print.html',
                         controller: 'CertificatePrintController'
-                    }).state('app.external', {
+                    })
+                    .state('app.external', {
                         url: '/external',
                         templateUrl: 'views/modules/external/index.html',
                         data: {title: 'Proveedores/Clientes'},
                         controller: 'ExternalCtrl'
+                    })
+                    .state('app.user', {
+                        url: '/user',
+                        templateUrl: 'views/modules/user/index.html',
+                        data: {title: 'Usuarios'},
+                        controller: 'UserCtrl'
+                    })
+                    .state('app.profile', {
+                        url: '/profile',
+                        templateUrl: 'views/modules/profile/index.html',
+                        data: {title: 'Perfiles'},
+                        controller: 'ProfileCtrl'
                     })
                     .state('app.analysis', {
                         url: '/analysis',

@@ -42,6 +42,7 @@ var app =
                             CERTIFICATE: 'certificates/',
                             EXTERNAL: 'externals/',
                             USER: 'users/',
+                            PROFILE: 'profiles/',
                         }
                     }
                     , DEVICE_KEY: 'b4cd45f5b00b326a79ea6121f9cc0db8'
@@ -73,6 +74,44 @@ var app =
                             , SESSION_ENDED: 'Hemos cerrado tu sessión dada la falta de actividad, por favor identifícate nuevamente para continuar.'
                         }
                     }
+                    , PERMISSIONS: {
+                        RECORD_LIST: 'recordList',
+                        CERTIFICATE_LIST: 'certificateList',
+                        PRODUCT_LIST: 'productList',
+                        STORE_LIST: 'storeList',
+                        SUBSIDIARY_LIST: 'subsidiaryList',
+                        EXTERNAL_LIST: 'externalList',
+                        USER_LIST: 'userList',
+                        PROFILE_LIST: 'profileList',
+
+                        RECORD_CREATE: 'recordCreate',
+                        CERTIFICATE_CREATE: 'certificateCreate',
+                        PRODUCT_CREATE: 'productCreate',
+                        STORE_CREATE: 'storeCreate',
+                        SUBSIDIARY_CREATE: 'subsidiaryCreate',
+                        EXTERNAL_CREATE: 'externalCreate',
+                        USER_CREATE: 'userCreate',
+                        PROFILE_CREATE: 'profileCreate',
+
+                        RECORD_UPDATE: 'recordUpdate',
+                        PRODUCT_UPDATE: 'productUpdate',
+                        STORE_UPDATE: 'storeUpdate',
+                        SUBSIDIARY_UPDATE: 'subsidiaryUpdate',
+                        EXTERNAL_UPDATE: 'externalUpdate',
+                        USER_UPDATE: 'userUpdate',
+                        PROFILE_UPDATE: 'profileUpdate',
+
+                        RECORD_DELETE: 'recordDelete',
+                        CERTIFICATE_DELETE: 'certificateDelete',
+                        PRODUCT_DELETE: 'productDelete',
+                        STORE_DELETE: 'storeDelete',
+                        SUBSIDIARY_DELETE: 'subsidiaryDelete',
+                        EXTERNAL_DELETE: 'externalDelete',
+                        USER_DELETE: 'userDelete',
+                        PROFILE_DELETE: 'profileDelete',
+
+                        USER_RESET_PASSWORD: 'userResetPassword',
+                    }
                 }
             })
             .factory('Page', function(){
@@ -83,6 +122,28 @@ var app =
                     setTitle: function(newTitle) { title = newTitle },
                     reset: function(){
                         title = _default
+                    }
+                };
+            })
+            .factory('Permissions',function(){
+                var _permissions = {};
+                var _isAdmin = false;
+                return {
+                    setPermissions: function(permissions){
+                        _permissions = permissions;
+                    },
+                    setIsAdmin: function(isAdmin){
+                        _isAdmin = isAdmin;
+                    },
+                    isAdmin: function(){
+                        return _isAdmin;
+                    },
+                    hasPermission: function(permission){
+                        return typeof _permissions[permission]!='undefined';
+                    },
+                    clear:function(){
+                        _isAdmin=false;
+                        _permissions={};
                     }
                 };
             })

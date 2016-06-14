@@ -2,7 +2,7 @@
     <div class="panel-heading">
       Bodegas/Tiendas
       <div style="float: right">
-        <button class="md-btn md-fab m-b blue" ng-click="">
+        <button class="md-btn md-fab m-b blue" ng-click="add()" ng-show="_p.isAdmin() || _p.hasPermission(_pn.STORE_CREATE)">
           <i class="mdi-content-add i-24"></i>
         </button>
         <button class="md-btn md-fab m-b bg-white" ng-click="get()">
@@ -25,6 +25,9 @@
             Sucursal
             <span class="glyphicon sort-icon" ng-show="sortKey=='subsidiary'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
+          <th ng-click="sort('active')" class="text-center">
+            Activo
+          </th>
           <th></th>
         </tr>
       <tr>
@@ -38,6 +41,7 @@
           <input ng-model="search.subsidiary" class="form-control" placeholder="Buscar por sucursal">
         </th>
         <th></th>
+        <th></th>
       </tr>
       </thead>
       <tbody>
@@ -45,7 +49,17 @@
           <td>{{item.name}}</td>
           <td>{{item.reference}}</td>
           <td>{{item.subsidiary}}</td>
-          <td><a ng-href="edit/{{item.id}}">Editar</a></td>
+          <td class="text-center">
+            <i ng-show="!item.active" class="btn-rounded btn-icon icon mdi-action-highlight-remove red i-24 panel-card"></i>
+            <i ng-show="item.active" class="btn-rounded btn-icon icon mdi-navigation-check green i-24 panel-card"></i>
+          </td>
+          <td class="mw-md mxw-md">
+            <div class="btn-group btn-group-justified m-b">
+              <a href class="btn btn-rounded btn-info btn-icon" ng-click="showDetail(_item)"><i class="icon glyphicon glyphicon-search i-16"></i></a>
+              <a href class="btn btn-rounded btn-danger btn-icon" ng-show="_p.isAdmin() || _p.hasPermission(_pn.STORE_DELETE)"><i class="icon glyphicon glyphicon-trash i-16"></i></a>
+              <a href class="btn btn-rounded btn-warning btn-icon" ng-show="_p.isAdmin() || _p.hasPermission(_pn.STORE_UPDATE)"><i class="icon fa fa-pencil-square-o i-16"></i></a>
+            </div>
+          </td>
         </tr>
       </tbody>
       <tfoot>
