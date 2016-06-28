@@ -229,10 +229,11 @@ angular.module('app')
             }
 
         }])
-    .controller('SubsidiaryCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'SubsidiaryService', 'APPLICATION',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, SubsidiaryService, APPLICATION) {
+    .controller('SubsidiaryCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'SubsidiaryService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, SubsidiaryService, APPLICATION) {
 
             $scope.items = [];
+            $scope._item = null;
             $scope.sortKey = 'name';
             $scope.reverse = false;
             $scope.pageSize = 10;
@@ -274,11 +275,39 @@ angular.module('app')
                 $state.go('app.subsidiaryAdd');
             }
 
+            $scope.delete = function(item){
+                $scope._item = item;
+                ngDialog.open({
+                    template: 'delete',
+                    scope: $scope,
+                    width: window.innerWidth < 800 ? window.innerWidth-24 : window.innerWidth-384
+                });
+            }
+
+            $scope._cancelDelete = function(){
+                $scope._item = null;
+                ngDialog.closeAll();
+            }
+
+            $scope._doDelete = function(item){
+                SubsidiaryService.delete({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id: item.id}
+                    , function (response) {
+                        Flash.create('success',response.message);
+                        $scope._cancelDelete();
+                        $scope.get();
+                    }
+                    , function (errorResponse) {
+                        debugger;
+                        console.log(errorResponse);
+                        Flash.create('danger',errorResponse.data.data.fields.reference);
+                    });
+            }
+
             $scope.get();
 
         }])
-    .controller('SubsidiaryAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'SubsidiaryService', 'APPLICATION',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, SubsidiaryService, APPLICATION) {
+    .controller('SubsidiaryAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'SubsidiaryService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, SubsidiaryService, APPLICATION) {
             $scope.subsidiary = {name:"", reference:"", active:true};
             $scope.requesting = false;
 
@@ -297,18 +326,20 @@ angular.module('app')
                 SubsidiaryService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.subsidiary
                 , function(response){
                     debugger;
-                    $scope._form.success.general = {message: response.message};
+                    Flash.create('success',response.message);
+                    //$scope._form.success.general = {message: response.message};
                     $scope.subsidiary = {name:"", reference:"", active:true};
                     $scope.form.$setPristine();
-                    setTimeout(function(){$scope._form.success.general = false;}, 5000);
+                    //setTimeout(function(){$scope._form.success.general = false;}, 5000);
                 }, function(errorResponse){
                     if(errorResponse.status == 406){ //validations error
                         if(errorResponse.data.data.fields.reference){
-                            $scope._form.error.reference = errorResponse.data.data.fields.reference;
+                            //$scope._form.error.reference = errorResponse.data.data.fields.reference;
+                            Flash.create('danger',errorResponse.data.data.fields.reference);
                         }
                     }
-                    $scope._form.error.general = {message: errorResponse.data.message};
-                    setTimeout(function(){$scope._form.error.general = false;}, 5000);
+                    //$scope._form.error.general = {message: errorResponse.data.message};
+                    //setTimeout(function(){$scope._form.error.general = false;}, 5000);
                 });
             }
 
@@ -316,10 +347,11 @@ angular.module('app')
                 $state.go('app.subsidiary');
             }
         }])
-    .controller('StoreCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'StoreService', 'APPLICATION',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, StoreService, APPLICATION) {
+    .controller('StoreCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'StoreService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, StoreService, APPLICATION) {
 
             $scope.items = [];
+            $scope._item = null;
             $scope.sortKey = 'name';
             $scope.reverse = false;
             $scope.pageSize = 10;
@@ -359,13 +391,42 @@ angular.module('app')
                     });
             };
 
+            $scope.delete = function(item){
+                $scope._item = item;
+                ngDialog.open({
+                    template: 'delete',
+                    scope: $scope,
+                    width: window.innerWidth < 800 ? window.innerWidth-24 : window.innerWidth-384
+                });
+            }
+
+            $scope._cancelDelete = function(){
+                $scope._item = null;
+                ngDialog.closeAll();
+            }
+
+            $scope._doDelete = function(item){
+                StoreService.delete({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id: item.id}
+                    , function (response) {
+                        Flash.create('success',response.message);
+                        $scope._cancelDelete();
+                        $scope.get();
+                    }
+                    , function (errorResponse) {
+                        debugger;
+                        console.log(errorResponse);
+                        Flash.create('danger',errorResponse.data.data.fields.reference);
+                    });
+            }
+
             $scope.get();
 
         }])
-    .controller('ProductCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ProductService', 'APPLICATION',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ProductService, APPLICATION) {
+    .controller('ProductCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'ProductService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, ProductService, APPLICATION) {
 
             $scope.items = [];
+            $scope._item = null;
             $scope.sortKey = 'name';
             $scope.reverse = false;
             $scope.pageSize = 10;
@@ -404,11 +465,39 @@ angular.module('app')
                     });
             };
 
+            $scope.delete = function(item){
+                $scope._item = item;
+                ngDialog.open({
+                    template: 'delete',
+                    scope: $scope,
+                    width: window.innerWidth < 800 ? window.innerWidth-24 : window.innerWidth-384
+                });
+            }
+
+            $scope._cancelDelete = function(){
+                $scope._item = null;
+                ngDialog.closeAll();
+            }
+
+            $scope._doDelete = function(item){
+                ProductService.delete({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id: item.id}
+                    , function (response) {
+                        Flash.create('success',response.message);
+                        $scope._cancelDelete();
+                        $scope.get();
+                    }
+                    , function (errorResponse) {
+                        debugger;
+                        console.log(errorResponse);
+                        Flash.create('danger',errorResponse.data.data.fields.reference);
+                    });
+            }
+
             $scope.get();
 
         }])
-    .controller('RecordCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'SubsidiaryService', 'StoreService', 'ProductService', 'RecordService', 'APPLICATION', '$sce','$interval',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, SubsidiaryService, StoreService, ProductService, RecordService, APPLICATION, $sce, $interval) {
+    .controller('RecordCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'SubsidiaryService', 'StoreService', 'ProductService', 'ngDialog', 'Flash', 'RecordService', 'APPLICATION', '$sce','$interval',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, SubsidiaryService, StoreService, ProductService, ngDialog, Flash, RecordService, APPLICATION, $sce, $interval) {
 
             $scope.products = [];
             $scope.product = false;
@@ -419,6 +508,7 @@ angular.module('app')
             $scope.loading = false;
 
             $scope.items = [];
+            $scope._item = null;
             $scope.sortKey = 'id';
             $scope.reverse = true;
             $scope.pageSize = 10;
@@ -450,7 +540,7 @@ angular.module('app')
                                 , due_date: response[i].due_date
                                 , reception_date: response[i].reception_date
                                 , properties: response[i].properties
-                                , user: response[i].user[0].firstname + ' '+response[i].user[0].lastname
+                                , user: response[i].creator[0].firstname + ' '+response[i].creator[0].lastname
                                 , veredict: response[i].veredict
                                 , remission: response[i].remission
                                 , quantity: response[i].quantity
@@ -513,12 +603,40 @@ angular.module('app')
                 }
             }, 100, 0, true);
 
+            $scope.delete = function(item){
+                $scope._item = item;
+                ngDialog.open({
+                    template: 'delete',
+                    scope: $scope,
+                    width: window.innerWidth < 800 ? window.innerWidth-24 : window.innerWidth-384
+                });
+            }
+
+            $scope._cancelDelete = function(){
+                $scope._item = null;
+                ngDialog.closeAll();
+            }
+
+            $scope._doDelete = function(item){
+                RecordService.delete({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id: item.id}
+                    , function (response) {
+                        Flash.create('success',response.message);
+                        $scope._cancelDelete();
+                        $scope.get();
+                    }
+                    , function (errorResponse) {
+                        debugger;
+                        console.log(errorResponse);
+                        Flash.create('danger',errorResponse.data.data.fields.reference);
+                    });
+            }
+
             initializeData();
 
         }])
 
-    .controller('CertificateCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'CertificateService', 'APPLICATION', '$sce', 'ngDialog',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, CertificateService, APPLICATION, $sce, ngDialog) {
+    .controller('CertificateCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'CertificateService', 'APPLICATION', '$sce',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, CertificateService, APPLICATION, $sce) {
 
             $scope.items = [];
             $scope.item = null;
@@ -595,11 +713,39 @@ angular.module('app')
                 $scope.itemPrintPage = window.open("#/print/certificate/"+item.id,this.target,'width=800,height=600');
             }
 
+            $scope.delete = function(item){
+                $scope.item = item;
+                ngDialog.open({
+                    template: 'delete',
+                    scope: $scope,
+                    width: window.innerWidth < 800 ? window.innerWidth-24 : window.innerWidth-384
+                });
+            }
+
+            $scope._cancelDelete = function(){
+                $scope.item = null;
+                ngDialog.closeAll();
+            }
+
+            $scope._doDelete = function(item){
+                CertificateService.delete({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id: item.id}
+                    , function (response) {
+                        Flash.create('success',response.message);
+                        $scope._cancelDelete();
+                        $scope.get();
+                    }
+                    , function (errorResponse) {
+                        debugger;
+                        console.log(errorResponse);
+                        Flash.create('danger',errorResponse.data.data.fields.reference);
+                    });
+            }
+
             $scope.get();
 
         }])
-    .controller('CertificatePrintController', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'CertificateService', 'APPLICATION', 'Page',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, CertificateService, APPLICATION, Page) {
+    .controller('CertificatePrintController', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'CertificateService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, CertificateService, APPLICATION) {
             $scope.item = null;
             $scope.itemLoading = true;
             $scope._width = 1;
@@ -617,10 +763,11 @@ angular.module('app')
                     $scope.itemLoading = false;
                 });
         }])
-    .controller('ExternalCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'APPLICATION',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, APPLICATION) {
+    .controller('ExternalCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'ExternalService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, ExternalService, APPLICATION) {
 
             $scope.items = [];
+            $scope._item = null;
             $scope.sortKey = 'name';
             $scope.reverse = false;
             $scope.pageSize = 10;
@@ -658,13 +805,42 @@ angular.module('app')
                     });
             };
 
+            $scope.delete = function(item){
+                $scope._item = item;
+                ngDialog.open({
+                    template: 'delete',
+                    scope: $scope,
+                    width: window.innerWidth < 800 ? window.innerWidth-24 : window.innerWidth-384
+                });
+            }
+
+            $scope._cancelDelete = function(){
+                $scope._item = null;
+                ngDialog.closeAll();
+            }
+
+            $scope._doDelete = function(item){
+                ExternalService.delete({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id: item.id}
+                    , function (response) {
+                        Flash.create('success',response.message);
+                        $scope._cancelDelete();
+                        $scope.get();
+                    }
+                    , function (errorResponse) {
+                        debugger;
+                        console.log(errorResponse);
+                        Flash.create('danger',errorResponse.data.data.fields.reference);
+                    });
+            }
+
             $scope.get();
 
         }])
-    .controller('UserCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'UserService', 'APPLICATION',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, UserService, APPLICATION) {
+    .controller('UserCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'UserService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, UserService, APPLICATION) {
 
             $scope.items = [];
+            $scope._item = null;
             $scope.sortKey = 'lastname';
             $scope.reverse = false;
             $scope.pageSize = 10;
@@ -693,13 +869,42 @@ angular.module('app')
                     });
             };
 
+            $scope.delete = function(item){
+                $scope._item = item;
+                ngDialog.open({
+                    template: 'delete',
+                    scope: $scope,
+                    width: window.innerWidth < 800 ? window.innerWidth-24 : window.innerWidth-384
+                });
+            }
+
+            $scope._cancelDelete = function(){
+                $scope._item = null;
+                ngDialog.closeAll();
+            }
+
+            $scope._doDelete = function(item){
+                UserService.delete({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id: item._id}
+                    , function (response) {
+                        Flash.create('success',response.message);
+                        $scope._cancelDelete();
+                        $scope.get();
+                    }
+                    , function (errorResponse) {
+                        debugger;
+                        console.log(errorResponse);
+                        Flash.create('danger',errorResponse.data.data.fields.reference);
+                    });
+            }
+
             $scope.get();
 
         }])
-    .controller('ProfileCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ProfileService', 'APPLICATION',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ProfileService, APPLICATION) {
+    .controller('ProfileCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'ProfileService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, ProfileService, APPLICATION) {
 
             $scope.items = [];
+            $scope._item = null;
             $scope.sortKey = 'name';
             $scope.reverse = false;
             $scope.pageSize = 10;
@@ -727,6 +932,34 @@ angular.module('app')
                         console.log(errorResponse);
                     });
             };
+
+            $scope.delete = function(item){
+                $scope._item = item;
+                ngDialog.open({
+                    template: 'delete',
+                    scope: $scope,
+                    width: window.innerWidth < 800 ? window.innerWidth-24 : window.innerWidth-384
+                });
+            }
+
+            $scope._cancelDelete = function(){
+                $scope._item = null;
+                ngDialog.closeAll();
+            }
+
+            $scope._doDelete = function(item){
+                ProfileService.delete({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id: item._id}
+                    , function (response) {
+                        Flash.create('success',response.message);
+                        $scope._cancelDelete();
+                        $scope.get();
+                    }
+                    , function (errorResponse) {
+                        debugger;
+                        console.log(errorResponse);
+                        Flash.create('danger',errorResponse.data.data.fields.reference);
+                    });
+            }
 
             $scope.get();
 

@@ -1,3 +1,4 @@
+<flash-message duration="10000" show-close="true"></flash-message>
   <div class="panel panel-default">
     <div class="panel-heading">
       Bodegas/Tiendas
@@ -55,8 +56,8 @@
           </td>
           <td class="mw-md mxw-md">
             <div class="btn-group btn-group-justified m-b">
-              <a href class="btn btn-rounded btn-info btn-icon" ng-click="showDetail(_item)"><i class="icon glyphicon glyphicon-search i-16"></i></a>
-              <a href class="btn btn-rounded btn-danger btn-icon" ng-show="_p.isAdmin() || _p.hasPermission(_pn.STORE_DELETE)"><i class="icon glyphicon glyphicon-trash i-16"></i></a>
+              <a href class="btn btn-rounded btn-info btn-icon" ng-click="showDetail(item)"><i class="icon glyphicon glyphicon-search i-16"></i></a>
+              <a href class="btn btn-rounded btn-danger btn-icon" ng-show="_p.isAdmin() || _p.hasPermission(_pn.STORE_DELETE)" ng-click="delete(item)"><i class="icon glyphicon glyphicon-trash i-16"></i></a>
               <a href class="btn btn-rounded btn-warning btn-icon" ng-show="_p.isAdmin() || _p.hasPermission(_pn.STORE_UPDATE)"><i class="icon fa fa-pencil-square-o i-16"></i></a>
             </div>
           </td>
@@ -76,3 +77,25 @@
       </tfoot>
     </table>
   </div>
+<script type="text/ng-template" id="delete">
+  <div class="panel-heading indigo">
+    Preparando borrado de bodega/tienda {{_item.name}} ({{_item.reference}})
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="m-v-sm">
+          ¿Está seguro que desea eliminar la bodega/tienda {{_item.name}} ({{_item.reference}})?, tenga en cuenta que esta operación no se puede revertir.
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <button class="btn btn-default w-100" ng-click="_cancelDelete()">No, esto es un error, no quiero eliminar esta bodega/tienda.</button>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <button class="btn btn-addon btn-danger w-100" ng-click="_doDelete(_item)"><i class="fa fa-trash"></i>Si, definitivamente quiero eliminar la bodega/tienda {{_item.name}} ({{_item.reference}})</button>
+      </div>
+    </div>
+  </div>
+</script>

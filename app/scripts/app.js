@@ -21,6 +21,7 @@ angular
     'ngMaterial',
     'ngStorage',
     'ngStore',
+    'ngFlash',
     'ui.router',
     'ui.utils',
     'ui.bootstrap',

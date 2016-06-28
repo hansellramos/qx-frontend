@@ -6194,6 +6194,10 @@ a.text-dark:hover {
   height: 64px;
 }
 
+.w-100{
+  width: 100%;
+}
+
 .w-xxs {
   width: 60px;
 }
