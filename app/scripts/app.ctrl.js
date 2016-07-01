@@ -229,8 +229,8 @@ angular.module('app')
             }
 
         }])
-    .controller('SubsidiaryCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'SubsidiaryService', 'APPLICATION',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, SubsidiaryService, APPLICATION) {
+    .controller('SubsidiaryCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'StoreService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, StoreService, APPLICATION) {
 
             $scope.items = [];
             $scope._item = null;
@@ -306,8 +306,8 @@ angular.module('app')
             $scope.get();
 
         }])
-    .controller('SubsidiaryAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'SubsidiaryService', 'APPLICATION',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, SubsidiaryService, APPLICATION) {
+    .controller('SubsidiaryAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'StoreService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, StoreService, APPLICATION) {
             $scope.subsidiary = {name:"", reference:"", active:true};
             $scope.requesting = false;
 
@@ -370,6 +370,10 @@ angular.module('app')
                 }
             }
 
+            $scope.add = function(){
+                $state.go('app.storeAdd');
+            }
+
             $scope.get = function () {
                 StoreService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {
@@ -422,6 +426,54 @@ angular.module('app')
             $scope.get();
 
         }])
+    .controller('StoreAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'StoreService', 'SubsidiaryService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, StoreService, SubsidiaryService, APPLICATION) {
+            $scope.store = {name:"", reference:"", subsidiary:null, active:true};
+            $scope.subsidiaries = [];
+            $scope.requesting = true;
+            StoreService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                , function (response) {
+                    $scope.subsidiaries = response;
+                    $scope.requesting = false;
+                }
+                , function (errorResponse) {
+                    debugger;
+                    Flash.create('danger',errorResponse);
+                    $scope.requesting = false;
+                });
+
+            $scope._form = {
+                error : {
+                    general: false,
+                    name: false,
+                    reference: false,
+                    subsidiary: false,
+                },
+                success: {
+                    general: false
+                }
+            };
+
+            $scope._create = function(){
+                StoreService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.subsidiary
+                    , function(response){
+                        debugger;
+                        Flash.create('success',response.message);
+                        $scope.store = {name:"", reference:"", subsidiary:null, active:true};
+                        $scope.form.$setPristine();
+                    }, function(errorResponse){
+                        if(errorResponse.status == 406){ //validations error
+                            if(errorResponse.data.data.fields.reference){
+                                Flash.create('danger',errorResponse.data.data.fields.reference);
+                            }
+                        }
+                    });
+            }
+
+            $scope._goBack = function(){
+                $state.go('app.store');
+            }
+        }])
     .controller('ProductCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'ProductService', 'APPLICATION',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, ProductService, APPLICATION) {
 
@@ -442,6 +494,10 @@ angular.module('app')
                     $scope.sortKey = keyname;
                     $scope.reverse = false;
                 }
+            }
+
+            $scope.add = function(){
+                $state.go('app.productAdd');
             }
 
             $scope.get = function () {
@@ -524,6 +580,10 @@ angular.module('app')
                     $scope.sortKey = keyname;
                     $scope.reverse = false;
                 }
+            }
+
+            $scope.add = function(){
+                $state.go('app.recordAdd');
             }
 
             $scope.get = function () {
@@ -660,6 +720,10 @@ angular.module('app')
                 }
             }
 
+            $scope.add = function(){
+                $state.go('app.certificateAdd');
+            }
+
             $scope.get = function () {
                 $scope.itemLoading = true;
                 CertificateService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
@@ -785,6 +849,10 @@ angular.module('app')
                 }
             }
 
+            $scope.add = function(){
+                $state.go('app.externalAdd');
+            }
+
             $scope.get = function () {
                 ExternalService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {
@@ -858,6 +926,10 @@ angular.module('app')
                 }
             }
 
+            $scope.add = function(){
+                $state.go('app.userAdd');
+            }
+
             $scope.get = function () {
                 UserService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {
@@ -920,6 +992,10 @@ angular.module('app')
                     $scope.sortKey = keyname;
                     $scope.reverse = false;
                 }
+            }
+
+            $scope.add = function(){
+                $state.go('app.profileAdd');
             }
 
             $scope.get = function () {
