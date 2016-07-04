@@ -16,24 +16,46 @@
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                     <div class="md-form-group float-label">
-                        <input class="md-input ng-pristine ng-seinvalid ng-invalid-required ng-touched" ng-model="store.reference"
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" name="reference" ng-model="store.reference"
                                ng-required="true" tabindex="102" aria-required="true" aria-invalid="true" style=""
-                               ng-class="{'b-b-danger':_form.error.reference && _form.error.reference.error && _form.error.reference.value==subsidiary.reference}" name="reference">
+                               ng-class="{'b-b-danger':_form.error.reference && _form.error.reference.error && _form.error.reference.value==store.reference}" name="reference">
                         <label><span class="font-xs text-danger-dk">*</span> Referencia
-                            &nbsp;<span class="label bg-danger pos-rlt m-r-xs" ng-show="_form.error.reference && _form.error.reference.error && _form.error.reference.value==subsidiary.reference"><b class="arrow left b-danger pull-in"></b>{{_form.error.reference.message}}</span>
+                            &nbsp;<span class="label bg-danger pos-rlt m-r-xs" ng-show="_form.error.reference && _form.error.reference.error && _form.error.reference.value==store.reference"><b class="arrow left b-danger pull-in"></b>{{_form.error.reference.message}}</span>
                         </label>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <label class="md-switch p-h-xs">
-                        <md-select ng-model="store.subsidiary" placeholder="Seleccione Sucursal" class="w-100">
-                            <md-option ng-repeat="subsidiary in subsidiaries|orderBy:'name'" ng-value="subsidiary.id">{{ subsidiary.name }} ({{ subsidiary.reference}})</md-option>
+                    <label class="md-switch p-h-xs w-100">
+                        <md-select ng-model="store.subsidiary" name="subsidiary" class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched w-100"
+                                   placeholder="Seleccione Sucursal" ng-required="true" tabindex="103" aria-required="true" aria-invalid="true">
+                            <md-option class="w-100" ng-repeat="subsidiary in subsidiaries|orderBy:'name'" ng-value="subsidiary.id">{{ subsidiary.name }} ({{ subsidiary.reference}})</md-option>
                         </md-select>
                     </label>
                 </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="md-form-group float-label">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="store.address" tabindex="104" name="address">
+                        <label>Dirección</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="md-form-group float-label">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="store.phone" tabindex="105"
+                               ng-class="{'b-b-danger':_form.error.reference && _form.error.reference.error && _form.error.reference.value==subsidiary.reference}"
+                               name="phone">
+                        <label>Teléfono</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="md-form-group float-label">
+                        <textarea class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="store.notes" tabindex="106"
+                                 name="notes" rows="2"></textarea>
+                        <label>Notas</label>
+                    </div>
+                </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-danger-dk font-sm">
                     <label class="md-switch">
-                        <input type="checkbox" ng-model="store.active" checked>
+                        <input type="checkbox" ng-model="store.active" checked tabindex="107">
                         <i class="green"></i>
                         <span ng-class="{'text-success':store.active, 'text-warning-dk':!store.active}">
                             <span ng-show="store.active">Activo</span>
@@ -58,8 +80,8 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-right">
-                    <button class="btn btn-default" ng-click="_goBack()">Volver</button>
-                    <button class="btn btn-addon btn-primary" ng-disabled="form.$invalid || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Sucursal</button>
+                    <button class="btn btn-default" ng-click="_goBack()" type="button">Volver</button>
+                    <button class="btn btn-addon btn-primary" ng-disabled="form.$invalid || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Bodega/Tienda</button>
                 </div>
             </div>
         </form>

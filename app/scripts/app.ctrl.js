@@ -229,8 +229,8 @@ angular.module('app')
             }
 
         }])
-    .controller('SubsidiaryCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'StoreService', 'APPLICATION',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, StoreService, APPLICATION) {
+    .controller('SubsidiaryCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'SubsidiaryService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, SubsidiaryService, APPLICATION) {
 
             $scope.items = [];
             $scope._item = null;
@@ -306,19 +306,15 @@ angular.module('app')
             $scope.get();
 
         }])
-    .controller('SubsidiaryAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'StoreService', 'APPLICATION',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, StoreService, APPLICATION) {
+    .controller('SubsidiaryAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'SubsidiaryService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, SubsidiaryService, APPLICATION) {
             $scope.subsidiary = {name:"", reference:"", active:true};
             $scope.requesting = false;
 
+            //Obligatory fields
             $scope._form = {
                 error : {
-                    general: false,
-                    name: false,
                     reference: false
-                },
-                success: {
-                    general: false
                 }
             };
 
@@ -327,19 +323,16 @@ angular.module('app')
                 , function(response){
                     debugger;
                     Flash.create('success',response.message);
-                    //$scope._form.success.general = {message: response.message};
                     $scope.subsidiary = {name:"", reference:"", active:true};
                     $scope.form.$setPristine();
-                    //setTimeout(function(){$scope._form.success.general = false;}, 5000);
                 }, function(errorResponse){
+                    debugger;
+                    Flash.create('danger',errorResponse.data.message);
                     if(errorResponse.status == 406){ //validations error
                         if(errorResponse.data.data.fields.reference){
-                            //$scope._form.error.reference = errorResponse.data.data.fields.reference;
-                            Flash.create('danger',errorResponse.data.data.fields.reference);
+                            $scope._form.error.reference = errorResponse.data.data.fields.reference;
                         }
                     }
-                    //$scope._form.error.general = {message: errorResponse.data.message};
-                    //setTimeout(function(){$scope._form.error.general = false;}, 5000);
                 });
             }
 
@@ -362,7 +355,6 @@ angular.module('app')
                     } else {
                         $scope.sortKey = 'id';
                         $scope.reverse = false;
-                        s
                     }
                 } else {
                     $scope.sortKey = keyname;
@@ -428,10 +420,10 @@ angular.module('app')
         }])
     .controller('StoreAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'StoreService', 'SubsidiaryService', 'APPLICATION',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, StoreService, SubsidiaryService, APPLICATION) {
-            $scope.store = {name:"", reference:"", subsidiary:null, active:true};
+            $scope.store = {name:"", reference:"", subsidiary:null, address:"", phone:"", notes:"", active:true};
             $scope.subsidiaries = [];
             $scope.requesting = true;
-            StoreService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+            SubsidiaryService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                 , function (response) {
                     $scope.subsidiaries = response;
                     $scope.requesting = false;
@@ -444,8 +436,6 @@ angular.module('app')
 
             $scope._form = {
                 error : {
-                    general: false,
-                    name: false,
                     reference: false,
                     subsidiary: false,
                 },
@@ -455,16 +445,19 @@ angular.module('app')
             };
 
             $scope._create = function(){
-                StoreService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.subsidiary
+                debugger;
+                StoreService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.store
                     , function(response){
                         debugger;
                         Flash.create('success',response.message);
-                        $scope.store = {name:"", reference:"", subsidiary:null, active:true};
+                        $scope.store = {name:"", reference:"", subsidiary:null, address:"", phone:"", notes:"", active:true};
                         $scope.form.$setPristine();
                     }, function(errorResponse){
+                        debugger;
+                        Flash.create('danger',errorResponse.data.message);
                         if(errorResponse.status == 406){ //validations error
                             if(errorResponse.data.data.fields.reference){
-                                Flash.create('danger',errorResponse.data.data.fields.reference);
+                                $scope._form.error.reference = errorResponse.data.data.fields.reference;
                             }
                         }
                     });
