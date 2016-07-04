@@ -999,6 +999,56 @@ angular.module('app')
             $scope.get();
 
         }])
+    .controller('UserAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'ProfileService', 'UserService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, ProfileService, UserService, APPLICATION) {
+            $scope.user = {username:"", password:"", repeatPassword:"", profile:null, firstname:"", lastname:"", email:"", active:true};
+            $scope.profiles = [];
+            $scope.requesting = true;
+            ProfileService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                , function (response) {
+                    $scope.profiles = response;
+                    $scope.requesting = false;
+                }
+                , function (errorResponse) {
+                    debugger;
+                    Flash.create('danger',errorResponse);
+                    $scope.requesting = false;
+                });
+
+            $scope._form = {
+                error : {
+                    username: false,
+                    profile: false,
+                    repeatPassword: { message: APPLICATION.ENUM.MESSAGES.USER.PASSWORDS_NOT_EQUAL }
+                },
+                success: {
+                    general: false
+                }
+            };
+
+            $scope._create = function(){
+                debugger;
+                UserService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.user
+                    , function(response){
+                        debugger;
+                        Flash.create('success',response.message);
+                        $scope.user = {username:"", password:"", repeatPassword:"", profile:null, firstname:"", lastname:"", email:"", active:true};
+                        $scope.form.$setPristine();
+                    }, function(errorResponse){
+                        debugger;
+                        Flash.create('danger',errorResponse.data.message);
+                        if(errorResponse.status == 406){ //validations error
+                            if(errorResponse.data.data.fields.username){
+                                $scope._form.error.username = errorResponse.data.data.fields.username;
+                            }
+                        }
+                    });
+            }
+
+            $scope._goBack = function(){
+                $state.go('app.user');
+            }
+        }])
     .controller('ProfileCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'ProfileService', 'APPLICATION',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, ProfileService, APPLICATION) {
 

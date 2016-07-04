@@ -122,6 +122,12 @@ angular.module('app')
                         data: {title: 'Usuarios'},
                         controller: 'UserCtrl'
                     })
+                    .state('app.userAdd', {
+                        url: '/user/add',
+                        templateUrl: 'views/modules/user/edit.html',
+                        data: {title: 'Nuevo Usuario'},
+                        controller: 'UserAddCtrl'
+                    })
                     .state('app.profile', {
                         url: '/profile',
                         templateUrl: 'views/modules/profile/index.html',
