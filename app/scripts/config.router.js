@@ -110,6 +110,12 @@ angular.module('app')
                         data: {title: 'Proveedores/Clientes'},
                         controller: 'ExternalCtrl'
                     })
+                    .state('app.externalAdd', {
+                        url: '/external/add',
+                        templateUrl: 'views/modules/external/edit.html',
+                        data: {title: 'Nuevo Cliente/Proveedor'},
+                        controller: 'ExternalAddCtrl'
+                    })
                     .state('app.user', {
                         url: '/user',
                         templateUrl: 'views/modules/user/index.html',

@@ -897,6 +897,40 @@ angular.module('app')
             $scope.get();
 
         }])
+    .controller('ExternalAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'ExternalService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, ExternalService, APPLICATION) {
+            $scope.external = {name:"", address:"", phone:"", notes:"", contact:"", active:true};
+            $scope.requesting = false;
+
+            //Obligatory fields
+            $scope._form = {
+                error : {
+                    name: false
+                }
+            };
+
+            $scope._create = function(){
+                ExternalService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.external
+                    , function(response){
+                        debugger;
+                        Flash.create('success',response.message);
+                        $scope.external = {name:"", address:"", phone:"", notes:"", contact:"", active:true};
+                        $scope.form.$setPristine();
+                    }, function(errorResponse){
+                        debugger;
+                        Flash.create('danger',errorResponse.data.message);
+                        if(errorResponse.status == 406){ //validations error
+                            if(errorResponse.data.data.fields.name){
+                                $scope._form.error.name = errorResponse.data.data.fields.name;
+                            }
+                        }
+                    });
+            }
+
+            $scope._goBack = function(){
+                $state.go('app.external');
+            }
+        }])
     .controller('UserCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'UserService', 'APPLICATION',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, UserService, APPLICATION) {
 

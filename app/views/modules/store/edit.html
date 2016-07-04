@@ -26,9 +26,10 @@
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <label class="md-switch p-h-xs w-100">
-                        <md-select ng-model="store.subsidiary" name="subsidiary" class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched w-100"
+                        <span class='font-xs text-danger-dk f-l'>*</span>
+                        <md-select ng-model="store.subsidiary" name="subsidiary" class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched w-auto"
                                    placeholder="Seleccione Sucursal" ng-required="true" tabindex="103" aria-required="true" aria-invalid="true">
-                            <md-option class="w-100" ng-repeat="subsidiary in subsidiaries|orderBy:'name'" ng-value="subsidiary.id">{{ subsidiary.name }} ({{ subsidiary.reference}})</md-option>
+                            <md-option ng-repeat="subsidiary in subsidiaries|orderBy:'name'" ng-value="subsidiary.id">{{ subsidiary.name }} ({{ subsidiary.reference}})</md-option>
                         </md-select>
                     </label>
                 </div>
