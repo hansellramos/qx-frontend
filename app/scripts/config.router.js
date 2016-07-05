@@ -134,6 +134,12 @@ angular.module('app')
                         data: {title: 'Perfiles'},
                         controller: 'ProfileCtrl'
                     })
+                    .state('app.profileAdd', {
+                        url: '/profile/add',
+                        templateUrl: 'views/modules/profile/edit.html',
+                        data: {title: 'Nuevo Perfil'},
+                        controller: 'ProfileAddCtrl'
+                    })
                     .state('app.analysis', {
                         url: '/analysis',
                         templateUrl: 'views/pages/dashboard.analysis.html',

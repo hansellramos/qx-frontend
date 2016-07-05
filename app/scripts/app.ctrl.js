@@ -1117,4 +1117,51 @@ angular.module('app')
             $scope.get();
 
         }])
+    .controller('ProfileAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'PermissionsService', 'ProfileService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, PermissionsService, ProfileService, APPLICATION) {
+            $scope.profile = {name:"", description:"", permissions:{}, active:true};
+            $scope.permissions = [];
+            $scope.requesting = true;
+            PermissionsService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                , function (response) {
+                    $scope.permissions = response;
+                    $scope.requesting = false;
+                }
+                , function (errorResponse) {
+                    debugger;
+                    Flash.create('danger',errorResponse);
+                    $scope.requesting = false;
+                });
+
+            $scope._form = {
+                error : {
+                    name: false,
+                },
+                success: {
+                    general: false
+                }
+            };
+
+            $scope._create = function(){
+                debugger;
+                ProfileService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.profile
+                    , function(response){
+                        debugger;
+                        Flash.create('success',response.message);
+                        $scope.profile = {name:"", description:"", permissions:{}, active:true};
+                        $scope.form.$setPristine();
+                    }, function(errorResponse){
+                        debugger;
+                        Flash.create('danger',errorResponse.data.message);
+                        if(errorResponse.status == 406){ //validations error
+
+                        }
+                    });
+            }
+
+            $scope._goBack = function(){
+                $state.go('app.user');
+            }
+        }])
+
 ;

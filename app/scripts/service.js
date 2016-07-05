@@ -46,4 +46,8 @@ angular
         return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.PROFILE + ':token/:id'
             , {token: '@token', id: '@id'})
     }])
+    .factory('PermissionsService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
+        return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.PERMISSIONS + ':token/:id'
+            , {token: '@token', id: '@id'})
+    }])
 ;
