@@ -104,6 +104,12 @@ angular.module('app')
                         templateUrl: 'views/modules/certificate/print.html',
                         controller: 'CertificatePrintController'
                     })
+                    .state('app.certificateAdd', {
+                        url: '/certificate/add',
+                        templateUrl: 'views/modules/certificate/edit.html',
+                        data: {title: 'Nuevo Certificado de Calidad'},
+                        controller: 'CertificateAddCtrl'
+                    })
                     .state('app.external', {
                         url: '/external',
                         templateUrl: 'views/modules/external/index.html',

@@ -1,0 +1,92 @@
+<flash-message duration="10000" show-close="true"></flash-message>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Crear Certificado
+    </div>
+    <div class="panel-body">
+        <form name="form" novalidate ng-submit="_create();">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <md-select ng-model="certificate.subsidiary" placeholder="Seleccione Sucursal" ng-change="updateStores()">
+                        <md-option ng-repeat="subsidiary in subsidiaries" ng-value="subsidiary">{{ subsidiary.name }} ({{subsidiary.reference}})</md-option>
+                    </md-select>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <md-select ng-model="store" placeholder="Seleccione Tienda/Bodega" ng-change="updateProducts()">
+                        <md-option ng-repeat="store in stores|orderBy:'+name'" ng-value="store">{{ store.name }} ({{store.reference}})</md-option>
+                    </md-select>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <md-select ng-model="certificate.product" placeholder="Seleccione Producto" ng-change="updateProperties()">
+                        <md-option ng-repeat="product in products|orderBy:'+name'" ng-value="product">{{ product.name }} ({{product.reference}})</md-option>
+                    </md-select>
+                </div>
+            </div>
+            <div class="row p-v-sm" ng-show="certificate.product">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <fieldset>
+                        <legend>
+                            <h5>Propiedades a mostrar del Producto</h5>
+                        </legend>
+                        <table class="table table-striped table-scroll-x">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th ng-repeat="property in certificate.product.properties">
+                                        <label class="md-switch">
+                                            <input type="checkbox" ng-model="certificate.properties[property.id]" ng-change="_updateCertificateProperties()">
+                                            <i class="green"></i>
+                                        <span ng-class="{'text-success':certificate.properties[property.id], 'text-warning-dk':!certificate.properties[property.id]}">
+                                            <span ng-show="certificate.properties[property.id]">Visible</span>
+                                            <span ng-show="!certificate.properties[property.id]">Invisible</span>
+                                        </span>
+                                        </label>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th>Lote</th>
+                                    <th ng-repeat="property in certificate.product.properties" class="text-capitalize">
+                                        <div ng-bind-html="property.name"></div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </fieldset>
+                </div>
+                {{certificate.properties}}
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="md-form-group float-label">
+                        <textarea class="md-input ng-invalid ng-invalid-required ng-touched"
+                                  ng-model="certificate.clause" tabindex="107"
+                                  name="clause" rows="2"></textarea>
+                        <label>Cláusula</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-danger-dk text-right font-sm">
+                    <span class="font-xs text-danger-dk">*</span> Campos Obligatorios
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="row">
+                        <div ng-show="_form.error.general" class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-danger">
+                            <i class="icon fa fa-remove"></i> {{_form.error.general.message}}
+                        </div>
+                        <div ng-show="_form.success.general" class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-success">
+                            <i class="icon fa fa-check"></i> {{_form.success.general.message}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-right">
+                    <button class="btn btn-default" ng-click="_goBack()" type="button">Volver</button>
+                    <button class="btn btn-addon btn-primary" ng-disabled="form.$invalid || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Perfil</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

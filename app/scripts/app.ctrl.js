@@ -801,6 +801,112 @@ angular.module('app')
             $scope.get();
 
         }])
+    .controller('CertificateAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'SubsidiaryService', 'StoreService', 'ProductService', 'RecordService', 'ExternalService', 'CertificateService', 'APPLICATION', '$sce',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, SubsidiaryService, StoreService, ProductService, RecordService, ExternalService, CertificateService, APPLICATION, $sce) {
+            $scope.certificate = {subsidiary:null, product:null, properties:[], values:[], customer:null, quantity:0
+                , presentation:"", remission:"", clause:APPLICATION.ENUM.MESSAGES.CERTIFICATE.DEFAULT_CLAUSE, active:true};
+            $scope.subsidiaries = [];
+            $scope.stores = [];
+            $scope._stores = [];
+            $scope.store = null;
+            $scope.products = [];
+            $scope._products = [];
+            $scope.properties = [];
+            $scope.records = [];
+            $scope.externals = [];
+            $scope.requesting = true;
+            SubsidiaryService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                , function (response) {$scope.subsidiaries = response;$scope.requesting = false;
+                }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+            });
+            StoreService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                , function (response) {$scope._stores = response;$scope.requesting = false;
+                }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+            });
+            ProductService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                , function (response) {
+                    for (var i = 0; i < response.length; i++) {
+                        var ps = [];
+                        for(var j = 0; j < response[i].properties.length;j++){
+                            ps.push({id:response[i].properties[j].id, name:$sce.trustAsHtml(response[i].properties[j].name)});
+                        }
+                        var p = {_id:response[i]._id, name:response[i].name, reference:response[i].reference, store:response[i].store, properties:ps};
+                        $scope._products.push(p);
+                    }
+                    $scope.requesting = false;
+                }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+            });
+
+            $scope.updateStores = function(){
+                $scope.stores = [];
+                for(var i in $scope._stores){
+                    var _store = $scope._stores[i];
+                    if(_store.subsidiary[0].id===$scope.certificate.subsidiary.id){
+                        $scope.stores.push(_store);
+                    }
+                }
+            };
+
+            $scope.updateProducts = function(){
+                $scope.products = [];
+                for(var i in $scope._products){
+                    var _product = $scope._products[i];
+                    if(_product.store[0]._id===$scope.store._id){
+                        $scope.products.push(_product);
+                    }
+                }
+            };
+
+            $scope.updateProperties = function(){
+                $scope.certificate.properties = [];
+                for(var i in $scope.certificate.product.properties){
+                    var _p = $scope.certificate.product.properties[i];
+                    $scope.certificate.properties[_p.id] = true;
+                }
+            }
+
+            $scope._updateCertificateProperties = function(){
+
+            }
+
+            $scope._form = {
+                error : {
+                    name: false,
+                },
+                success: {
+                    general: false
+                }
+            };
+
+            $scope._updateProperties = function(){
+                for(var i in  $scope.profile.permissions){
+                    if($scope.profile.permissions[i]===false){
+                        delete $scope.profile.permissions[i];
+                    }
+                }
+            }
+
+            $scope._create = function(){
+                debugger;
+                ProfileService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.profile
+                    , function(response){
+                        debugger;
+                        Flash.create('success',response.message);
+                        $scope.profile = {name:"", description:"", permissions:{}, active:true};
+                        $scope.form.$setPristine();
+                    }, function(errorResponse){
+                        debugger;
+                        Flash.create('danger',errorResponse.data.message);
+                        if(errorResponse.status == 406){ //validations error
+
+                        }
+                    });
+            }
+
+            $scope._goBack = function(){
+                $state.go('app.certificate');
+            }
+        }])
     .controller('CertificatePrintController', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'CertificateService', 'APPLICATION',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, CertificateService, APPLICATION) {
             $scope.item = null;
