@@ -163,7 +163,7 @@ angular.module('app')
                                 , function (response) {
                                     localStorage.setItem(APPLICATION.CONFIG.AUTH.TOKEN_DATA, JSON.stringify(response.data.token));
                                     localStorage.setItem(APPLICATION.CONFIG.AUTH.USER_DATA, JSON.stringify(response.data.token.user));
-                                    Permissions.setPermissions(response.data.token.user.permissions);
+                                    Permissions.setPermissions(response.data.token.user.profile[0].permissions);
                                     Permissions.setIsAdmin(response.data.token.user.isAdmin);
                                     $scope.app.auth = getCurrentUser();
                                 }, function (errorResponse) {
@@ -1142,6 +1142,14 @@ angular.module('app')
                 }
             };
 
+            $scope._updatePermissions = function(){
+                for(var i in  $scope.profile.permissions){
+                    if($scope.profile.permissions[i]===false){
+                        delete $scope.profile.permissions[i];
+                    }
+                }
+            }
+
             $scope._create = function(){
                 debugger;
                 ProfileService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.profile
@@ -1160,7 +1168,7 @@ angular.module('app')
             }
 
             $scope._goBack = function(){
-                $state.go('app.user');
+                $state.go('app.profile');
             }
         }])
 

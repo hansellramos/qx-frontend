@@ -8,20 +8,20 @@
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                     <div class="md-form-group float-label">
-                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="profile.name"
-                               ng-required="true" ng-minlength="3" tabindex="101" autofocus aria-required="true" aria-invalid="true" style=""
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                               ng-model="profile.name"
+                               ng-required="true" ng-minlength="3" tabindex="101" autofocus aria-required="true"
+                               aria-invalid="true" style=""
                                name="name">
                         <label><span class="font-xs text-danger-dk">*</span> Nombre</label>
                     </div>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="md-form-group float-label">
-                        <input class="md-input ng-pristine ng-seinvalid ng-invalid-required ng-touched" ng-model="profile.reference"
-                               ng-required="true" tabindex="102" aria-required="true" aria-invalid="true" style=""
-                               ng-class="{'b-b-danger':_form.error.reference && _form.error.reference.error && _form.error.reference.value==profile.reference}" name="reference">
-                        <label><span class="font-xs text-danger-dk">*</span> Referencia
-                            &nbsp;<span class="label bg-danger pos-rlt m-r-xs" ng-show="_form.error.reference && _form.error.reference.error && _form.error.reference.value==profile.reference"><b class="arrow left b-danger pull-in"></b>{{_form.error.reference.message}}</span>
-                        </label>
+                        <textarea class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                                  ng-model="profile.description" tabindex="107"
+                                  name="description" rows="2"></textarea>
+                        <label>Descripción</label>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -38,6 +38,45 @@
                     <span class="font-xs text-danger-dk">*</span> Campos Obligatorios
                 </div>
             </div>
+            <div class="row p-v-sm">
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-lg-offset-2 col-md-offset-2">
+                    <fieldset>
+                        <legend>
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-6 col-md-8 col-lg-8">
+                                    <h4>Permisos</h4>
+                                </div>
+                                <div class="col-xs-6 col-sm-6 col-md-8 col-lg-4 text-right">
+                                    <div class="input-group">
+                                        <input type="search" ng-model="_search" placeholder="Filtrar" class="form-control">
+                                        <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button" ng-click="_search = ''">
+                                            <i class="icon fa fa-remove"></i>
+                                        </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </legend>
+                        <ul class="list-group list-group-alt">
+                            <li class="list-group-item" ng-repeat="permission in permissions|filter:_search:'strict'">
+                                {{permission.name}}<br/>
+                                <small>{{permission.description}}</small>
+                                <span class="pull-right">
+                                    <label class="md-switch">
+                                        <input type="checkbox" ng-model="profile.permissions[permission.reference]" ng-change="_updatePermissions()">
+                                        <i class="green"></i>
+                                        <span ng-class="{'text-success':profile.permissions[permission.reference], 'text-warning-dk':!profile.permissions[permission.reference]}">
+                                            <span ng-show="profile.permissions[permission.reference]">Activo</span>
+                                            <span ng-show="!profile.permissions[permission.reference]">Inactivo</span>
+                                        </span>
+                                    </label>
+                                </span>
+                            </li>
+                        </ul>
+                    </fieldset>
+                </div>
+            </div>
             <br />
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -51,8 +90,8 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-right">
-                    <button class="btn btn-default" ng-click="_goBack()" type="button>Volver</button>
-                    <button class="btn btn-addon btn-primary" ng-disabled="form.$invalid || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Sucursal</button>
+                    <button class="btn btn-default" ng-click="_goBack()" type="button">Volver</button>
+                    <button class="btn btn-addon btn-primary" ng-disabled="form.$invalid || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Perfil</button>
                 </div>
             </div>
         </form>
