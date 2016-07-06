@@ -7,46 +7,81 @@
         <form name="form" novalidate ng-submit="_create();">
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                    <md-select ng-model="certificate.subsidiary" placeholder="Seleccione Sucursal" ng-change="updateStores()">
-                        <md-option ng-repeat="subsidiary in subsidiaries" ng-value="subsidiary">{{ subsidiary.name }} ({{subsidiary.reference}})</md-option>
-                    </md-select>
+                    <div class="md-select" ng-class="{'selected':certificate.subsidiary}">
+                        <label>Sucursal</label>
+                        <select name="subsidiary" class="md-input" ng-model="certificate.subsidiary" ng-change="updateStores()">
+                            <option ng-repeat="subsidiary in subsidiaries|orderBy:'+name'" ng-value="subsidiary.id" label="{{ subsidiary.name }} ({{subsidiary.reference}})">
+                        </select>
+                    </div>
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                    <md-select ng-model="store" placeholder="Seleccione Tienda/Bodega" ng-change="updateProducts()">
-                        <md-option ng-repeat="store in stores|orderBy:'+name'" ng-value="store">{{ store.name }} ({{store.reference}})</md-option>
-                    </md-select>
+                    <div class="md-select" ng-class="{'selected':store}">
+                        <label>Tienda/Bodega</label>
+                        <select class="md-input" ng-model="store" name="store" ng-change="updateProducts()">
+                            <option ng-repeat="store in stores|orderBy:'+name'" ng-value="store._id" label="{{ store.name }} ({{store.reference}})">
+                            </option>
+                        </select>
+                        <ui-select ng-model="_store" theme="bootstrap" ng-change="updateProducts()">
+                            <ui-select-match placeholder="Seleccione Tienda/Bodega...">
+                                {{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="_store._id as _store in stores|orderBy:'+name' | filter: $select.search">
+                                <div ng-bind-html="_store.name+' ('+_store.reference+')' | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                    <md-select ng-model="certificate.product" placeholder="Seleccione Producto" ng-change="updateProperties()">
-                        <md-option ng-repeat="product in products|orderBy:'+name'" ng-value="product">{{ product.name }} ({{product.reference}})</md-option>
-                    </md-select>
+                    <div class="md-select" ng-class="{'selected':certificate.product}">
+                        <label>Producto</label>
+                        <ui-select ng-model="certificate.product" theme="bootstrap" ng-change="updateProperties()">
+                            <ui-select-match placeholder="Seleccione Producto...">
+                                {{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="product.id as product in products|orderBy:'+name' | filter: $select.search">
+                                <div ng-bind-html="product.name+' ('+product.reference+')' | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                {{certificate.product}}
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <div class="md-select" ng-class="{'selected':certificate.customer}">
+                        <label>Cliente</label>
+                        <ui-select ng-model="certificate.customer" theme="bootstrap">
+                            <ui-select-match placeholder="Seleccione Cliente...">
+                                {{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="customer in externals|orderBy:'+name' | filter: $select.search">
+                                <div ng-bind-html="customer.name | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
                 </div>
             </div>
             <div class="row p-v-sm" ng-show="certificate.product">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <fieldset>
-                        <legend>
+                        <legend class="m-v-xs">
                             <h5>Propiedades a mostrar del Producto</h5>
                         </legend>
                         <table class="table table-striped table-scroll-x">
                             <thead>
                                 <tr>
-                                    <th></th>
-                                    <th ng-repeat="property in certificate.product.properties">
+                                    <th><span class="p-v-sm">Lote</span><br /><br /></th>
+                                    <th><span class="p-v-sm">Elaboración</span><br /><br /></th>
+                                    <th><span class="p-v-sm">Vencimiento</span><br /><br /></th>
+                                    <th><span class="p-v-sm">Cantidad</span><br /><br /></th>
+                                    <th ng-repeat="property in product.properties" class="text-capitalize">
+                                        <div ng-bind-html="property.name" class="p-v-sm"></div>
                                         <label class="md-switch">
                                             <input type="checkbox" ng-model="certificate.properties[property.id]" ng-change="_updateCertificateProperties()">
                                             <i class="green"></i>
-                                        <span ng-class="{'text-success':certificate.properties[property.id], 'text-warning-dk':!certificate.properties[property.id]}">
-                                            <span ng-show="certificate.properties[property.id]">Visible</span>
-                                            <span ng-show="!certificate.properties[property.id]">Invisible</span>
-                                        </span>
+                                            <span ng-class="{'text-success':certificate.properties[property.id], 'text-warning-dk':!certificate.properties[property.id]}">
+                                                <span ng-show="certificate.properties[property.id]">Visible</span>
+                                                <span ng-show="!certificate.properties[property.id]">Invisible</span>
+                                            </span>
                                         </label>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th>Lote</th>
-                                    <th ng-repeat="property in certificate.product.properties" class="text-capitalize">
-                                        <div ng-bind-html="property.name"></div>
                                     </th>
                                 </tr>
                             </thead>
@@ -55,13 +90,12 @@
                         </table>
                     </fieldset>
                 </div>
-                {{certificate.properties}}
             </div>
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="md-form-group float-label">
+                    <div class="md-textarea" ng-class="{'selected':certificate.clause}">
                         <textarea class="md-input ng-invalid ng-invalid-required ng-touched"
-                                  ng-model="certificate.clause" tabindex="107"
+                                  ng-model="certificate.clause" tabindex="107" ng-required="true"
                                   name="clause" rows="2"></textarea>
                         <label>Cláusula</label>
                     </div>

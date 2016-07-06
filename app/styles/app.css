@@ -6367,6 +6367,48 @@ a.text-dark:hover {
   float: right;
 }
 
+.md-select, .md-textarea{
+  padding: 18px 2px 24px;
+}
+.md-select select, .md-textarea textarea{
+  width:100%;
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.12);
+}
+.md-select select option{
+  height: 48px;
+}
+.md-select.selected label,
+.md-textarea.selected label{
+  top: 0px;
+  left: 20px;
+  font-size: 0.85em;
+  color: #3f51b5;
+  opacity: 1;
+}
+.md-select label:before{
+  content: 'Seleccione ';
+}
+.md-select label:after{
+  content: '...';
+}
+.md-select.selected label:before,
+.md-select.selected label:after{
+  content: '';
+}
+.md-select label,
+.md-textarea label{
+  opacity: 0.5;
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  font-size: 1em;
+  z-index: 0;
+  display: inline-block;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
 @media (max-width: 991px) {
   .w-auto-sm {
     width: auto;

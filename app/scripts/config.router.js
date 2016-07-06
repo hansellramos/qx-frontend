@@ -108,7 +108,8 @@ angular.module('app')
                         url: '/certificate/add',
                         templateUrl: 'views/modules/certificate/edit.html',
                         data: {title: 'Nuevo Certificado de Calidad'},
-                        controller: 'CertificateAddCtrl'
+                        controller: 'CertificateAddCtrl',
+                        resolve: load(['ui.select'])
                     })
                     .state('app.external', {
                         url: '/external',

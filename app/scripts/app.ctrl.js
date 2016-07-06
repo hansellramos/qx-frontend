@@ -811,6 +811,7 @@ angular.module('app')
             $scope.store = null;
             $scope.products = [];
             $scope._products = [];
+            $scope.product = null;
             $scope.properties = [];
             $scope.records = [];
             $scope.externals = [];
@@ -824,16 +825,11 @@ angular.module('app')
                 }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
             });
             ProductService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
-                , function (response) {
-                    for (var i = 0; i < response.length; i++) {
-                        var ps = [];
-                        for(var j = 0; j < response[i].properties.length;j++){
-                            ps.push({id:response[i].properties[j].id, name:$sce.trustAsHtml(response[i].properties[j].name)});
-                        }
-                        var p = {_id:response[i]._id, name:response[i].name, reference:response[i].reference, store:response[i].store, properties:ps};
-                        $scope._products.push(p);
-                    }
-                    $scope.requesting = false;
+                , function (response) {$scope._products = response;$scope.requesting = false;
+                }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+            });
+            ExternalService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                , function (response) {$scope.externals = response;$scope.requesting = false;
                 }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
             });
 
@@ -841,7 +837,7 @@ angular.module('app')
                 $scope.stores = [];
                 for(var i in $scope._stores){
                     var _store = $scope._stores[i];
-                    if(_store.subsidiary[0].id===$scope.certificate.subsidiary.id){
+                    if(_store.subsidiary && _store.subsidiary.length>0 &&  _store.subsidiary[0].id==$scope.certificate.subsidiary){
                         $scope.stores.push(_store);
                     }
                 }
@@ -851,16 +847,22 @@ angular.module('app')
                 $scope.products = [];
                 for(var i in $scope._products){
                     var _product = $scope._products[i];
-                    if(_product.store[0]._id===$scope.store._id){
+                    if(_product.store && _product.store.length>0 && _product.store[0]._id==$scope.store){
                         $scope.products.push(_product);
                     }
                 }
             };
 
             $scope.updateProperties = function(){
+                $scope.product = null;
+                for(var i in $scope._products){
+                    if($scope._products[i].id ==$scope.certificate.product){
+                        $scope.product = $scope._products[i];
+                    }
+                }
                 $scope.certificate.properties = [];
-                for(var i in $scope.certificate.product.properties){
-                    var _p = $scope.certificate.product.properties[i];
+                for(var i in $scope.product.properties){
+                    var _p = $scope.product.properties[i];
                     $scope.certificate.properties[_p.id] = true;
                 }
             }
