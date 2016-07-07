@@ -6,8 +6,30 @@
     <div class="panel-body">
         <form name="form" novalidate ng-submit="_create();">
             <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+                    <div class="qmd-input"  ng-class="{'selected':certificate.date}">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                               ng-model="certificate.date" type="date"
+                               ng-required="true" ng-minlength="3" tabindex="101" autofocus aria-required="true"
+                               aria-invalid="true" style=""
+                               name="date">
+                        <label><span class="font-xs text-danger-dk">*</span> Fecha</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+                    <div class="qmd-input"  ng-class="{'selected':certificate.date}">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                               ng-model="certificate.date" type="time"
+                               ng-required="true" ng-minlength="3" tabindex="101" autofocus aria-required="true"
+                               aria-invalid="true" style=""
+                               name="date">
+                        <label><span class="font-xs text-danger-dk">*</span> Hora</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                    <div class="md-select" ng-class="{'selected':certificate.subsidiary}">
+                    <div class="qmd-select" ng-class="{'selected':certificate.subsidiary}">
                         <label>Sucursal</label>
                         <select name="subsidiary" class="md-input" ng-model="certificate.subsidiary" ng-change="updateStores()">
                             <option ng-repeat="subsidiary in subsidiaries|orderBy:'+name'" ng-value="subsidiary.id" label="{{ subsidiary.name }} ({{subsidiary.reference}})">
@@ -15,7 +37,7 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                    <div class="md-select" ng-class="{'selected':store}">
+                    <div class="qmd-select" ng-class="{'selected':store}">
                         <label>Tienda/Bodega</label>
                         <select class="md-input" ng-model="store" name="store" ng-change="updateProducts()">
                             <option ng-repeat="store in stores|orderBy:'+name'" ng-value="store._id" label="{{ store.name }} ({{store.reference}})">
@@ -32,7 +54,7 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                    <div class="md-select" ng-class="{'selected':certificate.product}">
+                    <div class="qmd-select" ng-class="{'selected':certificate.product}">
                         <label>Producto</label>
                         <ui-select ng-model="certificate.product" theme="bootstrap" ng-change="updateProperties()">
                             <ui-select-match placeholder="Seleccione Producto...">
@@ -44,9 +66,10 @@
                         </ui-select>
                     </div>
                 </div>
-                {{certificate.product}}
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                    <div class="md-select" ng-class="{'selected':certificate.customer}">
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="qmd-select" ng-class="{'selected':certificate.customer}">
                         <label>Cliente</label>
                         <ui-select ng-model="certificate.customer" theme="bootstrap">
                             <ui-select-match placeholder="Seleccione Cliente...">
@@ -56,6 +79,35 @@
                                 <div ng-bind-html="customer.name | highlight: $select.search"></div>
                             </ui-select-choices>
                         </ui-select>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="qmd-input"  ng-class="{'selected':certificate.remission}">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                               ng-model="certificate.remission"
+                               tabindex="101" autofocus aria-required="true"
+                               name="remission">
+                        <label>Remisión</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="qmd-input"  ng-class="{'selected':certificate.quantity!==''}">
+                        <input class=" md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                               ng-model="certificate.quantity" type="text"
+                               ng-required="true" ng-minlength="1" tabindex="101" autofocus aria-required="true"
+                               aria-invalid="true" style=""
+                               name="quantity">
+                        <label><span class="font-xs text-danger-dk">*</span> Cantidad</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="qmd-input"  ng-class="{'selected':certificate.presentation}">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                               ng-model="certificate.presentation"
+                               ng-required="true" ng-minlength="3" tabindex="101" autofocus aria-required="true"
+                               aria-invalid="true" style=""
+                               name="presentation">
+                        <label><span class="font-xs text-danger-dk">*</span> Presentación</label>
                     </div>
                 </div>
             </div>
@@ -93,7 +145,7 @@
             </div>
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="md-textarea" ng-class="{'selected':certificate.clause}">
+                    <div class="qmd-textarea" ng-class="{'selected':certificate.clause}">
                         <textarea class="md-input ng-invalid ng-invalid-required ng-touched"
                                   ng-model="certificate.clause" tabindex="107" ng-required="true"
                                   name="clause" rows="2"></textarea>

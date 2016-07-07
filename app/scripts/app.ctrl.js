@@ -803,7 +803,8 @@ angular.module('app')
         }])
     .controller('CertificateAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'SubsidiaryService', 'StoreService', 'ProductService', 'RecordService', 'ExternalService', 'CertificateService', 'APPLICATION', '$sce',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, SubsidiaryService, StoreService, ProductService, RecordService, ExternalService, CertificateService, APPLICATION, $sce) {
-            $scope.certificate = {subsidiary:null, product:null, properties:[], values:[], customer:null, quantity:0
+            var _date = new Date();_date.setMilliseconds(0);_date.setSeconds(0);
+            $scope.certificate = {date: _date, subsidiary:null, product:null, properties:[], values:[], customer:null, quantity:0
                 , presentation:"", remission:"", clause:APPLICATION.ENUM.MESSAGES.CERTIFICATE.DEFAULT_CLAUSE, active:true};
             $scope.subsidiaries = [];
             $scope.stores = [];

@@ -6367,37 +6367,43 @@ a.text-dark:hover {
   float: right;
 }
 
-.md-select, .md-textarea{
+.qmd-select
+, .qmd-textarea
+, .qmd-input{
   padding: 18px 2px 24px;
 }
-.md-select select, .md-textarea textarea{
+.qmd-select select
+, .qmd-textarea textarea
+, .qmd-input input{
   width:100%;
   background: transparent;
   border: 1px solid rgba(0,0,0,0.12);
 }
-.md-select select option{
+.qmd-select select option{
   height: 48px;
 }
-.md-select.selected label,
-.md-textarea.selected label{
+.qmd-select.selected label
+,.qmd-textarea.selected label
+,.qmd-input.selected label{
   top: 0px;
   left: 20px;
   font-size: 0.85em;
   color: #3f51b5;
   opacity: 1;
 }
-.md-select label:before{
+.qmd-select label:before{
   content: 'Seleccione ';
 }
-.md-select label:after{
+.qmd-select label:after{
   content: '...';
 }
-.md-select.selected label:before,
-.md-select.selected label:after{
+.qmd-select.selected label:before,
+.qmd-select.selected label:after{
   content: '';
 }
-.md-select label,
-.md-textarea label{
+.qmd-select label
+,.qmd-textarea label
+,.qmd-input label {
   opacity: 0.5;
   position: absolute;
   top: 24px;
