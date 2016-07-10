@@ -31,24 +31,25 @@
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                     <div class="qmd-select" ng-class="{'selected':certificate.subsidiary}">
                         <label>Sucursal</label>
-                        <select name="subsidiary" class="md-input" ng-model="certificate.subsidiary" ng-change="updateStores()">
-                            <option ng-repeat="subsidiary in subsidiaries|orderBy:'+name'" ng-value="subsidiary.id" label="{{ subsidiary.name }} ({{subsidiary.reference}})">
-                        </select>
+                        <ui-select name="subsidiary" ng-model="certificate.subsidiary" ng-change="updateStores()">
+                            <ui-select-match placeholder="Seleccione Sucursal...">
+                                {{$select.selected.name}} ({{$select.selected.reference}})
+                            </ui-select-match>
+                            <ui-select-choices repeat="subsidiary.id as subsidiary in subsidiaries|orderBy:'+name' | filter: $select.search">
+                                <div ng-bind-html="subsidiary.name+' ('+subsidiary.reference+')' | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                    <div class="qmd-select" ng-class="{'selected':store}">
+                    <div class="qmd-select" ng-class="{'selected':certificate.store}">
                         <label>Tienda/Bodega</label>
-                        <select class="md-input" ng-model="store" name="store" ng-change="updateProducts()">
-                            <option ng-repeat="store in stores|orderBy:'+name'" ng-value="store._id" label="{{ store.name }} ({{store.reference}})">
-                            </option>
-                        </select>
-                        <ui-select ng-model="_store" theme="bootstrap" ng-change="updateProducts()">
+                        <ui-select name="store" ng-model="certificate.store" ng-change="updateProducts()">
                             <ui-select-match placeholder="Seleccione Tienda/Bodega...">
-                                {{$select.selected.name}}
+                                {{$select.selected.name}} ({{$select.selected.reference}})
                             </ui-select-match>
-                            <ui-select-choices repeat="_store._id as _store in stores|orderBy:'+name' | filter: $select.search">
-                                <div ng-bind-html="_store.name+' ('+_store.reference+')' | highlight: $select.search"></div>
+                            <ui-select-choices repeat="store._id as store in stores|orderBy:'+name' | filter: $select.search">
+                                <div ng-bind-html="store.name+' ('+store.reference+')' | highlight: $select.search"></div>
                             </ui-select-choices>
                         </ui-select>
                     </div>
@@ -58,7 +59,7 @@
                         <label>Producto</label>
                         <ui-select ng-model="certificate.product" theme="bootstrap" ng-change="updateProperties()">
                             <ui-select-match placeholder="Seleccione Producto...">
-                                {{$select.selected.name}}
+                                {{$select.selected.name}} ({{$select.selected.reference}})
                             </ui-select-match>
                             <ui-select-choices repeat="product.id as product in products|orderBy:'+name' | filter: $select.search">
                                 <div ng-bind-html="product.name+' ('+product.reference+')' | highlight: $select.search"></div>
@@ -120,12 +121,42 @@
                         <table class="table table-striped table-scroll-x">
                             <thead>
                                 <tr>
-                                    <th><span class="p-v-sm">Lote</span><br /><br /></th>
-                                    <th><span class="p-v-sm">Elaboración</span><br /><br /></th>
-                                    <th><span class="p-v-sm">Vencimiento</span><br /><br /></th>
-                                    <th><span class="p-v-sm">Cantidad</span><br /><br /></th>
-                                    <th ng-repeat="property in product.properties" class="text-capitalize">
-                                        <div ng-bind-html="property.name" class="p-v-sm"></div>
+                                    <th><div class="p-v-sm">Lote</div><br /></th>
+                                    <th>
+                                        <div class="p-v-sm text-capitalize text-center">Fecha Elaboración</div>
+                                        <label class="md-switch text-capitalize text-center">
+                                            <input type="checkbox" ng-model="certificate.properties['elaborationDate']" ng-change="_updateCertificateProperties()">
+                                            <i class="green"></i>
+                                            <span ng-class="{'text-success':certificate.properties['elaborationDate'], 'text-warning-dk':!certificate.properties['elaborationDate']}">
+                                                <span ng-show="certificate.properties['elaborationDate']">Visible</span>
+                                                <span ng-show="!certificate.properties['elaborationDate']">Invisible</span>
+                                            </span>
+                                        </label>
+                                    </th>
+                                    <th>
+                                        <div class="p-v-sm text-capitalize text-center">Fecha Vencimiento</div>
+                                        <label class="md-switch">
+                                            <input type="checkbox" ng-model="certificate.properties['dueDate']" ng-change="_updateCertificateProperties()">
+                                            <i class="green"></i>
+                                            <span ng-class="{'text-success':certificate.properties['dueDate'], 'text-warning-dk':!certificate.properties['dueDate']}">
+                                                <span ng-show="certificate.properties['dueDate']">Visible</span>
+                                                <span ng-show="!certificate.properties['dueDate']">Invisible</span>
+                                            </span>
+                                        </label>
+                                    </th>
+                                    <th>
+                                        <div class="p-v-sm text-capitalize text-center">Cantidad</div>
+                                        <label class="md-switch">
+                                            <input type="checkbox" ng-model="certificate.properties['quantity']" ng-change="_updateCertificateProperties()">
+                                            <i class="green"></i>
+                                                <span ng-class="{'text-success':certificate.properties['quantity'], 'text-warning-dk':!certificate.properties['quantity']}">
+                                                    <span ng-show="certificate.properties['quantity']">Visible</span>
+                                                    <span ng-show="!certificate.properties['quantity']">Invisible</span>
+                                                </span>
+                                        </label>
+                                    </th>
+                                    <th ng-repeat="property in product.properties">
+                                        <div ng-bind-html="property.name" class="p-v-sm text-capitalize text-center"></div>
                                         <label class="md-switch">
                                             <input type="checkbox" ng-model="certificate.properties[property.id]" ng-change="_updateCertificateProperties()">
                                             <i class="green"></i>
@@ -138,10 +169,35 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <tr ng-repeat="item in certificate.values">
+                                    <td>{{item.reference}}</td>
+                                    <td>{{item.elaboration_date| date:'yyyy-MM-dd'}}</td>
+                                    <td>{{item.due_date| date:'yyyy-MM-dd'}}</td>
+                                    <td class="text-right">{{item.quantity|number:0}}</td>
+                                    <td ng-repeat="property in product.properties">
+                                        <span ng-repeat="p in item.properties" ng-show="p.property == property.id">{{p.value}}</span>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </fieldset>
                 </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="qmd-input" ng-class="{'selected':form.record}">
+                        <ui-select name="record" ng-model="form.record" theme="bootstrap" ng-change="updateValues()">
+                            <ui-select-match placeholder="">
+                                {{$select.selected.reference}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="r in records|orderBy:'+name' | filter: $select.search">
+                                {{r.reference}} - Cantidad: {{r.quantity}} - Cantidad Existente: {{r.existing_quantity}} - Vencimiento: {{r.due_date|date}}
+                            </ui-select-choices>
+                        </ui-select>
+                        <label>Seleccione Lote para agregar al certificado...</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                {{form.record}}
             </div>
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">

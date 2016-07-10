@@ -804,17 +804,17 @@ angular.module('app')
     .controller('CertificateAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'SubsidiaryService', 'StoreService', 'ProductService', 'RecordService', 'ExternalService', 'CertificateService', 'APPLICATION', '$sce',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, SubsidiaryService, StoreService, ProductService, RecordService, ExternalService, CertificateService, APPLICATION, $sce) {
             var _date = new Date();_date.setMilliseconds(0);_date.setSeconds(0);
-            $scope.certificate = {date: _date, subsidiary:null, product:null, properties:[], values:[], customer:null, quantity:0
+            $scope.certificate = {date: _date, subsidiary:null, store:null, product:null, properties:[], values:[], customer:null, quantity:0
                 , presentation:"", remission:"", clause:APPLICATION.ENUM.MESSAGES.CERTIFICATE.DEFAULT_CLAUSE, active:true};
             $scope.subsidiaries = [];
             $scope.stores = [];
             $scope._stores = [];
-            $scope.store = null;
             $scope.products = [];
             $scope._products = [];
             $scope.product = null;
             $scope.properties = [];
-            $scope.records = [];
+            $scope.record = null;
+            $scope.form = {record:undefined, recordSelected:false};
             $scope.externals = [];
             $scope.requesting = true;
             SubsidiaryService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
@@ -848,7 +848,7 @@ angular.module('app')
                 $scope.products = [];
                 for(var i in $scope._products){
                     var _product = $scope._products[i];
-                    if(_product.store && _product.store.length>0 && _product.store[0]._id==$scope.store){
+                    if(_product.store && _product.store.length>0 && _product.store[0]._id==$scope.certificate.store){
                         $scope.products.push(_product);
                     }
                 }
@@ -866,6 +866,44 @@ angular.module('app')
                     var _p = $scope.product.properties[i];
                     $scope.certificate.properties[_p.id] = true;
                 }
+                $scope.certificate.properties['elaborationDate'] = false;
+                $scope.certificate.properties['dueDate'] = false;
+                $scope.certificate.properties['quantity'] = true;
+                $scope.updateRecords();
+
+            }
+
+            $scope.updateRecords = function(){
+                $scope.records = [];
+                $scope.requesting = true;
+                RecordService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), product:$scope.product._id}
+                    , function (response) {$scope._records = response; $scope.records = $scope._records; $scope.requesting = false;}
+                    , function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;}
+                );
+                $scope.certificate.values = [];
+            }
+
+            $scope.updateRecordsList = function(){
+                $scope.records = [];
+                var exists;
+                for(var r in $scope._records){
+                    exists = false;
+                    for(var v in $scope.certificate.values){
+                        if($scope._records[r].reference && $scope._records[r].reference == $scope.certificate.values[v].reference){
+                            exists = true;
+                        }
+                    }
+                    if($scope._records[r].reference && !exists ){
+                        $scope.records.push($scope._records[r]);
+                    }
+                }
+            }
+
+            $scope.updateValues = function(){
+                $scope.form.recordSelected = true;
+                $scope.certificate.values.push($scope.form.record);
+                $scope.form.record = undefined;
+                $scope.updateRecordsList();
             }
 
             $scope._updateCertificateProperties = function(){
