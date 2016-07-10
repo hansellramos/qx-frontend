@@ -6,7 +6,7 @@
     <div class="panel-body">
         <form name="form" novalidate ng-submit="_create();">
             <div class="row">
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
                     <div class="qmd-input"  ng-class="{'selected':certificate.date}">
                         <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
                                ng-model="certificate.date" type="date"
@@ -30,7 +30,7 @@
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                     <div class="qmd-select" ng-class="{'selected':certificate.subsidiary}">
-                        <label>Sucursal</label>
+                        <label><span class="font-xs text-danger-dk">*</span>Sucursal</label>
                         <ui-select name="subsidiary" ng-model="certificate.subsidiary" ng-change="updateStores()">
                             <ui-select-match placeholder="Seleccione Sucursal...">
                                 {{$select.selected.name}} ({{$select.selected.reference}})
@@ -56,7 +56,7 @@
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                     <div class="qmd-select" ng-class="{'selected':certificate.product}">
-                        <label>Producto</label>
+                        <label><span class="font-xs text-danger-dk">*</span>Producto</label>
                         <ui-select ng-model="certificate.product" theme="bootstrap" ng-change="updateProperties()">
                             <ui-select-match placeholder="Seleccione Producto...">
                                 {{$select.selected.name}} ({{$select.selected.reference}})
@@ -71,7 +71,7 @@
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
                     <div class="qmd-select" ng-class="{'selected':certificate.customer}">
-                        <label>Cliente</label>
+                        <label><span class="font-xs text-danger-dk">*</span>Cliente</label>
                         <ui-select ng-model="certificate.customer" theme="bootstrap">
                             <ui-select-match placeholder="Seleccione Cliente...">
                                 {{$select.selected.name}}
@@ -116,7 +116,8 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <fieldset>
                         <legend class="m-v-xs">
-                            <h5>Propiedades a mostrar del Producto</h5>
+                            <h5><span class="font-xs text-danger-dk">*</span>
+                                Propiedades a mostrar del Producto</h5>
                         </legend>
                         <table class="table table-striped table-scroll-x">
                             <thead>
@@ -125,7 +126,7 @@
                                     <th>
                                         <div class="p-v-sm text-capitalize text-center">Fecha Elaboración</div>
                                         <label class="md-switch text-capitalize text-center">
-                                            <input type="checkbox" ng-model="certificate.properties['elaborationDate']" ng-change="_updateCertificateProperties()">
+                                            <input type="checkbox" ng-model="certificate.properties['elaborationDate']">
                                             <i class="green"></i>
                                             <span ng-class="{'text-success':certificate.properties['elaborationDate'], 'text-warning-dk':!certificate.properties['elaborationDate']}">
                                                 <span ng-show="certificate.properties['elaborationDate']">Visible</span>
@@ -136,7 +137,7 @@
                                     <th>
                                         <div class="p-v-sm text-capitalize text-center">Fecha Vencimiento</div>
                                         <label class="md-switch">
-                                            <input type="checkbox" ng-model="certificate.properties['dueDate']" ng-change="_updateCertificateProperties()">
+                                            <input type="checkbox" ng-model="certificate.properties['dueDate']">
                                             <i class="green"></i>
                                             <span ng-class="{'text-success':certificate.properties['dueDate'], 'text-warning-dk':!certificate.properties['dueDate']}">
                                                 <span ng-show="certificate.properties['dueDate']">Visible</span>
@@ -147,7 +148,7 @@
                                     <th>
                                         <div class="p-v-sm text-capitalize text-center">Cantidad</div>
                                         <label class="md-switch">
-                                            <input type="checkbox" ng-model="certificate.properties['quantity']" ng-change="_updateCertificateProperties()">
+                                            <input type="checkbox" ng-model="certificate.properties['quantity']">
                                             <i class="green"></i>
                                                 <span ng-class="{'text-success':certificate.properties['quantity'], 'text-warning-dk':!certificate.properties['quantity']}">
                                                     <span ng-show="certificate.properties['quantity']">Visible</span>
@@ -158,7 +159,7 @@
                                     <th ng-repeat="property in product.properties">
                                         <div ng-bind-html="property.name" class="p-v-sm text-capitalize text-center"></div>
                                         <label class="md-switch">
-                                            <input type="checkbox" ng-model="certificate.properties[property.id]" ng-change="_updateCertificateProperties()">
+                                            <input type="checkbox" ng-model="certificate.properties[property.id]">
                                             <i class="green"></i>
                                             <span ng-class="{'text-success':certificate.properties[property.id], 'text-warning-dk':!certificate.properties[property.id]}">
                                                 <span ng-show="certificate.properties[property.id]">Visible</span>
@@ -197,9 +198,6 @@
                 </div>
             </div>
             <div class="row">
-                {{form.record}}
-            </div>
-            <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="qmd-textarea" ng-class="{'selected':certificate.clause}">
                         <textarea class="md-input ng-invalid ng-invalid-required ng-touched"
@@ -226,7 +224,7 @@
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-right">
                     <button class="btn btn-default" ng-click="_goBack()" type="button">Volver</button>
-                    <button class="btn btn-addon btn-primary" ng-disabled="form.$invalid || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Perfil</button>
+                    <button class="btn btn-addon btn-primary" ng-disabled="form.$invalid || certificate.values.length===0 || !validateCertificateProperties() || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Certificado</button>
                 </div>
             </div>
         </form>

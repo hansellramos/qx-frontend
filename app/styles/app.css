@@ -3951,7 +3951,7 @@ nav ul.nav li .nav-item > .icon {
   top: 0;
   float: left;
   min-width: 40px;
-  margin-right: 16px;
+  /*margin-right: 16px;*/
   line-height: inherit;
 }
 
@@ -6384,7 +6384,10 @@ a.text-dark:hover {
 }
 .qmd-select.selected label
 ,.qmd-textarea.selected label
-,.qmd-input.selected label{
+,.qmd-input.selected label
+,.qmd-input .md-input[type=date] ~ label
+,.qmd-input .md-input[type=time] ~ label
+,.qmd-input .md-input[type=datetime] ~ label{
   top: 0px;
   left: 20px;
   font-size: 0.85em;

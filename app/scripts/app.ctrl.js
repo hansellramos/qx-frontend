@@ -834,6 +834,15 @@ angular.module('app')
                 }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
             });
 
+            $scope.validateCertificateProperties = function(){
+                for(var i in $scope.certificate.properties){
+                    if($scope.certificate.properties[i]===true){
+                        return true;
+                    }
+                }
+                return false;
+            }
+
             $scope.updateStores = function(){
                 $scope.stores = [];
                 for(var i in $scope._stores){
@@ -906,10 +915,6 @@ angular.module('app')
                 $scope.updateRecordsList();
             }
 
-            $scope._updateCertificateProperties = function(){
-
-            }
-
             $scope._form = {
                 error : {
                     name: false,
@@ -929,7 +934,8 @@ angular.module('app')
 
             $scope._create = function(){
                 debugger;
-                ProfileService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.profile
+                formatCertificate();return false;
+                CertificateService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, formatCertificate()
                     , function(response){
                         debugger;
                         Flash.create('success',response.message);
@@ -942,6 +948,74 @@ angular.module('app')
 
                         }
                     });
+            }
+
+            function formatCertificate(){
+                return {
+                    date: $scope.certificate.date
+                    , subsidiary: $scope.certificate.subsidiary
+                    , product: $scope.certificate.product
+                    , customer: $scope.certificate.customer
+                    , remission: $scope.certificate.remission
+                    , quantity: $scope.certificate.quantity
+                    , presentation: $scope.certificate.presentation
+                    , properties: formatCertificateProperties()
+                    , values: formatCertificateValues()
+                    , clause: $scope.certificate.clause
+                    , active: true
+                };
+            }
+
+            function formatCertificateProperties(){
+                var _p = [];
+                _p.push({property:'reference', name:"Lote"});
+                if($scope.certificate.properties['dueDate']===true){
+                    _p.push({property:'dueDate', name:"Fecha de Vencimiento"});
+                }
+                for(var i in $scope.certificate.properties){
+                    if($scope.certificate.properties[i]===true){
+                        for(var p in $scope.product.properties){
+                            if($scope.product.properties[p].id == i){
+                                _p.push({
+                                    property: $scope.product.properties[p].id
+                                    , name: $scope.product.properties[p].name
+                                });
+                                break;
+                            }
+                        }
+                    }
+                }
+                return _p;
+            }
+
+            function formatCertificateValues(){
+                var _v = [];
+                for(var r in $scope.certificate.values){
+                    var _values = [];
+                    var _record = $scope.certificate.values[r];
+                    debugger;
+                    _values.push({
+                        property: 'reference'
+                        , value: _record.reference
+                    });
+                    for(var v in _record.properties){
+                        var _value = _record.properties[v];
+                        for(var pr in $scope.certificate.properties){
+                            if($scope.certificate.properties[pr] === true && _value.property == pr){
+                                _values.push({
+                                    property: _value.property
+                                    , value: _value.value
+                                });
+                            }
+                        }
+                    }
+                    _v.push({
+                        record: _record.reference
+                        , values: _values
+                    });
+                    debugger;
+                }
+                return _v;
             }
 
             $scope._goBack = function(){

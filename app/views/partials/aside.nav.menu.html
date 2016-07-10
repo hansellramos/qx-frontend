@@ -16,10 +16,27 @@
       </a>
     </li>
     <li ui-sref-active="active" ng-show="_p.isAdmin() || _p.hasPermission(_pn.CERTIFICATE_LIST)">
-      <a md-ink-ripple ui-sref="app.certificate">
+      <a md-ink-ripple>
+        <span class="pull-right text-muted">
+          <i class="fa fa-caret-down"></i>
+        </span>
         <i class="icon fa fa-certificate i-20"></i>
         <span class="font-normal">Certificados</span>
       </a>
+      <ul class="nav nav-sub">
+        <li ui-sref-active="active" ng-show="_p.isAdmin() || _p.hasPermission(_pn.CERTIFICATE_LIST)">
+          <a md-ink-ripple ui-sref="app.certificateAdd">
+            <i class="icon fa fa-search i-16"></i>
+            <span class="font-normal">Consultar</span>
+          </a>
+        </li>
+        <li ui-sref-active="active" ng-show="_p.isAdmin() || _p.hasPermission(_pn.CERTIFICATE_CREATE)">
+          <a md-ink-ripple ui-sref="app.certificateAdd">
+            <i class="icon fa fa-plus i-16"></i>
+            <span class="font-normal">Nuevo</span>
+          </a>
+        </li>
+      </ul>
     </li>
     <li ui-sref-active="active" ng-show="_p.isAdmin() || _p.hasPermission(_pn.PRODUCT_LIST)">
       <a md-ink-ripple ui-sref="app.product">
