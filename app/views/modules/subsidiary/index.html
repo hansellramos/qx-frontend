@@ -22,6 +22,10 @@
             Referencia
             <span class="glyphicon sort-icon" ng-show="sortKey=='reference'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
+          <th ng-click="sort('leader')">
+            Responsable
+            <span class="glyphicon sort-icon" ng-show="sortKey=='leader'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+          </th>
           <th ng-click="sort('active')" class="text-center">
             Activo
           </th>
@@ -34,6 +38,9 @@
         <th>
           <input ng-model="search.reference" class="form-control" placeholder="Buscar por referencia">
         </th>
+        <th>
+          <input ng-model="search.leader" class="form-control" placeholder="Buscar por Responsable">
+        </th>
         <th></th>
         <th></th>
       </tr>
@@ -42,6 +49,7 @@
         <tr dir-paginate="item in items|orderBy:sortKey:reverse|filter:search:strict|itemsPerPage:pageSize">
           <td>{{item.name}}</td>
           <td>{{item.reference}}</td>
+          <td>{{item.leader}}</td>
           <td class="text-center">
             <i ng-show="!item.active" class="btn-rounded btn-icon icon mdi-action-highlight-remove red i-24 panel-card"></i>
             <i ng-show="item.active" class="btn-rounded btn-icon icon mdi-navigation-check green i-24 panel-card"></i>

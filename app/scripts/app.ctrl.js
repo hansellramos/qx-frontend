@@ -260,6 +260,7 @@ angular.module('app')
                                 id: response[i]._id,
                                 name: response[i].name,
                                 reference: response[i].reference,
+                                leader: response[i].leader[0].firstname+' '+response[i].leader[0].lastname,
                                 active: response[i].active
                             });
                         }
@@ -804,17 +805,17 @@ angular.module('app')
     .controller('CertificateAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'SubsidiaryService', 'StoreService', 'ProductService', 'RecordService', 'ExternalService', 'CertificateService', 'APPLICATION', '$sce',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, SubsidiaryService, StoreService, ProductService, RecordService, ExternalService, CertificateService, APPLICATION, $sce) {
             var _date = new Date();_date.setMilliseconds(0);_date.setSeconds(0);
-            $scope.certificate = {date: _date, subsidiary:null, store:null, product:null, properties:[], values:[], customer:null, quantity:0
+            $scope.certificate = {date: _date, subsidiary:undefined, store:undefined, product:undefined, properties:[], values:[], customer:undefined, quantity:0
                 , presentation:"", remission:"", clause:APPLICATION.ENUM.MESSAGES.CERTIFICATE.DEFAULT_CLAUSE, active:true};
             $scope.subsidiaries = [];
             $scope.stores = [];
             $scope._stores = [];
             $scope.products = [];
             $scope._products = [];
-            $scope.product = null;
+            $scope.product = undefined;
             $scope.properties = [];
-            $scope.record = null;
-            $scope.form = {record:undefined, recordSelected:false};
+            $scope.record = undefined;
+            $scope.form = {record:undefined};
             $scope.externals = [];
             $scope.requesting = true;
             SubsidiaryService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
@@ -877,7 +878,7 @@ angular.module('app')
                 }
                 $scope.certificate.properties['elaborationDate'] = false;
                 $scope.certificate.properties['dueDate'] = false;
-                $scope.certificate.properties['quantity'] = true;
+                $scope.certificate.properties['quantity'] = false;
                 $scope.updateRecords();
 
             }
@@ -933,14 +934,15 @@ angular.module('app')
             }
 
             $scope._create = function(){
-                debugger;
-                formatCertificate();return false;
                 CertificateService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, formatCertificate()
                     , function(response){
                         debugger;
-                        Flash.create('success',response.message);
-                        $scope.profile = {name:"", description:"", permissions:{}, active:true};
-                        $scope.form.$setPristine();
+                        Flash.create('success',response.message
+                            +'. El código del certificado generado es ' +
+                            '<a class="font-bold" href="'+getPrintUrl(response.data.result)+'">'+response.data.result.id+'</a>,'
+                            +' para imprimir este certificado haga clic ' +
+                            '<a class="font-bold" href="'+getPrintUrl(response.data.result)+'">aquí</a>');
+                        $scope._reset();
                     }, function(errorResponse){
                         debugger;
                         Flash.create('danger',errorResponse.data.message);
@@ -948,6 +950,21 @@ angular.module('app')
 
                         }
                     });
+            }
+
+            $scope._reset = function(){
+                _date = new Date();_date.setMilliseconds(0);_date.setSeconds(0);
+                $scope.certificate = {date: _date, subsidiary:undefined, store:undefined, product:undefined, properties:[], values:[], customer:undefined, quantity:0
+                    , presentation:"", remission:"", clause:APPLICATION.ENUM.MESSAGES.CERTIFICATE.DEFAULT_CLAUSE, active:true};
+                $scope.form.$setPristine();
+                $scope.product = undefined;
+                $scope.properties = [];
+                $scope.record = undefined;
+                $scope.form = {record:undefined};
+            }
+
+            function getPrintUrl(item){
+                return 'javascript:window.open(\'#/print/certificate/'+item._id+'\',\'width=800,height=600\')';
             }
 
             function formatCertificate(){

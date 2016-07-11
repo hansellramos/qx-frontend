@@ -1,4 +1,4 @@
-<flash-message duration="10000" show-close="true"></flash-message>
+<flash-message duration="60000" show-close="true"></flash-message>
 <div class="panel panel-default">
     <div class="panel-heading">
         Crear Certificado
@@ -76,7 +76,7 @@
                             <ui-select-match placeholder="Seleccione Cliente...">
                                 {{$select.selected.name}}
                             </ui-select-match>
-                            <ui-select-choices repeat="customer in externals|orderBy:'+name' | filter: $select.search">
+                            <ui-select-choices repeat="customer.id as customer in externals|orderBy:'+name' | filter: $select.search">
                                 <div ng-bind-html="customer.name | highlight: $select.search"></div>
                             </ui-select-choices>
                         </ui-select>
@@ -174,7 +174,14 @@
                                     <td>{{item.reference}}</td>
                                     <td>{{item.elaboration_date| date:'yyyy-MM-dd'}}</td>
                                     <td>{{item.due_date| date:'yyyy-MM-dd'}}</td>
-                                    <td class="text-right">{{item.quantity|number:0}}</td>
+                                    <td class="text-right">
+                                        <div class="input-group m-b">
+                                            <input type="text" class="form-control text-right w-sm" ng-required="true" type="number"
+                                                   min="0" max="{{item.existing_quantity}}" name="quantity_{{item._id}}"
+                                                   ng-model="item.quantity">
+                                            <span class="input-group-addon">/{{item.existing_quantity|number:0}}</span>
+                                        </div>
+                                    </td>
                                     <td ng-repeat="property in product.properties">
                                         <span ng-repeat="p in item.properties" ng-show="p.property == property.id">{{p.value}}</span>
                                     </td>
@@ -224,7 +231,7 @@
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-right">
                     <button class="btn btn-default" ng-click="_goBack()" type="button">Volver</button>
-                    <button class="btn btn-addon btn-primary" ng-disabled="form.$invalid || certificate.values.length===0 || !validateCertificateProperties() || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Certificado</button>
+                    <button class="btn btn-addon btn-primary" ng-disabled="form.$invalid || !certificate.quantity>0 || certificate.values.length===0 || !validateCertificateProperties() || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Certificado</button>
                 </div>
             </div>
         </form>
