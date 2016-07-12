@@ -69,6 +69,34 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <div class="qmd-input" ng-class="{'selected':certificate.elaboration_date}">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                               ng-model="certificate.elaboration_date" type="date"
+                               ng-required="true" ng-minlength="3" tabindex="101" autofocus aria-required="true"
+                               aria-invalid="true" style=""
+                               name="date">
+                        <label><span class="font-xs text-danger-dk">*</span> Fecha de Elaboración</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <div class="qmd-input selected">
+                        <span class="Italic text-muted-lt l-h-2x" ng-show="!certificate.product">Debe seleccionar un producto...</span>
+                        <span class="l-h-2x" ng-show="certificate.product && certificate.due_date!=0">{{certificate.due_date}}</span>
+                        <span class="l-h-2x" ng-show="certificate.product && certificate.due_date==0">N/R</span>
+                        <span class="l-h-2x" ng-show="certificate.product && certificate.due_date!=0">Despues de su fecha de elaboración.</span>
+                        <label>Vencimiento</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <div class="qmd-input selected">
+                        <span class="l-h-2x" ng-bind-html="certificate.max_dose"></span>
+                        <span class="l-h-2x Italic text-muted-lt" ng-show="!certificate.max_dose">Debe seleccionar un producto...</span>
+                        <label>Dosis Máxima</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
                     <div class="qmd-select" ng-class="{'selected':certificate.customer}">
                         <label><span class="font-xs text-danger-dk">*</span>Cliente</label>
@@ -92,23 +120,26 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="qmd-input"  ng-class="{'selected':certificate.quantity!==''}">
-                        <input class=" md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
-                               ng-model="certificate.quantity" type="text"
-                               ng-required="true" ng-minlength="1" tabindex="101" autofocus aria-required="true"
-                               aria-invalid="true" style=""
-                               name="quantity">
-                        <label><span class="font-xs text-danger-dk">*</span> Cantidad</label>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
                     <div class="qmd-input"  ng-class="{'selected':certificate.presentation}">
                         <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
                                ng-model="certificate.presentation"
                                ng-required="true" ng-minlength="3" tabindex="101" autofocus aria-required="true"
-                               aria-invalid="true" style=""
+                               aria-invalid="true"
                                name="presentation">
                         <label><span class="font-xs text-danger-dk">*</span> Presentación</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="qmd-input"  ng-class="{'selected':certificate.quantity!==''}">
+                        <div class="input-group m-b">
+                            <input class="form-control md-input ng-pristine ng-invalid ng-invalid-required ng-touched text-right"
+                               ng-model="certificate.quantity" type="number"
+                               ng-required="true" ng-minlength="1" tabindex="101" autofocus aria-required="true"
+                               aria-invalid="true"
+                               name="quantity">
+                            <span class="input-group-addon">KG</span>
+                            </div>
+                        <label><span class="font-xs text-danger-dk">*</span> Cantidad</label>
                     </div>
                 </div>
             </div>
@@ -176,10 +207,10 @@
                                     <td>{{item.due_date| date:'yyyy-MM-dd'}}</td>
                                     <td class="text-right">
                                         <div class="input-group m-b">
-                                            <input type="text" class="form-control text-right w-sm" ng-required="true" type="number"
+                                            <input type="text" class="form-control text-right w-sm" ng-required="true"
                                                    min="0" max="{{item.existing_quantity}}" name="quantity_{{item._id}}"
-                                                   ng-model="item.quantity">
-                                            <span class="input-group-addon">/{{item.existing_quantity|number:0}}</span>
+                                                   ng-model="item.quantity" type="number">
+                                            <span class="input-group-addon">KG/{{item.existing_quantity|number:0}}KG</span>
                                         </div>
                                     </td>
                                     <td ng-repeat="property in product.properties">
@@ -207,10 +238,10 @@
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="qmd-textarea" ng-class="{'selected':certificate.clause}">
-                        <textarea class="md-input ng-invalid ng-invalid-required ng-touched"
+                        <textarea ckeditor class="md-input ng-invalid ng-invalid-required ng-touched"
                                   ng-model="certificate.clause" tabindex="107" ng-required="true"
                                   name="clause" rows="2"></textarea>
-                        <label>Cláusula</label>
+                        <label>Notas</label>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-danger-dk text-right font-sm">

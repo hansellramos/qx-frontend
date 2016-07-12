@@ -805,8 +805,10 @@ angular.module('app')
     .controller('CertificateAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'SubsidiaryService', 'StoreService', 'ProductService', 'RecordService', 'ExternalService', 'CertificateService', 'APPLICATION', '$sce',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, SubsidiaryService, StoreService, ProductService, RecordService, ExternalService, CertificateService, APPLICATION, $sce) {
             var _date = new Date();_date.setMilliseconds(0);_date.setSeconds(0);
-            $scope.certificate = {date: _date, subsidiary:undefined, store:undefined, product:undefined, properties:[], values:[], customer:undefined, quantity:0
-                , presentation:"", remission:"", clause:APPLICATION.ENUM.MESSAGES.CERTIFICATE.DEFAULT_CLAUSE, active:true};
+            $scope.certificate = {date: _date, subsidiary:undefined, store:undefined,
+                product:undefined, properties:[], presentation:"", max_dose:"", elaboration_date:_date, due_date:0,
+                values:[], customer:undefined, quantity:0
+                , remission:"", clause:APPLICATION.ENUM.MESSAGES.CERTIFICATE.DEFAULT_CLAUSE, active:true};
             $scope.subsidiaries = [];
             $scope.stores = [];
             $scope._stores = [];
@@ -879,6 +881,8 @@ angular.module('app')
                 $scope.certificate.properties['elaborationDate'] = false;
                 $scope.certificate.properties['dueDate'] = false;
                 $scope.certificate.properties['quantity'] = false;
+                $scope.certificate.max_dose = $scope.product.max_dose;
+                $scope.certificate.due_date = $scope.product.due_date;
                 $scope.updateRecords();
 
             }

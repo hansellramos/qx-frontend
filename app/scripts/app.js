@@ -17,6 +17,7 @@ angular
     'ngResource',
     'ngSanitize',
     'ngDialog',
+    'ngCkeditor',
     'ngTouch',
     'ngMaterial',
     'ngStorage',
