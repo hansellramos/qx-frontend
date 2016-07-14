@@ -958,8 +958,10 @@ angular.module('app')
 
             $scope._reset = function(){
                 _date = new Date();_date.setMilliseconds(0);_date.setSeconds(0);
-                $scope.certificate = {date: _date, subsidiary:undefined, store:undefined, product:undefined, properties:[], values:[], customer:undefined, quantity:0
-                    , presentation:"", remission:"", clause:APPLICATION.ENUM.MESSAGES.CERTIFICATE.DEFAULT_CLAUSE, active:true};
+                $scope.certificate = {date: _date, subsidiary:undefined, store:undefined,
+                    product:undefined, properties:[], presentation:"", max_dose:"", elaboration_date:_date, due_date:0,
+                    values:[], customer:undefined, quantity:0
+                    , remission:"", clause:APPLICATION.ENUM.MESSAGES.CERTIFICATE.DEFAULT_CLAUSE, active:true};
                 $scope.form.$setPristine();
                 $scope.product = undefined;
                 $scope.properties = [];
@@ -982,6 +984,9 @@ angular.module('app')
                     , presentation: $scope.certificate.presentation
                     , properties: formatCertificateProperties()
                     , values: formatCertificateValues()
+                    , elaboration_date: $scope.certificate.elaboration_date
+                    , max_dose: $scope.certificate.max_dose
+                    , due_date: $scope.certificate.due_date
                     , clause: $scope.certificate.clause
                     , active: true
                 };
@@ -1048,13 +1053,19 @@ angular.module('app')
             $scope.item = null;
             $scope.itemLoading = true;
             $scope._width = 1;
+            $scope.qrcode = "http://www.pqp.com.co/";
             CertificateService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params.id}
                 , function(response){
                     $scope.item = response;
-                    $rootScope.name = "PQP Certificado de Calidad No "+$scope.item.id;
+                    //debugger;
+                    //$scope.qrcode = "http://www.pqp.com.co/q/?c=";
                     $scope.itemLoading = false;
                     $scope._width = 80/($scope.item.properties.length-2);
-                    setTimeout(function(){window.print();},500);
+                    setTimeout(function(){
+                        $scope.qrcode = "http://www.pqp.com.co/q/c/"+$scope.item.id+"/v/"+$scope.item.verification;
+                        setTimeout(function(){window.print();},500);
+                    },100);
+                    $("title").html("Certificado de Calidad "+ $scope.item.id +" "+$("title").html())
                 }
                 , function(errorResponse){
                     debugger;

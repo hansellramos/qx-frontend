@@ -31,5 +31,6 @@ angular
     'pascalprecht.translate',
     'oc.lazyLoad',
     'angular-loading-bar',
-    'angularUtils.directives.dirPagination'
+    'angularUtils.directives.dirPagination',
+    'ja.qr'
   ]);
