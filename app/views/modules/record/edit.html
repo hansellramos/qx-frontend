@@ -1,0 +1,230 @@
+<flash-message duration="60000" show-close="true"></flash-message>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Nueva Muestra
+    </div>
+    <div class="panel-body">
+        <form name="form" novalidate ng-submit="_create();">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <div class="qmd-select" ng-class="{'selected':selecteds.subsidiary}">
+                        <label><span class="font-xs text-danger-dk">*</span>Sucursal</label>
+                        <ui-select name="subsidiary" ng-model="selecteds.subsidiary" ng-change="updateStores()" tabindex="101">
+                            <ui-select-match placeholder="Seleccione Sucursal..." tabindex="101">
+                                {{$select.selected.name}} ({{$select.selected.reference}})
+                            </ui-select-match>
+                            <ui-select-choices repeat="subsidiary.id as subsidiary in subsidiaries|orderBy:'+name' | filter: $select.search">
+                                <div ng-bind-html="subsidiary.name+' ('+subsidiary.reference+')' | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <div class="qmd-select" ng-class="{'selected':selecteds.store}">
+                        <label>Tienda/Bodega</label>
+                        <ui-select name="store" ng-model="selecteds.store" ng-change="updateProducts()"  tabindex="102">
+                            <ui-select-match placeholder="Seleccione Tienda/Bodega..." tabindex="102">
+                                {{$select.selected.name}} ({{$select.selected.reference}})
+                            </ui-select-match>
+                            <ui-select-choices repeat="store._id as store in stores|orderBy:'+name' | filter: $select.search">
+                                <div ng-bind-html="store.name+' ('+store.reference+')' | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <div class="qmd-select" ng-class="{'selected':selecteds.product}">
+                        <label><span class="font-xs text-danger-dk">*</span>Producto</label>
+                        <ui-select ng-model="selecteds.product" theme="bootstrap" ng-change="updateProperties()" tabindex="103" ng-required="true">
+                            <ui-select-match placeholder="Seleccione Producto..." tabindex="103">
+                                {{$select.selected.name}} ({{$select.selected.reference}})
+                            </ui-select-match>
+                            <ui-select-choices repeat="product as product in products|orderBy:'+name' | filter: $select.search">
+                                <div ng-bind-html="product.name+' ('+product.reference+')' | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="qmd-input"  ng-class="{'selected':record.reference}">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                               ng-model="record.reference"
+                               ng-required="true" ng-minlength="3" tabindex="104" aria-required="true"
+                               aria-invalid="true"
+                               name="reference">
+                        <label><span class="font-xs text-danger-dk">*</span> Lote</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                    <div class="qmd-input" ng-class="{'selected':record.analysis_date}">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                               ng-model="record.analysis_date" type="date"
+                               ng-required="true" ng-minlength="3" tabindex="104" autofocus aria-required="true" ng-required="true"
+                               aria-invalid="true" style=""
+                               name="analysis_date">
+                        <label><span class="font-xs text-danger-dk">*</span> Fecha de Análisis</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                    <div class="qmd-input" ng-class="{'selected':record.elaboration_date}">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                               ng-model="record.elaboration_date" type="date"
+                               ng-required="true" ng-minlength="3" tabindex="105" autofocus
+                               aria-invalid="true" style=""
+                               name="elaboration_date">
+                        <label><span class="font-xs text-danger-dk">*</span> Fecha de Elaboracion</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                    <div class="qmd-input" ng-class="{'selected':record.due_date}">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                               ng-model="record.due_date" type="date"
+                               ng-required="true" ng-minlength="3" tabindex="106" autofocus aria-required="true"
+                               aria-invalid="true" style=""
+                               name="due_date">
+                        <label><span class="font-xs text-danger-dk">*</span> Fecha de Vencimiento</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                    <div class="qmd-input" ng-class="{'selected':record.reception_date}">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                               ng-model="record.reception_date" type="date"
+                               ng-required="true" ng-minlength="3" tabindex="107" autofocus aria-required="true"
+                               aria-invalid="true" style=""
+                               name="reception_date">
+                        <label><span class="font-xs text-danger-dk">*</span> Fecha de Recepción</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="qmd-select" ng-class="{'selected':record.provider}">
+                        <label><span class="font-xs text-danger-dk">*</span>Proveedor</label>
+                        <ui-select ng-model="record.provider" theme="bootstrap" tabindex="108">
+                            <ui-select-match placeholder="Seleccione Proveedor..." tabindex="18">
+                                {{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="provider.id as provider in externals|orderBy:'+name' | filter: $select.search">
+                                <div ng-bind-html="provider.name | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="qmd-input"  ng-class="{'selected':record.remission}">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                               ng-model="record.remission"
+                               ng-required="true" ng-minlength="3" tabindex="109" aria-required="true"
+                               aria-invalid="true"
+                               name="presentation">
+                        <label><span class="font-xs text-danger-dk">*</span> Remisión</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="qmd-input"  ng-class="{'selected':record.quantity!==''}">
+                        <div class="input-group m-b">
+                            <input class="form-control md-input ng-pristine ng-invalid ng-invalid-required ng-touched text-right"
+                               ng-model="certificate.quantity" type="number"
+                               ng-required="true" ng-minlength="1" tabindex="110" aria-required="true"
+                               aria-invalid="true"
+                               name="quantity">
+                            <span class="input-group-addon">KG</span>
+                            </div>
+                        <label><span class="font-xs text-danger-dk">*</span> Cantidad</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="qmd-input"  ng-class="{'selected':record.veredict}">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                               ng-model="record.veredict"
+                               ng-required="true" ng-minlength="3" tabindex="111" aria-required="true"
+                               aria-invalid="true"
+                               name="veredict">
+                        <label><span class="font-xs text-danger-dk">*</span> Decisión</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row p-v-sm" ng-show="record.product">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <fieldset>
+                        <legend class="m-v-xs">
+                            <h5><span class="font-xs text-danger-dk">*</span>
+                                Especificaciones del Producto</h5>
+                        </legend>
+                        <table class="table table-striped table-scroll-x" id="properties">
+                            <thead>
+                                <tr>
+                                    <th ng-repeat="property in record.properties">
+                                        <div ng-bind-html="property.name" class="p-v-sm text-capitalize text-center"></div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td ng-repeat="property in record.properties">
+                                        <div class="qmd-input">
+                                            <input class="md-input bg-white" id="property_{{property.id}}" name="property_{{property.id}}" ng-model="property.value">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                    <div class="qmd-textarea selected">
+                        <textarea ckeditor class="md-input ng-invalid ng-invalid-required ng-touched"
+                                  ng-model="record.notes" tabindex="107" ng-required="true"
+                                  name="notes" rows="2"></textarea>
+                        <label>Notas</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                    <label class="md-switch">
+                        <input type="checkbox" ng-model="record.active" checked>
+                        <i class="green"></i>
+                        <span ng-class="{'text-success':record.active, 'text-warning-dk':!record.active}">
+                            <span ng-show="record.active">Liberado</span>
+                            <span ng-show="!record.active">Bloqueado</span>
+                        </span>
+                    </label>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-danger-dk text-right font-sm">
+                    <span class="font-xs text-danger-dk">*</span> Campos Obligatorios
+                </div>
+            </div>
+            <div class="row">
+                {{form}}
+            </div>
+            <div class="row">
+                {{form.$invalid}}
+            </div>
+            <div class="row">
+                {{validateProperties()}}
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="row">
+                        <div ng-show="_form.error.general" class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-danger">
+                            <i class="icon fa fa-remove"></i> {{_form.error.general.message}}
+                        </div>
+                        <div ng-show="_form.success.general" class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-success">
+                            <i class="icon fa fa-check"></i> {{_form.success.general.message}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-right">
+                    <button class="btn btn-default" ng-click="_goBack()" type="button">Volver</button>
+                    <button class="btn btn-addon btn-primary" ng-disabled="form.$invalid || !validateProperties() || requesting!=''" type="submit"><i class="fa fa-plus"></i>Guardar Muestra</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

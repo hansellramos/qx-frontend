@@ -6394,6 +6394,10 @@ a.text-dark:hover {
   color: #3f51b5;
   opacity: 1;
 }
+
+.qmd-input .md-input.bg-white{
+  background: #fff;
+}
 .qmd-select label:before{
   content: 'Seleccione ';
 }

@@ -11,30 +11,55 @@
         </button>
       </div>
     </div>
-    <table class="table table-striped">
-      <tr>
-        <td>
-          <md-select ng-model="subsidiary" placeholder="Seleccione Sucursal">
-            <md-option ng-repeat="subsidiary in subsidiaries" ng-value="subsidiary.id">{{ subsidiary.name }}</md-option>
-          </md-select>
-        </td>
-        <td>
-          <md-select ng-model="store" placeholder="Seleccione Tienda/Bodega">
-            <md-option ng-repeat="store in stores|filter:subsidiary|orderBy:'+name'" ng-value="store.id">{{ store.name }}</md-option>
-          </md-select>
-        </td>
-        <td>
-          <md-select ng-model="product" placeholder="Seleccione Producto" ng-change="get()">
-            <md-option ng-repeat="product in products|filter:store|orderBy:'+name'" ng-value="product">{{ product.name }} ({{product.reference}})</md-option>
-          </md-select>
-        </td>
-      </tr>
-    </table>
+    <div class="panel-body">
+      <br />
+      <div class="row">
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+        <div class="qmd-select" ng-class="{'selected':selecteds.subsidiary}">
+          <label><span class="font-xs text-danger-dk">*</span>Sucursal</label>
+          <ui-select name="subsidiary" ng-model="selecteds.subsidiary" ng-change="updateStores()">
+            <ui-select-match placeholder="Seleccione Sucursal...">
+              {{$select.selected.name}} ({{$select.selected.reference}})
+            </ui-select-match>
+            <ui-select-choices repeat="subsidiary.id as subsidiary in subsidiaries|orderBy:'+name' | filter: $select.search">
+              <div ng-bind-html="subsidiary.name+' ('+subsidiary.reference+')' | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+        <div class="qmd-select" ng-class="{'selected':selecteds.store}">
+          <label>Tienda/Bodega</label>
+          <ui-select name="store" ng-model="selecteds.store" ng-change="updateProducts()">
+            <ui-select-match placeholder="Seleccione Tienda/Bodega...">
+              {{$select.selected.name}} ({{$select.selected.reference}})
+            </ui-select-match>
+            <ui-select-choices repeat="store._id as store in stores|orderBy:'+name' | filter: $select.search">
+              <div ng-bind-html="store.name+' ('+store.reference+')' | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+        <div class="qmd-select" ng-class="{'selected':selecteds.product}">
+          <label><span class="font-xs text-danger-dk">*</span>Producto</label>
+          <ui-select ng-model="selecteds.product" theme="bootstrap" ng-change="get()">
+            <ui-select-match placeholder="Seleccione Producto...">
+              {{$select.selected.name}} ({{$select.selected.reference}})
+            </ui-select-match>
+            <ui-select-choices repeat="product as product in products|orderBy:'+name' | filter: $select.search">
+              <div ng-bind-html="product.name+' ('+product.reference+')' | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </div>
+      </div>
+    </div>
+    </div>
     <table class="table table-striped table-scroll-x">
-      <thead ng-show="product">
+      <thead ng-show="selecteds.product">
         <tr>
           <th ng-click="sort('reference')" >
-            Referencia
+            Lote
             <span class="glyphicon sort-icon" ng-show="sortKey=='reference'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
           <th ng-click="sort('analisys_date')" class="mw">
@@ -53,8 +78,8 @@
             Fecha Recepción
             <span class="glyphicon sort-icon" ng-show="sortKey=='reception_date'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
-          <th ng-repeat="property in product.properties" >
-            <div ng-bind-html="property.name"></div>
+          <th ng-repeat="property in selecteds.product.properties" >
+            <div ng-bind-html="property.name" class="text-capitalize"></div>
           </th>
           <th ng-click="sort('user')" >
             Usuario
@@ -102,7 +127,7 @@
         <th>
           <input ng-model="search.reception_date" class="form-control" placeholder="Buscar por fecha de recepción">
         </th>
-        <th colspan="{{product.properties.length}}">
+        <th colspan="{{selecteds.product.properties.length}}">
           <input ng-show="true" ng-model="search.properties.value" class="form-control" placeholder="Buscar por propiedad">
         </th>
         <th>
@@ -127,21 +152,21 @@
         <th></th>
       </tr>
       </thead>
-      <tbody ng-show="product && !loading">
+      <tbody ng-show="selecteds.product && !loading">
         <tr dir-paginate="item in items|orderBy:sortKey:reverse|filter:search:strict|itemsPerPage:pageSize">
           <td>{{item.reference}}</td>
           <td>{{item.analysis_date| date:'yyyy-MM-dd'}}</td>
           <td>{{item.elaboration_date| date:'yyyy-MM-dd'}}</td>
           <td>{{item.due_date| date:'yyyy-MM-dd'}}</td>
           <td>{{item.reception_date| date:'yyyy-MM-dd'}}</td>
-          <td ng-repeat="property in product.properties">
+          <td ng-repeat="property in selecteds.product.properties">
             <span ng-repeat="p in item.properties|filter:property.id">{{p.value}}</span>
           </td>
           <td>{{item.user}}</td>
           <td>{{item.veredict}}</td>
           <td class="text-right">{{item.remission|number:0}}</td>
-          <td class="text-right">{{item.quantity|number:0}}</td>
-          <td class="text-right">{{item.existing_quantity|number:0}}</td>
+          <td class="text-right">{{item.quantity|number:0}} KG</td>
+          <td class="text-right">{{item.existing_quantity|number:0}} KG</td>
           <td>{{item.supplier}}</td>
           <td class="text-center">
             <i ng-show="!item.satisfies" class="btn-rounded btn-icon icon mdi-action-highlight-remove red i-24 panel-card"></i>
@@ -158,7 +183,7 @@
           </td>
         </tr>
       </tbody>
-      <tbody ng-show="product && loading">
+      <tbody ng-show="selecteds.product && loading">
         <tr>
           <td colspan="{{13+product.properties.length}}" class="text-center">
             <md-progress-linear class="md-warn m-b" md-mode="buffer" value="{{determinateValue}}" md-buffer-value="{{determinateValue2}}">
@@ -166,7 +191,7 @@
           </td>
         </tr>
       </tbody>
-      <tfoot ng-show="product">
+      <tfoot ng-show="selecteds.product">
         <tr>
           <td colspan="{{13+product.properties.length}}" class="text-center">
             <label style="float: left;">Elementos por página: <input type="number" ng-model="pageSize" style="width: 50px; text-align: right;"> {{items.length}} Registros en Total</label>

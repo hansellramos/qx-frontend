@@ -87,7 +87,15 @@ angular.module('app')
                         url: '/record',
                         templateUrl: 'views/modules/record/index.html',
                         data: {title: 'Muestras'},
-                        controller: 'RecordCtrl'
+                        controller: 'RecordCtrl',
+                        resolve: load(['ui.select'])
+                    })
+                    .state('app.recordAdd', {
+                        url: '/record/add/:product',
+                        templateUrl: 'views/modules/record/edit.html',
+                        data: {title: 'Nueva Muestra'},
+                        controller: 'RecordAddCtrl',
+                        resolve: load(['ui.select'])
                     })
                     .state('app.certificate', {
                         url: '/certificate',
