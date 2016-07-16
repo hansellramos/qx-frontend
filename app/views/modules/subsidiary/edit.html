@@ -25,6 +25,19 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="qmd-select" ng-class="{'selected':subsidiary.leader}">
+                        <label><span class="font-xs text-danger-dk">*</span>Sucursal</label>
+                        <ui-select name="subsidiary" ng-model="subsidiary.leader">
+                            <ui-select-match placeholder="Seleccione Responsable...">
+                                {{$select.selected.firstname}} {{$select.selected.lastname}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="user.firstname+' '+user.lastname as user in users|orderBy:'+name' | filter: $select.search">
+                                <div ng-bind-html="user.firstname+' '+user.lastname | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                     <label class="md-switch">
                         <input type="checkbox" ng-model="subsidiary.active" checked>
                         <i class="green"></i>

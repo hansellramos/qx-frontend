@@ -260,7 +260,8 @@ angular.module('app')
                                 id: response[i]._id,
                                 name: response[i].name,
                                 reference: response[i].reference,
-                                leader: response[i].leader[0].firstname+' '+response[i].leader[0].lastname,
+                                leader: response[i].leader,
+                                //leader: response[i].leader[0].firstname+' '+response[i].leader[0].lastname,
                                 active: response[i].active
                             });
                         }
@@ -307,10 +308,15 @@ angular.module('app')
             $scope.get();
 
         }])
-    .controller('SubsidiaryAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'SubsidiaryService', 'APPLICATION',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, SubsidiaryService, APPLICATION) {
-            $scope.subsidiary = {name:"", reference:"", active:true};
+    .controller('SubsidiaryAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'UserService', 'SubsidiaryService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, UserService, SubsidiaryService, APPLICATION) {
+            $scope.subsidiary = {name:"", reference:"", leader:'', active:true};
             $scope.requesting = false;
+            $scope.users = [];
+            UserService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                , function (response) {$scope.users = response;$scope.requesting = false;
+                }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                });
 
             //Obligatory fields
             $scope._form = {
@@ -324,7 +330,7 @@ angular.module('app')
                 , function(response){
                     debugger;
                     Flash.create('success',response.message);
-                    $scope.subsidiary = {name:"", reference:"", active:true};
+                    $scope.subsidiary = {name:"", reference:"", leader:'', active:true};
                     $scope.form.$setPristine();
                 }, function(errorResponse){
                     debugger;

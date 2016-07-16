@@ -63,7 +63,8 @@ angular.module('app')
                         url: '/subsidiary/add',
                         templateUrl: 'views/modules/subsidiary/edit.html',
                         data: {title: 'Nueva Sucursal'},
-                        controller: 'SubsidiaryAddCtrl'
+                        controller: 'SubsidiaryAddCtrl',
+                        resolve: load(['ui.select'])
                     })
                     .state('app.store', {
                         url: '/store',
@@ -82,6 +83,13 @@ angular.module('app')
                         templateUrl: 'views/modules/product/index.html',
                         data: {title: 'Productos'},
                         controller: 'ProductCtrl'
+                    })
+                    .state('app.productAdd', {
+                        url: '/product/add/',
+                        templateUrl: 'views/modules/product/edit.html',
+                        data: {title: 'Nuevo Producto'},
+                        controller: 'ProductAddCtrl',
+                        resolve: load(['ui.select'])
                     })
                     .state('app.record', {
                         url: '/record',
