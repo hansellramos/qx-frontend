@@ -10,7 +10,7 @@
                     <div class="qmd-select" ng-class="{'selected':selecteds.subsidiary}">
                         <label><span class="font-xs text-danger-dk">*</span>Sucursal</label>
                         <ui-select name="subsidiary" ng-model="selecteds.subsidiary" ng-change="updateStores()" tabindex="101">
-                            <ui-select-match placeholder="Seleccione Sucursal..." tabindex="101">
+                            <ui-select-match placeholder="Seleccione Sucursal...">
                                 {{$select.selected.name}} ({{$select.selected.reference}})
                             </ui-select-match>
                             <ui-select-choices repeat="subsidiary.id as subsidiary in subsidiaries|orderBy:'+name' | filter: $select.search">
@@ -23,7 +23,7 @@
                     <div class="qmd-select" ng-class="{'selected':selecteds.store}">
                         <label>Tienda/Bodega</label>
                         <ui-select name="store" ng-model="selecteds.store" ng-change="updateProducts()"  tabindex="102">
-                            <ui-select-match placeholder="Seleccione Tienda/Bodega..." tabindex="102">
+                            <ui-select-match placeholder="Seleccione Tienda/Bodega...">
                                 {{$select.selected.name}} ({{$select.selected.reference}})
                             </ui-select-match>
                             <ui-select-choices repeat="store._id as store in stores|orderBy:'+name' | filter: $select.search">
@@ -36,7 +36,7 @@
                     <div class="qmd-select" ng-class="{'selected':selecteds.product}">
                         <label><span class="font-xs text-danger-dk">*</span>Producto</label>
                         <ui-select ng-model="selecteds.product" theme="bootstrap" ng-change="updateProperties()" tabindex="103" ng-required="true">
-                            <ui-select-match placeholder="Seleccione Producto..." tabindex="103">
+                            <ui-select-match placeholder="Seleccione Producto...">
                                 {{$select.selected.name}} ({{$select.selected.reference}})
                             </ui-select-match>
                             <ui-select-choices repeat="product as product in products|orderBy:'+name' | filter: $select.search">
@@ -47,14 +47,15 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="qmd-input"  ng-class="{'selected':record.reference}">
-                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
-                               ng-model="record.reference"
-                               ng-required="true" ng-minlength="3" tabindex="104" aria-required="true"
-                               aria-invalid="true"
-                               name="reference">
-                        <label><span class="font-xs text-danger-dk">*</span> Lote</label>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="qmd-input float-label">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" name="reference" ng-model="record.reference"
+                               ng-required="true" tabindex="104" aria-required="true" aria-invalid="true" style=""
+                               ng-class="{'b-b-danger':_form.error.reference && _form.error.reference.error && _form.error.reference.value==record.reference}" name="reference">
+                        <label><span class="font-xs text-danger-dk">*</span> Lote&nbsp;<span class="label bg-danger pos-rlt m-r-xs"
+                            ng-show="_form.error.reference && _form.error.reference.error && _form.error.reference.value==record.reference">
+                            <b class="arrow left b-danger pull-in"></b>{{_form.error.reference.message}}</span>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -63,7 +64,7 @@
                     <div class="qmd-input" ng-class="{'selected':record.analysis_date}">
                         <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
                                ng-model="record.analysis_date" type="date"
-                               ng-required="true" ng-minlength="3" tabindex="104" autofocus aria-required="true" ng-required="true"
+                               ng-required="true" ng-minlength="3" tabindex="105" autofocus aria-required="true" ng-required="true"
                                aria-invalid="true" style=""
                                name="analysis_date">
                         <label><span class="font-xs text-danger-dk">*</span> Fecha de Análisis</label>
@@ -73,30 +74,27 @@
                     <div class="qmd-input" ng-class="{'selected':record.elaboration_date}">
                         <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
                                ng-model="record.elaboration_date" type="date"
-                               ng-required="true" ng-minlength="3" tabindex="105" autofocus
-                               aria-invalid="true" style=""
+                               tabindex="106" autofocus style=""
                                name="elaboration_date">
-                        <label><span class="font-xs text-danger-dk">*</span> Fecha de Elaboracion</label>
+                        <label>Fecha de Elaboracion</label>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
                     <div class="qmd-input" ng-class="{'selected':record.due_date}">
                         <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
                                ng-model="record.due_date" type="date"
-                               ng-required="true" ng-minlength="3" tabindex="106" autofocus aria-required="true"
-                               aria-invalid="true" style=""
+                               tabindex="108" autofocus style=""
                                name="due_date">
-                        <label><span class="font-xs text-danger-dk">*</span> Fecha de Vencimiento</label>
+                        <label>Fecha de Vencimiento</label>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
                     <div class="qmd-input" ng-class="{'selected':record.reception_date}">
                         <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
                                ng-model="record.reception_date" type="date"
-                               ng-required="true" ng-minlength="3" tabindex="107" autofocus aria-required="true"
-                               aria-invalid="true" style=""
+                               tabindex="109" autofocus style=""
                                name="reception_date">
-                        <label><span class="font-xs text-danger-dk">*</span> Fecha de Recepción</label>
+                        <label> Fecha de Recepción</label>
                     </div>
                 </div>
             </div>
@@ -104,7 +102,7 @@
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
                     <div class="qmd-select" ng-class="{'selected':record.provider}">
                         <label><span class="font-xs text-danger-dk">*</span>Proveedor</label>
-                        <ui-select ng-model="record.provider" theme="bootstrap" tabindex="108">
+                        <ui-select ng-model="record.provider" theme="bootstrap" tabindex="110">
                             <ui-select-match placeholder="Seleccione Proveedor..." tabindex="18">
                                 {{$select.selected.name}}
                             </ui-select-match>
@@ -118,7 +116,7 @@
                     <div class="qmd-input"  ng-class="{'selected':record.remission}">
                         <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
                                ng-model="record.remission"
-                               ng-required="true" ng-minlength="3" tabindex="109" aria-required="true"
+                               ng-required="true" ng-minlength="1" tabindex="111" aria-required="true"
                                aria-invalid="true"
                                name="presentation">
                         <label><span class="font-xs text-danger-dk">*</span> Remisión</label>
@@ -128,8 +126,8 @@
                     <div class="qmd-input"  ng-class="{'selected':record.quantity!==''}">
                         <div class="input-group m-b">
                             <input class="form-control md-input ng-pristine ng-invalid ng-invalid-required ng-touched text-right"
-                               ng-model="certificate.quantity" type="number"
-                               ng-required="true" ng-minlength="1" tabindex="110" aria-required="true"
+                               ng-model="record.quantity" type="number"
+                               ng-required="true" ng-minlength="1" tabindex="112" aria-required="true"
                                aria-invalid="true"
                                name="quantity">
                             <span class="input-group-addon">KG</span>
@@ -141,7 +139,7 @@
                     <div class="qmd-input"  ng-class="{'selected':record.veredict}">
                         <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
                                ng-model="record.veredict"
-                               ng-required="true" ng-minlength="3" tabindex="111" aria-required="true"
+                               ng-required="true" ng-minlength="1" tabindex="113" aria-required="true"
                                aria-invalid="true"
                                name="veredict">
                         <label><span class="font-xs text-danger-dk">*</span> Decisión</label>
@@ -167,7 +165,7 @@
                                 <tr>
                                     <td ng-repeat="property in record.properties">
                                         <div class="qmd-input">
-                                            <input class="md-input bg-white" id="property_{{property.id}}" name="property_{{property.id}}" ng-model="property.value">
+                                            <input class="md-input bg-white" id="property_{{property.id}}" name="property_{{property.id}}" ng-model="property.value" tabindex="{{130+$index}}">
                                         </div>
                                     </td>
                                 </tr>
@@ -180,7 +178,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
                     <div class="qmd-textarea selected">
                         <textarea ckeditor class="md-input ng-invalid ng-invalid-required ng-touched"
-                                  ng-model="record.notes" tabindex="107" ng-required="true"
+                                  ng-model="record.notes" tabindex="200"
                                   name="notes" rows="2"></textarea>
                         <label>Notas</label>
                     </div>
@@ -198,15 +196,6 @@
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-danger-dk text-right font-sm">
                     <span class="font-xs text-danger-dk">*</span> Campos Obligatorios
                 </div>
-            </div>
-            <div class="row">
-                {{form}}
-            </div>
-            <div class="row">
-                {{form.$invalid}}
-            </div>
-            <div class="row">
-                {{validateProperties()}}
             </div>
             <br />
             <div class="row">

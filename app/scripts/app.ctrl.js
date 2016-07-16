@@ -729,6 +729,15 @@ angular.module('app')
             $scope._products = [];
             $scope.loading = false;
 
+            $scope._form = {
+                error : {
+                    reference: false,
+                },
+                success: {
+                    general: false
+                }
+            };
+
             function initializeData(){
                 $scope.subsidiaries = [];
                 SubsidiaryService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
@@ -757,22 +766,18 @@ angular.module('app')
             }
 
             $scope._create = function(){
-                var _t = formatRecord();
-                debugger;
                 RecordService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, formatRecord()
                     , function(response){
                         debugger;
-                        Flash.create('success',response.message
-                            +'. El código del certificado generado es ' +
-                            '<a class="font-bold" href="'+getPrintUrl(response.data.result)+'">'+response.data.result.id+'</a>,'
-                            +' para imprimir este certificado haga clic ' +
-                            '<a class="font-bold" href="'+getPrintUrl(response.data.result)+'">aquí</a>');
+                        Flash.create('success',response.message);
                         $scope._reset();
                     }, function(errorResponse){
                         debugger;
                         Flash.create('danger',errorResponse.data.message);
                         if(errorResponse.status == 406){ //validations error
-
+                            if(errorResponse.data.data.fields.reference){
+                                $scope._form.error.reference = errorResponse.data.data.fields.reference;
+                            }
                         }
                     });
             }
@@ -795,12 +800,13 @@ angular.module('app')
                     elaboration_date:$scope.record.elaboration_date,
                     due_date:$scope.record.due_date,
                     reception_date:$scope.record.reception_date,
-                    provider:$scope.record.provider,
+                    supplier:$scope.record.provider,
                     remission:$scope.record.remission,
                     quantity:$scope.record.quantity,
                     existent_quantity:$scope.record.quantity,
                     veredict:$scope.record.veredict,
                     active:$scope.record.active,
+                    satisfies:$scope.record.active,
                     notes:$scope.record.notes
                 };
                 var _properties = [];
@@ -820,8 +826,8 @@ angular.module('app')
                 $scope.record = {reference:'', product:$scope.record.product, analysis_date:_date, elaboration_date:_date, due_date:undefined, reception_date:undefined,
                     provider:undefined, remission:"", quantity:0, veredict:'', active:true, notes:'', properties:[]
                 };
+                $scope.updateProperties();
                 $scope.form.$setPristine();
-                $scope.form = {record:undefined};
             }
 
             $scope.updateStores = function(){
