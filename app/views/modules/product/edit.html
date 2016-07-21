@@ -1,0 +1,248 @@
+<flash-message duration="10000" show-close="true"></flash-message>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Crear Producto
+    </div>
+    <div class="panel-body">
+        <form name="form" novalidate ng-submit="_create();">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="qmd-input"  ng-class="{'selected':product.name}">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                               ng-model="product.name"
+                               ng-required="true" ng-minlength="3" tabindex="101" autofocus aria-required="true"
+                               aria-invalid="true" name="name">
+                        <label><span class="font-xs text-danger-dk">*</span> Nombre</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="qmd-input" ng-class="{'selected':product.reference}">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="product.reference"
+                               ng-required="true" tabindex="102" aria-required="true" aria-invalid="true" style=""
+                               ng-class="{'b-b-danger':_form.error.reference && _form.error.reference.error && _form.error.reference.value==product.reference}" name="reference">
+                        <label><span class="font-xs text-danger-dk">*</span> Referencia
+                            &nbsp;<span class="label bg-danger pos-rlt m-r-xs" ng-show="_form.error.reference && _form.error.reference.error && _form.error.reference.value==product.reference"><b class="arrow left b-danger pull-in"></b>{{_form.error.reference.message}}</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="qmd-select" ng-class="{'selected':selecteds.subsidiary}">
+                        <label><span class="font-xs text-danger-dk">*</span>Sucursal</label>
+                        <ui-select name="subsidiary" ng-model="selecteds.subsidiary" ng-change="updateStores()" tabindex="103">
+                            <ui-select-match placeholder="Seleccione Sucursal...">
+                                {{$select.selected.name}} ({{$select.selected.reference}})
+                            </ui-select-match>
+                            <ui-select-choices repeat="subsidiary.id as subsidiary in subsidiaries|orderBy:'+name' | filter: $select.search">
+                                <div ng-bind-html="subsidiary.name+' ('+subsidiary.reference+')' | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="qmd-select" ng-class="{'selected':product.store}">
+                        <label><span class="font-xs text-danger-dk">*</span>Tienda/Bodega</label>
+                        <ui-select name="store" ng-model="product.store" tabindex="104">
+                            <ui-select-match placeholder="Seleccione Tienda/Bodega...">
+                                {{$select.selected.name}} ({{$select.selected.reference}})
+                            </ui-select-match>
+                            <ui-select-choices repeat="store.id as store in stores|orderBy:'+name' | filter: $select.search">
+                                <div ng-bind-html="store.name+' ('+store.reference+')' | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="qmd-textarea selected">
+                    <textarea ckeditor class="md-input ng-invalid ng-invalid-required ng-touched"
+                              ng-model="product.max_dose" tabindex="105" ng-required="true"
+                              name="clause" rows="2"></textarea>
+                        <label><span class="font-xs text-danger-dk">*</span>Dosis Máxima</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="qmd-select" ng-class="{'selected':product.due_date}">
+                        <label><span class="font-xs text-danger-dk">*</span>Vencimiento</label>
+                        <ui-select name="due_date" ng-model="product.due_date" tabindex="106">
+                            <ui-select-match placeholder="Seleccione Vencimiento...">
+                                {{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="due.value as due in dueList|orderBy:'+value' | filter: $select.search">
+                                <div ng-bind-html="due.name | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="qmd-input"  ng-class="{'selected':product.certification_nsf}">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                               ng-model="product.certification_nsf"
+                               tabindex="107"  name="certification_nsf">
+                        <label> Certficado NSF</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <label class="md-switch">
+                        <input type="checkbox" ng-model="product.active" checked>
+                        <i class="green"></i>
+                        <span ng-class="{'text-success':subsidiary.active, 'text-warning-dk':!product.active}">
+                            <span ng-show="product.active">Activo</span>
+                            <span ng-show="!product.active">Inactivo</span>
+                        </span>
+                    </label>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-danger-dk text-right font-sm">
+                    <span class="font-xs text-danger-dk">*</span> Campos Obligatorios
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <fieldset>
+                        <legend>
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-6 col-md-8 col-lg-8">
+                                    <h4>Propiedades</h4>
+                                </div>
+                                <div class="col-xs-6 col-sm-6 col-md-8 col-lg-4 text-right">
+                                    <button type="button" class="btn btn-icon btn-rounded btn-info waves" tabindex="109" ng-click="addProperty()">
+                                        <i class="mdi-content-add i-24"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </legend>
+                        <ul class="list-group list-group-alt">
+                            <li class="list-group-item" ng-repeat="property in product.properties">
+                                <div class="row">
+                                    <div class="col-lg-1">
+                                        <button type="button" class="btn btn-icon btn-rounded btn-default waves" ng-click="removeProperty($index)">
+                                            <i class="mdi-content-remove i-20"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="qmd-textarea selected">
+                                            <textarea ckeditor class="md-input ng-invalid ng-invalid-required ng-touched"
+                                              ng-model="property.name" tabindex="{{200+($index*100)}}"
+                                              name="property[{{$index}}].name" rows="2"></textarea>
+                                            <label><span class="font-xs text-danger-dk">*</span>Descripción</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <div class="qmd-select" ng-class="{'selected':property.validation.type}">
+                                            <label><span class="font-xs text-danger-dk">*</span>Tipo de propiedad</label>
+                                            <ui-select name="store" ng-model="property.validation.type" ng-change="updateProperty($index)"
+                                                       tabindex="{{200+($index*100)+1}}" name="property[{{$index}}].type">
+                                                <ui-select-match placeholder="Seleccione tipo de propiedad...">
+                                                    {{$select.selected.name}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="type.value as type in propertyTypeList|orderBy:'+name' | filter: $select.search">
+                                                    <div ng-bind-html="type.name | highlight: $select.search"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-5" ng-show="property.validation.type==propertyTypeEnum.BOOLEAN">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="qmd-input" ng-class="{'selected':property.validation.yes_value}">
+                                                    <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                                                           ng-model="property.validation.yes_value"
+                                                           tabindex="{{200+($index*100)+2}}" name="property[{{$index}}].yes_value">
+                                                    <label><span class="font-xs text-danger-dk">*</span> Valor Aceptado</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="qmd-input" ng-class="{'selected':property.validation.no_value}">
+                                                    <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                                                           ng-model="property.validation.no_value"
+                                                           tabindex="{{200+($index*100)+3}}" name="property[{{$index}}].no_value">
+                                                    <label><span class="font-xs text-danger-dk">*</span> Valor Rechazado</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-5" ng-show="property.validation.type==propertyTypeEnum.LIST">
+                                        <button type="button" class="btn btn-icon btn-rounded btn-default waves" ng-click="addPropertyListItem($index)">
+                                            <i class="mdi-content-add i-20"></i>
+                                        </button>
+                                        <ul class="list-group">
+                                            <li class="list-group-item" ng-repeat="item in property.validation.list">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="qmd-input" ng-class="{'selected':item.label}">
+                                                            <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                                                                   ng-model="item.label"
+                                                                   tabindex="{{200+($parent.$index*100)+10+($index)}}"
+                                                                   name="property[{{$parent.$index}}].list[{{$index}}].label">
+                                                            <label><span class="font-xs text-danger-dk">*</span> Valor</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <div class="qmd-input">
+                                                            <label class="md-switch text-muted-no">
+                                                                <input type="checkbox" ng-model="item.valid" name="property[{{$parent.$index}}].list[{{$index}}].valid">
+                                                                <i class="green"></i>
+                                                                <span ng-class="{'text-success':item.valid, 'text-warning-dk':!item.valid}">
+                                                                    <span ng-show="item.valid">Válido</span>
+                                                                    <span ng-show="!item.valid">Inválido</span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-2">
+                                                        <div class="qmd-input selected">
+                                                            <button type="button" class="btn btn-icon btn-rounded btn-default waves" ng-click="removePropertyListItem($parent.$index, $index)">
+                                                                <i class="mdi-content-remove i-20"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-lg-4" ng-show="property.validation.type==propertyTypeEnum.RANGE">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="qmd-input" ng-class="{'selected':property.validation.min_value!==''}">
+                                                    <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" tabindex="{{200+($index*100)+11}}"
+                                                           ng-model="property.validation.min_value" type="number" name="property[{{$index}}].min_value">
+                                                    <label>Mínimo</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="qmd-input" ng-class="{'selected':property.validation.max_value!==''}">
+                                                    <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" tabindex="{{200+($index*100)+12}}"
+                                                           ng-model="property.validation.max_value" type="number"  name="property[{{$index}}].max_value">
+                                                    <label>Máximo</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </fieldset>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="row">
+                        <div ng-show="_form.error.general" class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-danger">
+                            <i class="icon fa fa-remove"></i> {{_form.error.general.message}}
+                        </div>
+                        <div ng-show="_form.success.general" class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-success">
+                            <i class="icon fa fa-check"></i> {{_form.success.general.message}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-right">
+                    <button class="btn btn-default" ng-click="_goBack()" type="button">Volver</button>
+                    <button class="btn btn-addon btn-primary" ng-disabled="form.$invalid || !product.store || !product.due_date || !validateProperties() || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Producto</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

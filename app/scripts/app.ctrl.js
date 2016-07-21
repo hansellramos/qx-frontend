@@ -552,6 +552,183 @@ angular.module('app')
             $scope.get();
 
         }])
+    .controller('ProductAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'SubsidiaryService', 'StoreService', 'DueListFactory', 'PropertyTypeFactory', 'ngDialog', 'Flash', 'ProductService', 'APPLICATION', '$sce','$interval',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, SubsidiaryService, StoreService, DueListFactory, PropertyTypeFactory, ngDialog, Flash, ProductService, APPLICATION, $sce, $interval) {
+            $scope.product = { store:undefined, name:'', reference:'', due_date:4, max_dose:'', notes:'', certification_nsf:''
+                , properties:[{name:'', validation:{type:APPLICATION.ENUM.PROPERTY.TYPE.TEXT}}], active:true
+            };
+            $scope.selecteds = {
+                subsidiary: undefined
+            };
+            $scope.subsidiaries = [];
+            $scope.stores = [];
+            $scope._stores = [];
+            $scope.dueList = DueListFactory.get();
+            $scope.propertyTypeList = PropertyTypeFactory.get();
+            $scope.propertyTypeEnum = APPLICATION.ENUM.PROPERTY.TYPE;
+            $scope.loading = false;
+
+            $scope._form = {
+                error : {
+                    reference: false,
+                },
+                success: {
+                    general: false
+                }
+            };
+
+            function initializeData(){
+                $scope.subsidiaries = [];
+                SubsidiaryService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function (response) {$scope.subsidiaries = response;$scope.requesting = false;
+                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    });
+                $scope._stores = [];
+                StoreService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function (response) {$scope._stores = response;$scope.requesting = false;
+                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    });
+            }
+
+            $scope._goBack = function(){
+                $state.go('app.product');
+            }
+
+            $scope._create = function(){
+                ProductService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.product
+                    , function(response){
+                        debugger;
+                        Flash.create('success',response.message);
+                        $scope._reset();
+                    }, function(errorResponse){
+                        debugger;
+                        Flash.create('danger',errorResponse.data.message);
+                        if(errorResponse.status == 406){ //validations error
+                            if(errorResponse.data.data.fields.reference){
+                                $scope._form.error.reference = errorResponse.data.data.fields.reference;
+                            }
+                        }
+                    });
+            }
+
+            $scope.validateProperties = function(){
+                if($scope.record.product==undefined) return false;
+                for(var i in $scope.record.properties){
+                    if($scope.record.properties[i].value == ""){
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            $scope._reset = function(){
+                $scope.product = { store:undefined, name:'', reference:'', due_date:4, max_dose:'', notes:'', certification_nsf:''
+                    , properties:[{name:'', validation:{type:APPLICATION.ENUM.PROPERTY.TYPE.TEXT}}], active:true
+                };
+                $scope.form.$setPristine();
+            }
+
+            $scope.updateStores = function(){
+                $scope.stores = [];
+                for(var i in $scope._stores){
+                    var _store = $scope._stores[i];
+                    if(_store.subsidiary && _store.subsidiary.length>0 &&  _store.subsidiary[0].id==$scope.selecteds.subsidiary){
+                        $scope.stores.push(_store);
+                    }
+                }
+            };
+
+            $scope.addProperty = function(){
+                $scope.product.properties.push(
+                    {
+                        name:'',
+                        validation:{
+                            type:'text'
+                        },
+                        active:true,
+                        remission_editable:false
+                    }
+                );
+            }
+
+            $scope.removeProperty = function(index){
+                if($scope.product.properties.length-1<index){
+                    delete $scope.product.properties[index];
+                }
+            }
+
+            $scope.updateProperty = function(index){
+                if($scope.product.properties[index].validation.type==APPLICATION.ENUM.PROPERTY.TYPE.LIST){
+                    $scope.product.properties[index].validation = {
+                        type:APPLICATION.ENUM.PROPERTY.TYPE.LIST,
+                        list:[{
+                            label: '', valid: true
+                        }]
+                    };
+                }else if($scope.product.properties[index].validation.type==APPLICATION.ENUM.PROPERTY.TYPE.RANGE){
+                    $scope.product.properties[index].validation = {
+                        type:APPLICATION.ENUM.PROPERTY.TYPE.RANGE,
+                        max_value:1.00,
+                        min_value:0.00
+                    };
+                }else if($scope.product.properties[index].validation.type==APPLICATION.ENUM.PROPERTY.TYPE.BOOLEAN){
+                    $scope.product.properties[index].validation = {
+                        type:APPLICATION.ENUM.PROPERTY.TYPE.BOOLEAN,
+                        yes_value:'',
+                        no_value:''
+                    };
+                }else if($scope.product.properties[index].validation.type==APPLICATION.ENUM.PROPERTY.TYPE.TEXT){
+                    $scope.product.properties[index].validation = {
+                        type:APPLICATION.ENUM.PROPERTY.TYPE.TEXT
+                    };
+                }
+            }
+
+            $scope.addPropertyListItem = function(index){
+                $scope.product.properties[index].validation.list.push({
+                    label: '', valid: true
+                });
+            }
+
+            $scope.removePropertyListItem = function(parent, index){
+                delete $scope.product.properties[parent].validation.list[index];
+            }
+
+            $scope.validateProperties = function(){
+                for(var i in $scope.product.properties){
+                    var _p = $scope.product.properties[i];
+                    if(_p.name===''){
+                        return false;
+                    }
+                    if(_p.type===APPLICATION.ENUM.PROPERTY.TYPE.TEXT){
+                        //text validations
+                    }else if(_p.type===APPLICATION.ENUM.PROPERTY.TYPE.LIST){
+                        for(var j in _p.validation.list){
+                            var _e = _p.validation.list[j];
+                            if(_e.label===''){
+                                return false;
+                            }
+                        }
+                    }else if(_p.type===APPLICATION.ENUM.PROPERTY.TYPE.RANGE){
+                        if(_p.validations.max_value!=='' && _p.validations.min_value!==''
+                            && parseFloat(_p.validation.max_value)<=parseFloat(_p.validation.min_value)){
+                            return false;
+                        }
+                        if(_p.validations.min_value!=='' && _p.validations.max_value!==''
+                            && parseFloat(_p.validation.min_value)>=parseFloat(_p.validation.max_value)){
+                            return false;
+                        }
+                    }else if(_p.type===APPLICATION.ENUM.PROPERTY.TYPE.BOOLEAN){
+                        if(_p.validation.yes_value==='' || _p.validation.no_value===''){
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
+            initializeData();
+        }])
     .controller('RecordCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'SubsidiaryService', 'StoreService', 'ProductService', 'ngDialog', 'Flash', 'RecordService', 'APPLICATION', '$sce','$interval',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, SubsidiaryService, StoreService, ProductService, ngDialog, Flash, RecordService, APPLICATION, $sce, $interval) {
 

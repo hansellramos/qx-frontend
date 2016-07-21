@@ -5096,6 +5096,11 @@ a.text-dark:hover {
   color: rgba(0, 0, 0, 0.87);
 }
 
+.text-muted-no {
+  color: inherit;
+  opacity: 1 !important;
+}
+
 .text-muted {
   color: inherit;
   opacity: 0.75;
