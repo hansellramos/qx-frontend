@@ -85,6 +85,13 @@ angular.module('app')
                         data: {title: 'Nueva Tienda/Bodega'},
                         controller: 'StoreAddCtrl'
                     })
+                    .state('app.storeEdit', {
+                        url: '/store/edit/:_id',
+                        templateUrl: 'views/modules/store/edit.html',
+                        data: {title: 'Modificar Bodega/Tienda'},
+                        controller: 'StoreEditCtrl',
+                        resolve: load(['ui.select'])
+                    })
                     .state('app.product', {
                         url: '/product',
                         templateUrl: 'views/modules/product/index.html',

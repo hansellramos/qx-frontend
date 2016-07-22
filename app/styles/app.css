@@ -6427,6 +6427,24 @@ a.text-dark:hover {
   transition: all 0.2s;
 }
 
+.floating-message{
+  position: fixed;
+  left: 24px;
+  right: 24px;
+  top: 96px;
+  z-index: 1000;
+  opacity: 0.95;
+}
+
+.floating-message .alert{
+  webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+}
+
+.app-aside:not(.folded):not(.hide) ~ .app-content .floating-message{
+  left: 264px;
+}
+
 @media (max-width: 991px) {
   .w-auto-sm {
     width: auto;

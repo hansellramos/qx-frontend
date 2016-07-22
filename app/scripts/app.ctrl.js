@@ -356,6 +356,11 @@ angular.module('app')
             $scope.original = undefined;
             $scope.users = [];
             $scope.subsidiary = {};
+            $scope._form = {
+                error : {
+                    reference: false,
+                }
+            };
 
             $scope._submit = $scope._edit = function(){
                 SubsidiaryService.update({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}, $scope._getChanges()
@@ -486,6 +491,10 @@ angular.module('app')
                 });
             }
 
+            $scope.edit = function(item){
+                $state.go('app.storeEdit', {'_id':item.id});
+            }
+
             $scope._cancelDelete = function(){
                 $scope._item = null;
                 ngDialog.closeAll();
@@ -534,7 +543,7 @@ angular.module('app')
                 }
             };
 
-            $scope._create = function(){
+            $scope._submit = $scope._create = function(){
                 debugger;
                 StoreService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.store
                     , function(response){
@@ -556,6 +565,97 @@ angular.module('app')
             $scope._goBack = function(){
                 $state.go('app.store');
             }
+        }])
+    .controller('StoreEditCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'StoreService', 'SubsidiaryService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, StoreService, SubsidiaryService, APPLICATION) {
+            $scope.original = undefined;
+            $scope.subsidiaries = [];
+            $scope.store = {};
+            $scope._form = {
+                error : {
+                    reference: false,
+                }
+            };
+            $scope._submit = $scope._edit = function(){
+                StoreService.update({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}, $scope._getChanges()
+                    , function(response){
+                        Flash.create('success',response.message);
+                        $scope._init();
+                    }, function(errorResponse){
+                        debugger;
+                        Flash.create('danger',errorResponse.data.message);
+                        if(errorResponse.status == 406){ //validations error
+                            if(errorResponse.data.data.fields.reference){
+                                $scope._form.error.reference = errorResponse.data.data.fields.reference;
+                            }
+                        }
+                    });
+            }
+
+            $scope._validate = function(){
+                if(JSON.stringify($scope.original) == JSON.stringify($scope.store)){
+                    return false;
+                }else if(Object.keys($scope._getChanges()).length===0){
+                    return false;
+                }
+                return true;
+            }
+
+            $scope._goBack = function(){
+                $state.go('app.store');
+            }
+
+            $scope.__construct = function(){
+                $scope.original = undefined;
+                $scope.subsidiaries = [];
+                $scope.store = {};
+                //$scope.form.$setPristine();
+            }
+
+            $scope._getChanges = function(){
+                var changes = {};
+                if($scope.original.name!==$scope.store.name){
+                    changes.name = $scope.store.name;
+                }
+                if($scope.original.reference!==$scope.store.reference){
+                    changes.reference = $scope.store.reference;
+                }
+                if($scope.original.subsidiary!==$scope.store.subsidiary){
+                    changes.subsidiary = $scope.store.subsidiary;
+                }
+                if($scope.original.address!==$scope.store.address){
+                    changes.address = $scope.store.address;
+                }
+                if($scope.original.phone!==$scope.store.phone){
+                    changes.phone = $scope.store.phone;
+                }
+                if($scope.store.notes && $scope.store.notes!=='<p></p>' && $scope.original.notes!==$scope.store.notes){
+                    changes.notes = $scope.store.notes;
+                }
+                if($scope.original.active!==$scope.store.active){
+                    changes.active = $scope.store.active;
+                }
+                return changes;
+            }
+
+            $scope._init = function(){
+                $scope.__construct();
+                StoreService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}
+                    , function (response) {
+                        $scope.store = response;
+                        $scope.store.subsidiary = $scope.store.subsidiary[0].id;
+                        $scope.original = JSON.parse(JSON.stringify($scope.store));
+                        $scope.requesting = false;
+                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    });
+                SubsidiaryService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function (response) {$scope.subsidiaries = response;$scope.requesting = false;
+                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    });
+            }
+
+            $scope._init();
+
         }])
     .controller('ProductCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'ProductService', 'APPLICATION',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, ProductService, APPLICATION) {
