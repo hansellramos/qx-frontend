@@ -260,8 +260,8 @@ angular.module('app')
                                 id: response[i]._id,
                                 name: response[i].name,
                                 reference: response[i].reference,
-                                leader: response[i].leader,
-                                //leader: response[i].leader[0].firstname+' '+response[i].leader[0].lastname,
+                                //leader: response[i].leader,
+                                leader: response[i].leader[0].firstname+' '+response[i].leader[0].lastname,
                                 active: response[i].active
                             });
                         }
@@ -284,6 +284,10 @@ angular.module('app')
                     scope: $scope,
                     width: window.innerWidth < 800 ? window.innerWidth-24 : window.innerWidth-384
                 });
+            }
+
+            $scope.edit = function(item){
+                $state.go('app.subsidiaryEdit', {'_id':item.id});
             }
 
             $scope._cancelDelete = function(){
@@ -310,7 +314,7 @@ angular.module('app')
         }])
     .controller('SubsidiaryAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'UserService', 'SubsidiaryService', 'APPLICATION',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, UserService, SubsidiaryService, APPLICATION) {
-            $scope.subsidiary = {name:"", reference:"", leader:'', active:true};
+            $scope.subsidiary = {name:"", reference:"", leader:undefined, active:true};
             $scope.requesting = false;
             $scope.users = [];
             UserService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
@@ -325,12 +329,12 @@ angular.module('app')
                 }
             };
 
-            $scope._create = function(){
+            $scope._submit = $scope._create = function(){
                 SubsidiaryService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.subsidiary
                 , function(response){
                     debugger;
                     Flash.create('success',response.message);
-                    $scope.subsidiary = {name:"", reference:"", leader:'', active:true};
+                    $scope.subsidiary = {name:"", reference:"", leader:undefined, active:true};
                     $scope.form.$setPristine();
                 }, function(errorResponse){
                     debugger;
@@ -346,6 +350,85 @@ angular.module('app')
             $scope._goBack = function(){
                 $state.go('app.subsidiary');
             }
+        }])
+    .controller('SubsidiaryEditCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'UserService', 'SubsidiaryService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, UserService, SubsidiaryService, APPLICATION) {
+            $scope.original = undefined;
+            $scope.users = [];
+            $scope.subsidiary = {};
+
+            $scope._submit = $scope._edit = function(){
+                SubsidiaryService.update({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}, $scope._getChanges()
+                    , function(response){
+                        debugger;
+                        Flash.create('success',response.message);
+                        $scope._init();
+                    }, function(errorResponse){
+                        debugger;
+                        Flash.create('danger',errorResponse.data.message);
+                        if(errorResponse.status == 406){ //validations error
+                            if(errorResponse.data.data.fields.reference){
+                                $scope._form.error.reference = errorResponse.data.data.fields.reference;
+                            }
+                        }
+                    });
+            }
+
+            $scope._validate = function(){
+                if(JSON.stringify($scope.original) == JSON.stringify($scope.subsidiary)){
+                    return false;
+                }else if(Object.keys($scope._getChanges()).length===0){
+                    return false;
+                }
+                return true;
+            }
+
+            $scope._goBack = function(){
+                $state.go('app.subsidiary');
+            }
+
+            $scope.__construct = function(){
+                $scope.original = undefined;
+                $scope.users = [];
+                $scope.subsidiary = {};
+                //$scope.form.$setPristine();
+            }
+
+            $scope._getChanges = function(){
+                var changes = {};
+                if($scope.original.name!==$scope.subsidiary.name){
+                    changes.name = $scope.subsidiary.name;
+                }
+                if($scope.original.reference!==$scope.subsidiary.reference){
+                    changes.reference = $scope.subsidiary.reference;
+                }
+                if($scope.original.leader!==$scope.subsidiary.leader){
+                    changes.leader = $scope.subsidiary.leader;
+                }
+                if($scope.original.active!==$scope.subsidiary.active){
+                    changes.active = $scope.subsidiary.active;
+                }
+                return changes;
+            }
+
+            $scope._init = function(){
+                $scope.__construct();
+                SubsidiaryService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}
+                    , function (response) {
+                        $scope.subsidiary = response;
+                        $scope.subsidiary.leader = $scope.subsidiary.leader[0].id;
+                        $scope.original = JSON.parse(JSON.stringify($scope.subsidiary));
+                        $scope.requesting = false;
+                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                });
+                UserService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function (response) {$scope.users = response;$scope.requesting = false;
+                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                });
+            }
+
+            $scope._init();
+
         }])
     .controller('StoreCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'StoreService', 'APPLICATION',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, StoreService, APPLICATION) {

@@ -66,6 +66,13 @@ angular.module('app')
                         controller: 'SubsidiaryAddCtrl',
                         resolve: load(['ui.select'])
                     })
+                    .state('app.subsidiaryEdit', {
+                        url: '/subsidiary/edit/:_id',
+                        templateUrl: 'views/modules/subsidiary/edit.html',
+                        data: {title: 'Modificar Sucursal'},
+                        controller: 'SubsidiaryEditCtrl',
+                        resolve: load(['ui.select'])
+                    })
                     .state('app.store', {
                         url: '/store',
                         templateUrl: 'views/modules/store/index.html',

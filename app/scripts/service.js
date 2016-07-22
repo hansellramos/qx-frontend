@@ -16,19 +16,19 @@ angular
     }])
     .factory('SubsidiaryService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
         return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.SUBSIDIARY + ':token/:id'
-            , {token: '@token', id: '@id'})
+            , {token: '@token', id: '@id'}, { update: { method: 'PUT' }})
     }])
     .factory('StoreService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
         return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.STORE + ':token/:id'
-            , {token: '@token', id: '@id'})
+            , {token: '@token', id: '@id'}, { update: { method: 'PUT' }})
     }])
     .factory('ProductService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
         return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.PRODUCT + ':token/:id'
-            , {token: '@token', id: '@id'})
+            , {token: '@token', id: '@id'}, { update: { method: 'PUT' }})
     }])
     .factory('RecordService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
         return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.RECORD + ':token/:product/:id'
-            , {token: '@token', product:'@product', id: '@id'})
+            , {token: '@token', product:'@product', id: '@id'}, { update: { method: 'PUT' }})
     }])
     .factory('CertificateService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
         return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.CERTIFICATE + ':token/:id'
@@ -36,15 +36,15 @@ angular
     }])
     .factory('ExternalService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
         return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.EXTERNAL + ':token/:id'
-            , {token: '@token', id: '@id'})
+            , {token: '@token', id: '@id'}, { update: { method: 'PUT' }})
     }])
     .factory('UserService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
         return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.USER + ':token/:id'
-            , {token: '@token', id: '@id'})
+            , {token: '@token', id: '@id'}, { update: { method: 'PUT' }})
     }])
     .factory('ProfileService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
         return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.PROFILE + ':token/:id'
-            , {token: '@token', id: '@id'})
+            , {token: '@token', id: '@id'}, { update: { method: 'PUT' }})
     }])
     .factory('PermissionsService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
         return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.PERMISSIONS + ':token/:id'
