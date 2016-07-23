@@ -1,45 +1,50 @@
-<flash-message duration="10000" show-close="true"></flash-message>
+<flash-message duration="10000" show-close="true" class="floating-message"></flash-message>
 <div class="panel panel-default">
     <div class="panel-heading">
-        Crear Cliente/Proveedor
+        <span ng-hide="original">Crear Cliente/Proveedor</span>
+        <span ng-show="original">Modificar Cliente/Proveedor {{original.name}}</span>
     </div>
     <div class="panel-body">
-        <form name="form" novalidate ng-submit="_create();">
+        <form name="form" novalidate ng-submit="_submit();">
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <div class="md-form-group float-label">
-                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="external.name"
-                               ng-required="true" tabindex="102" aria-required="true" aria-invalid="true" style=""
-                               ng-class="{'b-b-danger':_form.error.name && _form.error.name.error && _form.error.name.value==external.name}" name="name">
-                        <label><span class="font-xs text-danger-dk">*</span> Nombre
-                            &nbsp;<span class="label bg-danger pos-rlt m-r-xs" ng-show="_form.error.name && _form.error.name.error && _form.error.name.value==external.name"><b class="arrow left b-danger pull-in"></b>{{_form.error.name.message}}</span>
-                        </label>
+                    <div class="qmd-input" ng-class="{'selected':external.name}">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                               ng-model="external.name" ng-required="true" ng-minlength="3"
+                               tabindex="101" autofocus aria-required="true"
+                               name="name">
+                        <label><span class="font-xs text-danger-dk">*</span> Nombre</label>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <div class="md-form-group float-label">
-                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="external.address" tabindex="104" name="address">
+                    <div class="qmd-input"  ng-class="{'selected':external.address}">
+                        <input class="md-input"
+                               ng-model="external.address" tabindex="102"
+                               name="address">
                         <label>Dirección</label>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <div class="md-form-group float-label">
-                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="external.phone" tabindex="105"
+                    <div class="qmd-input"  ng-class="{'selected':external.phone}">
+                        <input class="md-input"
+                               ng-model="external.phone" tabindex="103"
                                name="phone">
                         <label>Teléfono</label>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <div class="md-form-group float-label">
-                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="external.contact" tabindex="106"
+                    <div class="qmd-input"  ng-class="{'selected':external.contact}">
+                        <input class="md-input"
+                               ng-model="external.contact" tabindex="104"
                                name="contact">
                         <label>Contacto</label>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="md-form-group float-label">
-                        <textarea class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="external.notes" tabindex="107"
-                                 name="notes" rows="2"></textarea>
+                    <div class="qmd-textarea selected">
+                        <textarea ckeditor class="md-input"
+                                  ng-model="external.notes" tabindex="105"
+                                  name="notes" rows="2"></textarea>
                         <label>Notas</label>
                     </div>
                 </div>
@@ -71,7 +76,8 @@
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-right">
                     <button class="btn btn-default" ng-click="_goBack()" type="button">Volver</button>
-                    <button class="btn btn-addon btn-primary" ng-disabled="form.$invalid || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Cliente/Proveedor</button>
+                    <button class="btn btn-addon btn-primary" ng-hide="original" ng-disabled="form.$invalid || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Cliente/Proveedor</button>
+                    <button class="btn btn-addon btn-primary" ng-show="original" ng-disabled="form.$invalid || !_validate() || requesting!=''" type="submit"><i class="fa fa-pencil"></i>Guardar Cliente/Proveedor</button>
                 </div>
             </div>
         </form>

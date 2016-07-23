@@ -1667,6 +1667,10 @@ angular.module('app')
                 });
             }
 
+            $scope.edit = function(item){
+                $state.go('app.externalEdit', {'_id':item.id});
+            }
+
             $scope._cancelDelete = function(){
                 $scope._item = null;
                 ngDialog.closeAll();
@@ -1701,7 +1705,7 @@ angular.module('app')
                 }
             };
 
-            $scope._create = function(){
+            $scope._submit = $scope._create = function(){
                 ExternalService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.external
                     , function(response){
                         debugger;
@@ -1722,6 +1726,85 @@ angular.module('app')
             $scope._goBack = function(){
                 $state.go('app.external');
             }
+        }])
+    .controller('ExternalEditCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'ExternalService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, ExternalService, APPLICATION) {
+            $scope.original = undefined;
+            $scope.external = {};
+            $scope._form = {
+                error : {
+                    reference: false,
+                }
+            };
+            $scope._submit = $scope._edit = function(){
+                ExternalService.update({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}, $scope._getChanges()
+                    , function(response){
+                        Flash.create('success',response.message);
+                        $scope._init();
+                    }, function(errorResponse){
+                        debugger;
+                        Flash.create('danger',errorResponse.data.message);
+                        if(errorResponse.status == 406){ //validations error
+
+                        }
+                    });
+            }
+
+            $scope._validate = function(){
+                if(JSON.stringify($scope.original) == JSON.stringify($scope.external)){
+                    return false;
+                }else if(Object.keys($scope._getChanges()).length===0){
+                    return false;
+                }
+                return true;
+            }
+
+            $scope._goBack = function(){
+                $state.go('app.external');
+            }
+
+            $scope.__construct = function(){
+                $scope.original = undefined;
+                $scope.external = {};
+                //$scope.form.$setPristine();
+            }
+
+            $scope._getChanges = function(){
+                var changes = {};
+                if($scope.original.name!==$scope.external.name){
+                    changes.name = $scope.external.name;
+                }
+                if($scope.original.address!==$scope.external.address){
+                    changes.address = $scope.external.address;
+                }
+                if($scope.original.phone!==$scope.external.phone){
+                    changes.phone = $scope.external.phone;
+                }
+                if($scope.external.notes && $scope.external.notes!=='<p></p>' && $scope.original.notes!==$scope.external.notes){
+                    changes.notes = $scope.external.notes;
+                }
+                if($scope.original.contact!==$scope.external.contact){
+                    changes.contact = $scope.external.contact;
+                }
+                if($scope.original.active!==$scope.external.active){
+                    changes.active = $scope.external.active;
+                }
+                return changes;
+            }
+
+            $scope._init = function(){
+                $scope.__construct();
+                ExternalService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}
+                    , function (response) {
+                        $scope.external = response;
+                        $scope.original = JSON.parse(JSON.stringify($scope.external));
+                        $scope.requesting = false;
+                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                });
+            }
+
+            $scope._init();
+
         }])
     .controller('UserCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'UserService', 'APPLICATION',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, UserService, APPLICATION) {

@@ -153,6 +153,13 @@ angular.module('app')
                         data: {title: 'Nuevo Cliente/Proveedor'},
                         controller: 'ExternalAddCtrl'
                     })
+                    .state('app.externalEdit', {
+                        url: '/external/edit/:_id',
+                        templateUrl: 'views/modules/external/edit.html',
+                        data: {title: 'Modificar Proveedor/Cliente'},
+                        controller: 'ExternalEditCtrl',
+                        resolve: load(['ui.select'])
+                    })
                     .state('app.user', {
                         url: '/user',
                         templateUrl: 'views/modules/user/index.html',

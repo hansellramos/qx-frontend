@@ -126,7 +126,7 @@
 <br />
 <div class="row" ng-show="!itemLoading && item.clause">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        {{item.clause}}<br /><br />
+        <div ng-bind-html="item.clause"></div><br /><br />
     </div>
 </div>
 <div class="row" ng-show="!itemLoading">
