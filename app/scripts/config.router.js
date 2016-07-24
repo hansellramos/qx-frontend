@@ -172,6 +172,13 @@ angular.module('app')
                         data: {title: 'Nuevo Usuario'},
                         controller: 'UserAddCtrl'
                     })
+                    .state('app.userEdit', {
+                        url: '/user/edit/:_id',
+                        templateUrl: 'views/modules/user/edit.html',
+                        data: {title: 'Modificar Usuario'},
+                        controller: 'UserEditCtrl',
+                        resolve: load(['ui.select'])
+                    })
                     .state('app.profile', {
                         url: '/profile',
                         templateUrl: 'views/modules/profile/index.html',

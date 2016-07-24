@@ -7,7 +7,7 @@
         <form name="form" novalidate ng-submit="_create();">
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <div class="md-form-group float-label">
+                    <div class="qmd-input"  ng-class="{'selected':user.username}">
                         <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" name="username" ng-model="user.username"
                                ng-minlength="3" ng-required="true" tabindex="101" aria-required="true" aria-invalid="true" style=""
                                ng-class="{'b-b-danger':_form.error.username && _form.error.username.error && _form.error.username.value==user.username}" name="username">
@@ -17,25 +17,32 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <label class="md-switch p-h-xs w-100">
-                        <span class='font-xs text-danger-dk f-l'>*</span>
-                        <md-select ng-model="user.profile" name="profile" class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched w-auto"
-                                   placeholder="Seleccione Perfil" ng-required="true" tabindex="102" aria-required="true" aria-invalid="true">
-                            <md-option ng-repeat="profile in profiles|orderBy:'name'" ng-value="profile.id">{{ profile.name }} <small>{{profile.description}}</small></md-option>
-                        </md-select>
-                    </label>
+                    <div class="qmd-select" ng-class="{'selected':user.profile}">
+                        <label><span class="font-xs text-danger-dk">*</span>Perfil</label>
+                        <ui-select name="subsidiary" ng-model="user.profile" tabindex="103" ng-required="true">
+                            <ui-select-match placeholder="Seleccione Perfil...">
+                                {{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="profile.id as profile in profiles|orderBy:'+name' | filter: $select.search">
+                                <div ng-bind-html="profile.name | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <div class="md-form-group float-label">
-                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" name="password" ng-model="user.password"
-                               ng-minlength="6" ng-required="true" tabindex="103" aria-required="true" aria-invalid="true" style="" type="password">
+                    <div class="qmd-input"  ng-class="{'selected':user.password}">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                               ng-model="user.password" type="password"
+                               ng-required="true" ng-minlength="3" tabindex="103" autofocus
+                               aria-required="true" aria-invalid="true" ng-minlength="6"
+                               name="password">
                         <label><span class="font-xs text-danger-dk">*</span> Contraseña</label>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <div class="md-form-group float-label">
+                    <div class="qmd-input"  ng-class="{'selected':user.repeatPassword}">
                         <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" name="repeatPasword" ng-model="user.repeatPassword"
                                ng-minlength="6" ng-required="true" tabindex="104" aria-required="true" aria-invalid="true" style="" type="password"
                                ng-class="{'b-b-danger':user.password != user.repeatPassword && user.password != ''}" name="repeatPassword">
@@ -45,7 +52,7 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <div class="md-form-group float-label">
+                    <div class="qmd-input"  ng-class="{'selected':user.firstname}">
                         <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="user.firstname"
                                ng-required="true" ng-minlength="2" tabindex="105" autofocus aria-required="true" aria-invalid="true" style=""
                                name="firstname">
@@ -53,7 +60,7 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <div class="md-form-group float-label">
+                    <div class="qmd-input"  ng-class="{'selected':user.lastname}">
                         <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="user.lastname"
                                ng-required="true" ng-minlength="2" tabindex="106" autofocus aria-required="true" aria-invalid="true" style=""
                                name="lastname">
@@ -61,7 +68,7 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <div class="md-form-group float-label">
+                    <div class="qmd-input"  ng-class="{'selected':user.email}">
                         <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="user.email"
                                ng-required="true" ng-minlength="6" tabindex="107" autofocus aria-required="true" aria-invalid="true" style=""
                                name="email" type="email">

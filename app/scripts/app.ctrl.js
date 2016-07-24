@@ -1852,6 +1852,10 @@ angular.module('app')
                 });
             }
 
+            $scope.edit = function(item){
+                $state.go('app.userEdit', {'_id':item._id});
+            }
+
             $scope._cancelDelete = function(){
                 $scope._item = null;
                 ngDialog.closeAll();
@@ -1923,6 +1927,95 @@ angular.module('app')
             $scope._goBack = function(){
                 $state.go('app.user');
             }
+        }])
+    .controller('UserEditCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'ProfileService', 'UserService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, ProfileService, UserService, APPLICATION) {
+            $scope.original = undefined;
+            $scope.profiles = [];
+            $scope.user = {};
+            $scope._form = {
+                error : {
+                    username: false,
+                    profile: false,
+                    repeatPassword: { message: APPLICATION.ENUM.MESSAGES.USER.PASSWORDS_NOT_EQUAL }
+                }
+            };
+            $scope._submit = $scope._edit = function(){
+                UserService.update({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}, $scope._getChanges()
+                    , function(response){
+                        Flash.create('success',response.message);$scope._init();
+                    }, function(errorResponse){
+                        debugger;
+                        Flash.create('danger',errorResponse.data.message);
+                        if(errorResponse.status == 406){ //validations error
+                            $scope._form.error.username = errorResponse.data.data.fields.username;
+                        }
+                    });
+            }
+
+            $scope._validate = function(){
+                if(JSON.stringify($scope.original) == JSON.stringify($scope.user)){
+                    return false;
+                }else if(Object.keys($scope._getChanges()).length===0){
+                    return false;
+                }
+                return true;
+            }
+
+            $scope._goBack = function(){
+                $state.go('app.user');
+            }
+
+            $scope.__construct = function(){
+                $scope.original = undefined;
+                $scope.user = {};
+                //$scope.form.$setPristine();
+            }
+
+            $scope._getChanges = function(){
+                var changes = {};
+                if($scope.original.firstname!==$scope.user.firstname){
+                    changes.firstname = $scope.user.firstname;
+                }
+                if($scope.original.lastname!==$scope.user.lastname){
+                    changes.lastname = $scope.user.lastname;
+                }
+                if($scope.original.username!==$scope.user.username){
+                    changes.username = $scope.user.username;
+                }
+                if($scope.user.password!=='' && $scope.user.password!==$scope.user.repeatPassword){
+                    changes.password = $scope.user.password;
+                }
+                if($scope.original.profile!==$scope.user.profile){
+                    changes.profile = $scope.user.profile;
+                }
+                if($scope.original.active!==$scope.external.active){
+                    changes.active = $scope.user.active;
+                }
+                if($scope.original.isAdmin!==$scope.external.isAdmin){
+                    changes.isAdmin = $scope.user.isAdmin;
+                }
+                return changes;
+            }
+
+            $scope._init = function(){
+                $scope.__construct();
+                ProfileService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function (response) {$scope.profiles = response;$scope.requesting = false;}
+                    , function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
+                    });
+                UserService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}
+                    , function (response) {
+                        $scope.user = response;
+                        $scope.user.profile = $scope.user.profile[0].id;
+                        $scope.original = JSON.parse(JSON.stringify($scope.user));
+                        $scope.requesting = false;
+                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    });
+            }
+
+            $scope._init();
+
         }])
     .controller('ProfileCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'ProfileService', 'APPLICATION',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, ProfileService, APPLICATION) {
