@@ -1301,7 +1301,7 @@ angular.module('app')
                 ngDialog.open({
                     template: 'detail',
                     scope: $scope,
-                    width: window.innerWidth < 800 ? window.innerWidth-24 : window.innerWidth-384
+                    //width: window.innerWidth < 800 ? window.innerWidth-24 : window.innerWidth-384
                 });
             }
 
@@ -1315,7 +1315,7 @@ angular.module('app')
                 ngDialog.open({
                     template: 'delete',
                     scope: $scope,
-                    width: window.innerWidth < 800 ? window.innerWidth-24 : window.innerWidth-384
+                    //width: window.innerWidth < 800 ? window.innerWidth-24 : window.innerWidth-384
                 });
             }
 

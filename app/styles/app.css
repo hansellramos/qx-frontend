@@ -6441,6 +6441,18 @@ a.text-dark:hover {
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
 }
 
+.ngdialog.ngdialog-theme-default{
+  padding-top: 32px;
+  padding-bottom: 32px;
+  z-index: 100;
+}
+
+.ngdialog.ngdialog-theme-default .ngdialog-content{
+  width: 96%;
+  margin-left: 2%;
+  margin-right: 2%;
+}
+
 .app-aside:not(.folded):not(.hide) ~ .app-content .floating-message{
   left: 264px;
 }
