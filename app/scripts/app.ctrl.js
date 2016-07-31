@@ -1512,6 +1512,16 @@ angular.module('app')
                 return 'javascript:window.open(\'#/print/certificate/'+item._id+'\',\'width=800,height=600\')';
             }
 
+            function getLeader(){
+                for(var i=0;i<$scope.subsidiaries.length;i++){
+                    if($scope.subsidiaries[i].id ==$scope.certificate.subsidiary){
+                        return $scope.subsidiaries[i].leader[0].firstname + ' '
+                            + $scope.subsidiaries[i].leader[0].lastname;
+                    }
+                }
+                return null;
+            }
+
             function formatCertificate(){
                 return {
                     date: $scope.certificate.date
@@ -1526,6 +1536,7 @@ angular.module('app')
                     , elaboration_date: $scope.certificate.elaboration_date
                     , max_dose: $scope.certificate.max_dose
                     , due_date: $scope.certificate.due_date
+                    , leader: getLeader()
                     , clause: $scope.certificate.clause
                     , active: true
                 };
