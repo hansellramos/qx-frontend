@@ -1,10 +1,11 @@
 <flash-message duration="10000" show-close="true"></flash-message>
 <div class="panel panel-default">
     <div class="panel-heading">
-        Crear Usuario
+        <span ng-hide="original">Crear Usuario</span>
+        <span ng-show="original">Modificar Usuario {{original.firstname}} {{original.lastname}}({{original.username}})</span>
     </div>
     <div class="panel-body">
-        <form name="form" novalidate ng-submit="_create();">
+        <form name="form" novalidate ng-submit="_submit();">
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                     <div class="qmd-input"  ng-class="{'selected':user.username}">
@@ -30,41 +31,41 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" ng-show="_p.isAdmin() || _p.hasPermission(_pn.USER_RESET_PASSWORD)">
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                     <div class="qmd-input"  ng-class="{'selected':user.password}">
                         <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
-                               ng-model="user.password" type="password"
-                               ng-required="true" ng-minlength="3" tabindex="103" autofocus
-                               aria-required="true" aria-invalid="true" ng-minlength="6"
+                               ng-model="user.password" type="password" ng-minlength="4"
+                               tabindex="103"
                                name="password">
-                        <label><span class="font-xs text-danger-dk">*</span> Contraseña</label>
+                        <label><span ng-show="user.password!=='' || user.repeatPassword!==''" class="font-xs text-danger-dk">*</span>Contraseña{{user.password}}</label>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                     <div class="qmd-input"  ng-class="{'selected':user.repeatPassword}">
                         <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" name="repeatPasword" ng-model="user.repeatPassword"
-                               ng-minlength="6" ng-required="true" tabindex="104" aria-required="true" aria-invalid="true" style="" type="password"
-                               ng-class="{'b-b-danger':user.password != user.repeatPassword && user.password != ''}" name="repeatPassword">
-                        <label><span class="font-xs text-danger-dk">*</span> Repetir Contraseña
+                               tabindex="104" type="password" ng-minlength="4"
+                               ng-class="{'b-b-danger':user.password != user.repeatPassword && user.password != ''}">
+                        <label><span ng-show="user.password!='' || user.repeatPassword!=''" class="font-xs text-danger-dk">*</span>Repetir Contraseña{{user.repeatPassword}}
                             &nbsp;<span class="label bg-danger pos-rlt m-r-xs" ng-show="user.password != user.repeatPassword && user.password != ''"><b class="arrow left b-danger pull-in"></b>{{_form.error.repeatPassword.message}}</span>
                         </label>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                     <div class="qmd-input"  ng-class="{'selected':user.firstname}">
                         <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="user.firstname"
                                ng-required="true" ng-minlength="2" tabindex="105" autofocus aria-required="true" aria-invalid="true" style=""
                                name="firstname">
-                        <label><span class="font-xs text-danger-dk">*</span> Nombres</label>
+                        <label><span class="font-xs text-danger-dk">*</span> Nombre</label>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                     <div class="qmd-input"  ng-class="{'selected':user.lastname}">
                         <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="user.lastname"
-                               ng-required="true" ng-minlength="2" tabindex="106" autofocus aria-required="true" aria-invalid="true" style=""
-                               name="lastname">
-                        <label><span class="font-xs text-danger-dk">*</span> Apellidos</label>
+                               tabindex="106" name="lastname">
+                        <label>Apellidos</label>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -87,6 +88,16 @@
                         </span>
                     </label>
                 </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-danger-dk font-sm" ng-show="_p.isAdmin()">
+                <label class="md-switch">
+                    <input type="checkbox" ng-model="user.isAdmin" checked tabindex="108">
+                    <i class="green"></i>
+                        <span ng-class="{'text-success':user.isAdmin}">
+                            <span ng-show="user.active">Administrador</span>
+                            <span ng-show="!user.active">No es Administrador</span>
+                        </span>
+                </label>
+            </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-danger-dk text-right font-sm">
                     <span class="font-xs text-danger-dk">*</span> Campos Obligatorios
                 </div>
@@ -105,7 +116,8 @@
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-right">
                     <button class="btn btn-default" ng-click="_goBack()" type="button">Volver</button>
-                    <button class="btn btn-addon btn-primary" ng-disabled="user.password === user.repeatPassword && form.$invalid || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Usuario</button>
+                    <button class="btn btn-addon btn-primary" ng-hide="original" ng-disabled="user.password ==='' || user.password !== user.repeatPassword || form.$invalid || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Usuario</button>
+                    <button class="btn btn-addon btn-primary" ng-show="original" ng-disabled="user.password !== user.repeatPassword || form.$invalid || !_validate() || requesting!=''" type="submit"><i class="fa fa-pencil"></i>Guardar Usuario</button>
                 </div>
             </div>
         </form>

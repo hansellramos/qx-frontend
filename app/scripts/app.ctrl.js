@@ -1994,16 +1994,19 @@ angular.module('app')
                 if($scope.original.username!==$scope.user.username){
                     changes.username = $scope.user.username;
                 }
-                if($scope.user.password!=='' && $scope.user.password!==$scope.user.repeatPassword){
+                if($scope.user.password!==''){
                     changes.password = $scope.user.password;
                 }
                 if($scope.original.profile!==$scope.user.profile){
                     changes.profile = $scope.user.profile;
                 }
-                if($scope.original.active!==$scope.external.active){
+                if($scope.original.email!==$scope.user.email){
+                    changes.email= $scope.user.email;
+                }
+                if($scope.original.active!==$scope.user.active){
                     changes.active = $scope.user.active;
                 }
-                if($scope.original.isAdmin!==$scope.external.isAdmin){
+                if($scope.original.isAdmin!==$scope.user.isAdmin){
                     changes.isAdmin = $scope.user.isAdmin;
                 }
                 return changes;
@@ -2018,6 +2021,8 @@ angular.module('app')
                 UserService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}
                     , function (response) {
                         $scope.user = response;
+                        $scope.user.password = $scope.user.repeatPassword = '';
+                        if(!$scope.user.email){$scope.user.email ='';}
                         $scope.user.profile = $scope.user.profile[0].id;
                         $scope.original = JSON.parse(JSON.stringify($scope.user));
                         $scope.requesting = false;

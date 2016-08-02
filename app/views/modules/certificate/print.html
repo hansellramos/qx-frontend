@@ -6,7 +6,7 @@
     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-center">
         <h4 class="font-bold">PRODUCTOS QUIMICOS PANAMERICANOS S.A.</h4>
         <h5 class="font-bold">CERTIFICADO DE CALIDAD </h5>
-        <h5 class="font-bold">No. {{item.id}}</h5>
+        <h5 class="font-bold">No. {{item.subsidiary[0].reference}}{{item.id}}</h5>
     </div>
     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-right">
         <qr text="qrcode" correction-level="'H'" size="96"></qr>
@@ -103,7 +103,7 @@
         </div>
         <div class="row">
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                FECHA DE VENCIMIENTO:
+                VENCIMIENTO:
             </div>
             <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 font-w100">
                 {{item.due_date}}
