@@ -2079,6 +2079,10 @@ angular.module('app')
                 });
             }
 
+            $scope.edit = function(item){
+                $state.go('app.profileEdit', {'_id':item._id});
+            }
+
             $scope._cancelDelete = function(){
                 $scope._item = null;
                 ngDialog.closeAll();
@@ -2134,7 +2138,7 @@ angular.module('app')
                 }
             }
 
-            $scope._create = function(){
+            $scope._submit = $scope._create = function(){
                 debugger;
                 ProfileService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.profile
                     , function(response){
@@ -2154,6 +2158,90 @@ angular.module('app')
             $scope._goBack = function(){
                 $state.go('app.profile');
             }
+        }])
+    .controller('ProfileEditCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'PermissionsService', 'ProfileService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, PermissionsService, ProfileService, APPLICATION) {
+            $scope.original = undefined;
+            $scope.permissions = [];
+            $scope.profile = {};
+            $scope._form = {
+                error : {
+                }
+            };
+            $scope._submit = $scope._edit = function(){
+                ProfileService.update({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}, $scope._getChanges()
+                    , function(response){
+                        Flash.create('success',response.message);$scope._init();
+                    }, function(errorResponse){
+                        debugger;
+                        Flash.create('danger',errorResponse.data.message);
+                        if(errorResponse.status == 406){ //validations error
+                        }
+                    });
+            }
+
+            $scope._updatePermissions = function(){
+                for(var i in  $scope.profile.permissions){
+                    if($scope.profile.permissions[i]===false){
+                        delete $scope.profile.permissions[i];
+                    }
+                }
+            }
+
+            $scope._validate = function(){
+                if(JSON.stringify($scope.original) == JSON.stringify($scope.user)){
+                    return false;
+                }else if(Object.keys($scope._getChanges()).length===0){
+                    return false;
+                }
+                return true;
+            }
+
+            $scope._goBack = function(){
+                $state.go('app.profile');
+            }
+
+            $scope.__construct = function(){
+                $scope.original = undefined;
+                $scope.profile = {};
+                //$scope.form.$setPristine();
+            }
+
+            $scope._getChanges = function(){
+                var changes = {};
+                if($scope.original.name!==$scope.profile.name){
+                    changes.name = $scope.profile.name;
+                }
+                if($scope.original.description!==$scope.profile.description){
+                    changes.description = $scope.profile.description;
+                }
+                if(JSON.stringify($scope.original.permissions)!==JSON.stringify($scope.profile.permissions)){
+                    changes.permissions = $scope.profile.permissions;
+                }
+                if($scope.original.active!==$scope.profile.active){
+                    changes.active = $scope.profile.active;
+                }
+                return changes;
+            }
+
+            $scope._init = function(){
+                $scope.__construct();
+                PermissionsService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function (response) {
+                        $scope.permissions = response;
+                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    });
+                ProfileService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}
+                    , function (response) {
+                        $scope.profile = response;
+                        $scope.original = JSON.parse(JSON.stringify($scope.profile));
+                        $scope.requesting = false;
+                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                });
+            }
+
+            $scope._init();
+
         }])
 
 ;

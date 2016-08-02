@@ -191,6 +191,13 @@ angular.module('app')
                         data: {title: 'Nuevo Perfil'},
                         controller: 'ProfileAddCtrl'
                     })
+                    .state('app.profileEdit', {
+                        url: '/profile/edit/:_id',
+                        templateUrl: 'views/modules/profile/edit.html',
+                        data: {title: 'Modificar Perfil'},
+                        controller: 'ProfileEditCtrl',
+                        resolve: load(['ui.select'])
+                    })
                     .state('app.analysis', {
                         url: '/analysis',
                         templateUrl: 'views/pages/dashboard.analysis.html',

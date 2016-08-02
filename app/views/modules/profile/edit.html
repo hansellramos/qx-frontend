@@ -1,13 +1,14 @@
 <flash-message duration="10000" show-close="true"></flash-message>
 <div class="panel panel-default">
     <div class="panel-heading">
-        Crear Perfil
+        <span ng-hide="original">Crear Perfil</span>
+        <span ng-show="original">Modificar Perfil {{original.name}}</span>
     </div>
     <div class="panel-body">
-        <form name="form" novalidate ng-submit="_create();">
+        <form name="form" novalidate ng-submit="_submit();">
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <div class="md-form-group float-label">
+                    <div class="qmd-input" ng-class="{'selected':profile.name}">
                         <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
                                ng-model="profile.name"
                                ng-required="true" ng-minlength="3" tabindex="101" autofocus aria-required="true"
@@ -17,7 +18,7 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="md-form-group float-label">
+                    <div class="qmd-textarea" ng-class="{'selected':profile.description}">
                         <textarea class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
                                   ng-model="profile.description" tabindex="107"
                                   name="description" rows="2"></textarea>
@@ -59,7 +60,7 @@
                             </div>
                         </legend>
                         <ul class="list-group list-group-alt">
-                            <li class="list-group-item" ng-repeat="permission in permissions|filter:_search:'strict'">
+                            <li class="list-group-item" ng-repeat="permission in permissions|filter:_search:'strict'|orderBy:'+name'">
                                 {{permission.name}}<br/>
                                 <small>{{permission.description}}</small>
                                 <span class="pull-right">
@@ -91,7 +92,8 @@
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-right">
                     <button class="btn btn-default" ng-click="_goBack()" type="button">Volver</button>
-                    <button class="btn btn-addon btn-primary" ng-disabled="form.$invalid || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Perfil</button>
+                    <button class="btn btn-addon btn-primary" ng-hide="original" ng-disabled="form.$invalid || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Perfil</button>
+                    <button class="btn btn-addon btn-primary" ng-show="original" ng-disabled="form.$invalid || !_validate() || requesting!=''" type="submit"><i class="fa fa-pencil"></i>Guardar Perfil</button>
                 </div>
             </div>
         </form>

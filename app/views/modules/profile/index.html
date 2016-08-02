@@ -51,7 +51,7 @@
             <div class="btn-group btn-group-justified m-b">
               <a href class="btn btn-rounded btn-info btn-icon" ng-click="showDetail(item)"><i class="icon glyphicon glyphicon-search i-16"></i></a>
               <a href class="btn btn-rounded btn-danger btn-icon" ng-show="_p.isAdmin() || _p.hasPermission(_pn.PROFILE_DELETE)" ng-click="delete(item)"><i class="icon glyphicon glyphicon-trash i-16"></i></a>
-              <a href class="btn btn-rounded btn-warning btn-icon" ng-show="_p.isAdmin() || _p.hasPermission(_pn.PROFILE_UPDATE)"><i class="icon fa fa-pencil-square-o i-16"></i></a>
+              <a href class="btn btn-rounded btn-warning btn-icon" ng-show="_p.isAdmin() || _p.hasPermission(_pn.PROFILE_UPDATE)"  ng-click="edit(item)"><i class="icon fa fa-pencil-square-o i-16"></i></a>
             </div>
           </td>
         </tr>
