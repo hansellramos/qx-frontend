@@ -1916,7 +1916,7 @@ angular.module('app')
                 }
             };
 
-            $scope._create = function(){
+            $scope._submit = $scope._create = function(){
                 debugger;
                 UserService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.user
                     , function(response){
