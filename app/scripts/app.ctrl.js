@@ -1131,7 +1131,7 @@ angular.module('app')
                 $state.go('app.record');
             }
 
-            $scope._create = function(){
+            $scope._submit = $scope._create = function(){
                 RecordService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, formatRecord()
                     , function(response){
                         debugger;
@@ -1227,6 +1227,100 @@ angular.module('app')
             }
 
             initializeData();
+        }])
+    .controller('RecordImportCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'SubsidiaryService', 'StoreService', 'ProductService', 'ngDialog', 'Flash', 'RecordService', 'APPLICATION', '$sce','$interval',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, SubsidiaryService, StoreService, ProductService, ngDialog, Flash, RecordService, APPLICATION, $sce, $interval) {
+
+            $scope.selecteds = {
+                subsidiary: undefined
+                , store: undefined
+                , product: undefined
+            };
+            $scope.subsidiaries = [];
+            $scope.stores = [];
+            $scope._stores = [];
+            $scope.products = [];
+            $scope.externals = [];
+            $scope._products = [];
+            $scope.loading = false;
+
+            $scope.config = {
+                firstRow:2,
+                fields:{
+                    lote:1,
+                    supplier: 2,
+                    remission: 3,
+                    analysisDate: 4,
+                    elaborationDate:5,
+                    receptionDate:6,
+                    dueDate:7,
+                    properties:[],
+                    quantity:8,
+                    existentQuantity:9,
+                    veredict:10,
+                    active:11,
+                    creator:12,
+                    notes:13
+                }
+            };
+
+            function initializeData(){
+                $scope.subsidiaries = [];
+                SubsidiaryService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function (response) {$scope.subsidiaries = response;$scope.requesting = false;
+                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    });
+                $scope._stores = [];
+                StoreService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function (response) {$scope._stores = response;$scope.requesting = false;
+                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    });
+                $scope._products = [];
+                ProductService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function (response) {$scope._products = response;$scope.requesting = false;
+                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    });
+                $scope.externals = [];
+                ExternalService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function (response) {$scope.externals = response;$scope.requesting = false;
+                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    });
+            }
+
+            $scope.updateStores = function(){
+                $scope.stores = [];
+                for(var i in $scope._stores){
+                    var _store = $scope._stores[i];
+                    if(_store.subsidiary && _store.subsidiary.length>0 &&  _store.subsidiary[0].id==$scope.selecteds.subsidiary){
+                        $scope.stores.push(_store);
+                    }
+                }
+            };
+
+            $scope.updateProducts = function(){
+                $scope.products = [];
+                for(var i in $scope._products){
+                    var _product = $scope._products[i];
+                    if(_product.store && _product.store.length>0 && _product.store[0]._id==$scope.selecteds.store){
+                        $scope.products.push(_product);
+                    }
+                }
+            };
+
+            $scope.updateProperties = function(){
+                /*
+                $scope.record.product = $scope.selecteds.product.id;
+                $scope.record.properties = [];
+                for(var i in $scope.selecteds.product.properties){
+                    var _p = $scope.selecteds.product.properties[i];
+                    _p.value = '';
+                    $scope.record.properties.push(_p);
+                }
+                */
+            }
+
+            initializeData();
+
         }])
     .controller('CertificateCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'CertificateService', 'APPLICATION', '$sce',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, CertificateService, APPLICATION, $sce) {

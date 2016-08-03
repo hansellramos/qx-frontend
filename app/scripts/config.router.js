@@ -119,6 +119,13 @@ angular.module('app')
                         controller: 'RecordAddCtrl',
                         resolve: load(['ui.select'])
                     })
+                    .state('app.recordImport', {
+                        url: '/record/import/:product',
+                        templateUrl: 'views/modules/record/import.html',
+                        data: {title: 'Importar Muestras'},
+                        controller: 'RecordImportCtrl',
+                        resolve: load(['ui.select'])
+                    })
                     .state('app.certificate', {
                         url: '/certificate',
                         templateUrl: 'views/modules/certificate/index.html',

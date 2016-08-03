@@ -1,0 +1,150 @@
+<flash-message duration="60000" show-close="true" class="floating-message"></flash-message>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Importar Muestras
+    </div>
+    <div class="panel-body">
+        <form name="form" novalidate ng-submit="_create();">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <div class="qmd-select" ng-class="{'selected':selecteds.subsidiary}">
+                        <label><span class="font-xs text-danger-dk">*</span>Sucursal</label>
+                        <ui-select name="subsidiary" ng-model="selecteds.subsidiary" ng-change="updateStores()" tabindex="101">
+                            <ui-select-match placeholder="Seleccione Sucursal...">
+                                {{$select.selected.name}} ({{$select.selected.reference}})
+                            </ui-select-match>
+                            <ui-select-choices repeat="subsidiary.id as subsidiary in subsidiaries|orderBy:'+name' | filter: $select.search">
+                                <div ng-bind-html="subsidiary.name+' ('+subsidiary.reference+')' | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <div class="qmd-select" ng-class="{'selected':selecteds.store}">
+                        <label>Tienda/Bodega</label>
+                        <ui-select name="store" ng-model="selecteds.store" ng-change="updateProducts()"  tabindex="102">
+                            <ui-select-match placeholder="Seleccione Tienda/Bodega...">
+                                {{$select.selected.name}} ({{$select.selected.reference}})
+                            </ui-select-match>
+                            <ui-select-choices repeat="store._id as store in stores|orderBy:'+name' | filter: $select.search">
+                                <div ng-bind-html="store.name+' ('+store.reference+')' | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <div class="qmd-select" ng-class="{'selected':selecteds.product}">
+                        <label><span class="font-xs text-danger-dk">*</span>Producto</label>
+                        <ui-select ng-model="selecteds.product" theme="bootstrap" ng-change="updateProperties()" tabindex="103" ng-required="true">
+                            <ui-select-match placeholder="Seleccione Producto...">
+                                {{$select.selected.name}} ({{$select.selected.reference}})
+                            </ui-select-match>
+                            <ui-select-choices repeat="product as product in products|orderBy:'+name' | filter: $select.search">
+                                <div ng-bind-html="product.name+' ('+product.reference+')' | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <div class="qmd-input" ng-class="{'selected':config.firstRow}">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                               ng-model="config.firstRow" ng-required="true" type="number"
+                               tabindex="104" name="firstRow">
+                        <label><span class="font-xs text-danger-dk">*</span> Empezar desde la columna</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <div class="qmd-input selected">
+                        <input class="md-input" type="file" name="file">
+                        <label>Archivo</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <div class="qmd-input selected">
+                    <button class="btn btn-success" ng-click="" type="button">Cargar Archivo</button>
+                        </div>
+                </div>
+            </div>
+            <div class="row p-v-sm" ng-show="selecteds.product">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <fieldset>
+                        <legend class="m-v-xs">
+                            <h5><span class="font-xs text-danger-dk">*</span>
+                                Orden de Columnas</h5>
+                        </legend>
+                        <table class="table table-striped table-scroll-x" id="properties">
+                            <thead>
+                                <tr>
+                                    <th>Lote</th>
+                                    <th>Proveedor</th>
+                                    <th>Remisión</th>
+                                    <th>Fecha de Análisis</th>
+                                    <th>Fecha de Elaboración</th>
+                                    <th>Fecha de Recepción</th>
+                                    <th>Fecha de Vencimiento</th>
+                                    <th ng-repeat="property in selecteds.product.properties">
+                                        <div ng-bind-html="property.name" class="p-v-sm text-capitalize text-center"></div>
+                                    </th>
+                                    <th>Cantidad</th>
+                                    <th>Cantidad Existente</th>
+                                    <th>Desición</th>
+                                    <th>Liberado</th>
+                                    <th>Usuario</th>
+                                    <th>Notas</th>
+                                    <th>Estado</th>
+                                </tr>
+                                <tr>
+                                    <th><input ng-model="config.fields.lote" type="number" class="form-control" placeholder="Número de Columna"></th>
+                                    <th><input ng-model="config.fields.supplier" type="number" class="form-control" placeholder="Número de Columna"></th>
+                                    <th><input ng-model="config.fields.remission" type="number" class="form-control" placeholder="Número de Columna"></th>
+                                    <th><input ng-model="config.fields.analysisDate" type="number" class="form-control" placeholder="Número de Columna"></th>
+                                    <th><input ng-model="config.fields.elaborationDate" type="number" class="form-control" placeholder="Número de Columna"></th>
+                                    <th><input ng-model="config.fields.receptionDate" type="number" class="form-control" placeholder="Número de Columna"></th>
+                                    <th><input ng-model="config.fields.dueDate" type="number" class="form-control" placeholder="Número de Columna"></th>
+                                    <th ng-repeat="property in selecteds.product.properties">
+                                        <input ng-model="config.fields.properties[property.id]" type="number" class="form-control" placeholder="Número de Columna">
+                                    </th>
+                                    <th><input ng-model="config.fields.quantity" type="number" class="form-control" placeholder="Número de Columna"></th>
+                                    <th><input ng-model="config.fields.existentQuantity" type="number" class="form-control" placeholder="Número de Columna"></th>
+                                    <th><input ng-model="config.fields.veredict" type="number" class="form-control" placeholder="Número de Columna"></th>
+                                    <th><input ng-model="config.fields.active" type="number" class="form-control" placeholder="Número de Columna"></th>
+                                    <th><input ng-model="config.fields.user" type="number" class="form-control" placeholder="Número de Columna"></th>
+                                    <th><input ng-model="config.fields.notes" type="number" class="form-control" placeholder="Número de Columna"></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td ng-repeat="property in record.properties">
+                                        <div class="qmd-input">
+                                            <input class="md-input bg-white" id="property_{{property.id}}" name="property_{{property.id}}" ng-model="property.value" tabindex="{{130+$index}}">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </fieldset>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="row">
+                        <div ng-show="_form.error.general" class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-danger">
+                            <i class="icon fa fa-remove"></i> {{_form.error.general.message}}
+                        </div>
+                        <div ng-show="_form.success.general" class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-success">
+                            <i class="icon fa fa-check"></i> {{_form.success.general.message}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-right">
+                    <button class="btn btn-default" ng-click="_goBack()" type="button">Volver</button>
+                    <button class="btn btn-addon btn-primary" ng-disabled="form.$invalid || !validateProperties() || requesting!=''" type="submit"><i class="fa fa-plus"></i>Guardar Muestra</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

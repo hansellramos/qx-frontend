@@ -10,10 +10,33 @@
       </a>
     </li>
     <li ui-sref-active="active" ng-show="_p.isAdmin() || _p.hasPermission(_pn.RECORD_LIST)">
-      <a md-ink-ripple ui-sref="app.record">
+      <a md-ink-ripple>
+        <span class="pull-right text-muted">
+          <i class="fa fa-caret-down"></i>
+        </span>
         <i class="icon mdi-maps-layers i-20"></i>
         <span class="font-normal">Registros</span>
       </a>
+      <ul class="nav nav-sub">
+        <li ui-sref-active="active" ng-show="_p.isAdmin() || _p.hasPermission(_pn.RECORD_LIST)">
+          <a md-ink-ripple ui-sref="app.record">
+            <i class="icon fa fa-search i-16"></i>
+            <span class="font-normal">Consultar</span>
+          </a>
+        </li>
+        <li ui-sref-active="active" ng-show="_p.isAdmin() || _p.hasPermission(_pn.RECORD_CREATE)">
+          <a md-ink-ripple ui-sref="app.recordAdd">
+            <i class="icon fa fa-plus i-16"></i>
+            <span class="font-normal">Nuevo</span>
+          </a>
+        </li>
+        <li ui-sref-active="active" ng-show="_p.isAdmin() || _p.hasPermission(_pn.RECORD_IMPORT)">
+          <a md-ink-ripple ui-sref="app.recordImport">
+            <i class="icon glyphicon glyphicon-import i-16"></i>
+            <span class="font-normal">Importar</span>
+          </a>
+        </li>
+      </ul>
     </li>
     <li ui-sref-active="active" ng-show="_p.isAdmin() || _p.hasPermission(_pn.CERTIFICATE_LIST)">
       <a md-ink-ripple>

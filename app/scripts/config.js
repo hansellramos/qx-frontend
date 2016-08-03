@@ -126,6 +126,8 @@ var app =
                         PROFILE_DELETE: 'profileDelete',
 
                         USER_RESET_PASSWORD: 'userResetPassword',
+
+                        RECORD_IMPORT: 'recordImport',
                     }
                 }
             })
