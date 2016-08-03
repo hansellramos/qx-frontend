@@ -191,7 +191,7 @@ angular.module('app')
     .controller('AuthController', ['$scope', '$translate', '$stateParams', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'LoginService', 'APPLICATION',
         function ($scope, $translate, $stateParams, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, LoginService, APPLICATION) {
             $scope.data = {error: false, errorMessage: ''
-                , username: 'admin', password: 'Komodo123!'
+                , username: '', password: ''
             };
             if ($stateParams.message) {
                 $scope.data.error = true;
@@ -223,7 +223,6 @@ angular.module('app')
 
             function errorNotResponse(errorResponse) {
                 $scope.requesting = '';
-                debugger;
                 $scope.data.error = true;
                 $scope.data.errorMessage = errorResponse.status != 0 ? errorResponse.data.message : APPLICATION.ENUM.MESSAGES.AUTH.NO_CONNECTION;
             }
@@ -268,7 +267,6 @@ angular.module('app')
                         $scope.items = items;
                     }
                     , function (errorResponse) {
-                        debugger;
                         console.log(errorResponse);
                     });
             };
@@ -303,7 +301,6 @@ angular.module('app')
                         $scope.get();
                     }
                     , function (errorResponse) {
-                        debugger;
                         console.log(errorResponse);
                         Flash.create('danger',errorResponse.data.data.fields.reference);
                     });
@@ -319,7 +316,7 @@ angular.module('app')
             $scope.users = [];
             UserService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                 , function (response) {$scope.users = response;$scope.requesting = false;
-                }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                 });
 
             //Obligatory fields
@@ -332,12 +329,10 @@ angular.module('app')
             $scope._submit = $scope._create = function(){
                 SubsidiaryService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.subsidiary
                 , function(response){
-                    debugger;
                     Flash.create('success',response.message);
                     $scope.subsidiary = {name:"", reference:"", leader:undefined, active:true};
                     $scope.form.$setPristine();
                 }, function(errorResponse){
-                    debugger;
                     Flash.create('danger',errorResponse.data.message);
                     if(errorResponse.status == 406){ //validations error
                         if(errorResponse.data.data.fields.reference){
@@ -365,11 +360,9 @@ angular.module('app')
             $scope._submit = $scope._edit = function(){
                 SubsidiaryService.update({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}, $scope._getChanges()
                     , function(response){
-                        debugger;
                         Flash.create('success',response.message);
                         $scope._init();
                     }, function(errorResponse){
-                        debugger;
                         Flash.create('danger',errorResponse.data.message);
                         if(errorResponse.status == 406){ //validations error
                             if(errorResponse.data.data.fields.reference){
@@ -424,11 +417,11 @@ angular.module('app')
                         $scope.subsidiary.leader = $scope.subsidiary.leader[0].id;
                         $scope.original = JSON.parse(JSON.stringify($scope.subsidiary));
                         $scope.requesting = false;
-                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                 });
                 UserService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {$scope.users = response;$scope.requesting = false;
-                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                 });
             }
 
@@ -477,7 +470,6 @@ angular.module('app')
                         $scope.items = items;
                     }
                     , function (errorResponse) {
-                        debugger;
                         console.log(errorResponse);
                     });
             };
@@ -508,7 +500,6 @@ angular.module('app')
                         $scope.get();
                     }
                     , function (errorResponse) {
-                        debugger;
                         console.log(errorResponse);
                         Flash.create('danger',errorResponse.data.data.fields.reference);
                     });
@@ -528,7 +519,6 @@ angular.module('app')
                     $scope.requesting = false;
                 }
                 , function (errorResponse) {
-                    debugger;
                     Flash.create('danger',errorResponse);
                     $scope.requesting = false;
                 });
@@ -544,15 +534,12 @@ angular.module('app')
             };
 
             $scope._submit = $scope._create = function(){
-                debugger;
                 StoreService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.store
                     , function(response){
-                        debugger;
                         Flash.create('success',response.message);
                         $scope.store = {name:"", reference:"", subsidiary:null, address:"", phone:"", notes:"", active:true};
                         $scope.form.$setPristine();
                     }, function(errorResponse){
-                        debugger;
                         Flash.create('danger',errorResponse.data.message);
                         if(errorResponse.status == 406){ //validations error
                             if(errorResponse.data.data.fields.reference){
@@ -582,7 +569,6 @@ angular.module('app')
                         Flash.create('success',response.message);
                         $scope._init();
                     }, function(errorResponse){
-                        debugger;
                         Flash.create('danger',errorResponse.data.message);
                         if(errorResponse.status == 406){ //validations error
                             if(errorResponse.data.data.fields.reference){
@@ -646,11 +632,11 @@ angular.module('app')
                         $scope.store.subsidiary = $scope.store.subsidiary[0].id;
                         $scope.original = JSON.parse(JSON.stringify($scope.store));
                         $scope.requesting = false;
-                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                     });
                 SubsidiaryService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {$scope.subsidiaries = response;$scope.requesting = false;
-                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                     });
             }
 
@@ -699,7 +685,6 @@ angular.module('app')
                         $scope.items = items;
                     }
                     , function (errorResponse) {
-                        debugger;
                         console.log(errorResponse);
                     });
             };
@@ -726,7 +711,6 @@ angular.module('app')
                         $scope.get();
                     }
                     , function (errorResponse) {
-                        debugger;
                         console.log(errorResponse);
                         Flash.create('danger',errorResponse.data.data.fields.reference);
                     });
@@ -764,12 +748,12 @@ angular.module('app')
                 $scope.subsidiaries = [];
                 SubsidiaryService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {$scope.subsidiaries = response;$scope.requesting = false;
-                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                     });
                 $scope._stores = [];
                 StoreService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {$scope._stores = response;$scope.requesting = false;
-                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                     });
             }
 
@@ -780,11 +764,9 @@ angular.module('app')
             $scope._create = function(){
                 ProductService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.product
                     , function(response){
-                        debugger;
                         Flash.create('success',response.message);
                         $scope._reset();
                     }, function(errorResponse){
-                        debugger;
                         Flash.create('danger',errorResponse.data.message);
                         if(errorResponse.status == 406){ //validations error
                             if(errorResponse.data.data.fields.reference){
@@ -980,7 +962,6 @@ angular.module('app')
             }
 
             $scope.get = function () {
-                debugger;
                 $scope.loading = true;
                 RecordService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), product:$scope.selecteds.product._id}
                     , function (response) {
@@ -1009,7 +990,6 @@ angular.module('app')
                         $scope.loading = false;
                     }
                     , function (errorResponse) {
-                        debugger;
                         console.log(errorResponse);
                         $scope.loading = false;
                     });
@@ -1019,17 +999,17 @@ angular.module('app')
                 $scope.subsidiaries = [];
                 SubsidiaryService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {$scope.subsidiaries = response;$scope.requesting = false;
-                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                 });
                 $scope._stores = [];
                 StoreService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {$scope._stores = response;$scope.requesting = false;
-                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                 });
                 $scope._products = [];
                 ProductService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {$scope._products = response;$scope.requesting = false;
-                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                 });
             }
 
@@ -1067,7 +1047,6 @@ angular.module('app')
                         $scope.get();
                     }
                     , function (errorResponse) {
-                        debugger;
                         console.log(errorResponse);
                         Flash.create('danger',errorResponse.data.data.fields.reference);
                     });
@@ -1108,22 +1087,22 @@ angular.module('app')
                 $scope.subsidiaries = [];
                 SubsidiaryService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {$scope.subsidiaries = response;$scope.requesting = false;
-                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                     });
                 $scope._stores = [];
                 StoreService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {$scope._stores = response;$scope.requesting = false;
-                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                     });
                 $scope._products = [];
                 ProductService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {$scope._products = response;$scope.requesting = false;
-                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                     });
                 $scope.externals = [];
                 ExternalService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {$scope.externals = response;$scope.requesting = false;
-                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                     });
             }
 
@@ -1134,11 +1113,9 @@ angular.module('app')
             $scope._submit = $scope._create = function(){
                 RecordService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, formatRecord()
                     , function(response){
-                        debugger;
                         Flash.create('success',response.message);
                         $scope._reset();
                     }, function(errorResponse){
-                        debugger;
                         Flash.create('danger',errorResponse.data.message);
                         if(errorResponse.status == 406){ //validations error
                             if(errorResponse.data.data.fields.reference){
@@ -1268,22 +1245,22 @@ angular.module('app')
                 $scope.subsidiaries = [];
                 SubsidiaryService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {$scope.subsidiaries = response;$scope.requesting = false;
-                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                     });
                 $scope._stores = [];
                 StoreService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {$scope._stores = response;$scope.requesting = false;
-                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                     });
                 $scope._products = [];
                 ProductService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {$scope._products = response;$scope.requesting = false;
-                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                     });
                 $scope.externals = [];
                 ExternalService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {$scope.externals = response;$scope.requesting = false;
-                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                     });
             }
 
@@ -1374,7 +1351,6 @@ angular.module('app')
                         $scope.itemLoading = false;
                     }
                     , function (errorResponse) {
-                        debugger;
                         console.log(errorResponse);
                     });
             };
@@ -1388,7 +1364,6 @@ angular.module('app')
                         $scope.itemLoading = false;
                     }
                 , function(errorResponse){
-                        debugger;
                         $scope.errorMesagge = "Error consultando elemento";
                         $scope.itemLoading = false;
                     });
@@ -1426,7 +1401,6 @@ angular.module('app')
                         $scope.get();
                     }
                     , function (errorResponse) {
-                        debugger;
                         console.log(errorResponse);
                         Flash.create('danger',errorResponse.data.data.fields.reference);
                     });
@@ -1455,19 +1429,19 @@ angular.module('app')
             $scope.requesting = true;
             SubsidiaryService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                 , function (response) {$scope.subsidiaries = response;$scope.requesting = false;
-                }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
             });
             StoreService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                 , function (response) {$scope._stores = response;$scope.requesting = false;
-                }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
             });
             ProductService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                 , function (response) {$scope._products = response;$scope.requesting = false;
-                }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
             });
             ExternalService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                 , function (response) {$scope.externals = response;$scope.requesting = false;
-                }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
             });
 
             $scope.validateCertificateProperties = function(){
@@ -1525,7 +1499,7 @@ angular.module('app')
                 $scope.requesting = true;
                 RecordService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), product:$scope.product._id}
                     , function (response) {$scope._records = response; $scope.records = $scope._records; $scope.requesting = false;}
-                    , function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;}
+                    , function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;}
                 );
                 $scope.certificate.values = [];
             }
@@ -1573,7 +1547,6 @@ angular.module('app')
             $scope._create = function(){
                 CertificateService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, formatCertificate()
                     , function(response){
-                        debugger;
                         Flash.create('success',response.message
                             +'. El código del certificado generado es ' +
                             '<a class="font-bold" href="'+getPrintUrl(response.data.result)+'">'+response.data.result.id+'</a>,'
@@ -1581,7 +1554,6 @@ angular.module('app')
                             '<a class="font-bold" href="'+getPrintUrl(response.data.result)+'">aquí</a>');
                         $scope._reset();
                     }, function(errorResponse){
-                        debugger;
                         Flash.create('danger',errorResponse.data.message);
                         if(errorResponse.status == 406){ //validations error
 
@@ -1663,7 +1635,6 @@ angular.module('app')
                 for(var r in $scope.certificate.values){
                     var _values = [];
                     var _record = $scope.certificate.values[r];
-                    debugger;
                     _values.push({
                         property: 'reference'
                         , value: _record.reference
@@ -1683,7 +1654,6 @@ angular.module('app')
                         record: _record.reference
                         , values: _values
                     });
-                    debugger;
                 }
                 return _v;
             }
@@ -1701,7 +1671,6 @@ angular.module('app')
             CertificateService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params.id}
                 , function(response){
                     $scope.item = response;
-                    //debugger;
                     //$scope.qrcode = "http://www.pqp.com.co/q/?c=";
                     $scope.itemLoading = false;
                     $scope._width = 80/($scope.item.properties.length-2);
@@ -1712,7 +1681,6 @@ angular.module('app')
                     $("title").html("Certificado de Calidad "+ $scope.item.id +" "+$("title").html())
                 }
                 , function(errorResponse){
-                    debugger;
                     $scope.errorMesagge = "Error consultando elemento";
                     $scope.itemLoading = false;
                 });
@@ -1758,7 +1726,6 @@ angular.module('app')
                         $scope.items = items;
                     }
                     , function (errorResponse) {
-                        debugger;
                         console.log(errorResponse);
                     });
             };
@@ -1789,7 +1756,6 @@ angular.module('app')
                         $scope.get();
                     }
                     , function (errorResponse) {
-                        debugger;
                         console.log(errorResponse);
                         Flash.create('danger',errorResponse.data.data.fields.reference);
                     });
@@ -1813,12 +1779,10 @@ angular.module('app')
             $scope._submit = $scope._create = function(){
                 ExternalService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.external
                     , function(response){
-                        debugger;
                         Flash.create('success',response.message);
                         $scope.external = {name:"", address:"", phone:"", notes:"", contact:"", active:true};
                         $scope.form.$setPristine();
                     }, function(errorResponse){
-                        debugger;
                         Flash.create('danger',errorResponse.data.message);
                         if(errorResponse.status == 406){ //validations error
                             if(errorResponse.data.data.fields.name){
@@ -1847,7 +1811,6 @@ angular.module('app')
                         Flash.create('success',response.message);
                         $scope._init();
                     }, function(errorResponse){
-                        debugger;
                         Flash.create('danger',errorResponse.data.message);
                         if(errorResponse.status == 406){ //validations error
 
@@ -1904,7 +1867,7 @@ angular.module('app')
                         $scope.external = response;
                         $scope.original = JSON.parse(JSON.stringify($scope.external));
                         $scope.requesting = false;
-                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                 });
             }
 
@@ -1943,7 +1906,6 @@ angular.module('app')
                         $scope.items = response;
                     }
                     , function (errorResponse) {
-                        debugger;
                         console.log(errorResponse);
                     });
             };
@@ -1974,7 +1936,6 @@ angular.module('app')
                         $scope.get();
                     }
                     , function (errorResponse) {
-                        debugger;
                         console.log(errorResponse);
                         Flash.create('danger',errorResponse.data.data.fields.reference);
                     });
@@ -1994,7 +1955,6 @@ angular.module('app')
                     $scope.requesting = false;
                 }
                 , function (errorResponse) {
-                    debugger;
                     Flash.create('danger',errorResponse);
                     $scope.requesting = false;
                 });
@@ -2011,15 +1971,12 @@ angular.module('app')
             };
 
             $scope._submit = $scope._create = function(){
-                debugger;
                 UserService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.user
                     , function(response){
-                        debugger;
                         Flash.create('success',response.message);
                         $scope.user = {username:"", password:"", repeatPassword:"", profile:null, firstname:"", lastname:"", email:"", active:true};
                         $scope.form.$setPristine();
                     }, function(errorResponse){
-                        debugger;
                         Flash.create('danger',errorResponse.data.message);
                         if(errorResponse.status == 406){ //validations error
                             if(errorResponse.data.data.fields.username){
@@ -2050,7 +2007,6 @@ angular.module('app')
                     , function(response){
                         Flash.create('success',response.message);$scope._init();
                     }, function(errorResponse){
-                        debugger;
                         Flash.create('danger',errorResponse.data.message);
                         if(errorResponse.status == 406){ //validations error
                             $scope._form.error.username = errorResponse.data.data.fields.username;
@@ -2120,7 +2076,7 @@ angular.module('app')
                         $scope.user.profile = $scope.user.profile[0].id;
                         $scope.original = JSON.parse(JSON.stringify($scope.user));
                         $scope.requesting = false;
-                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                     });
             }
 
@@ -2159,7 +2115,6 @@ angular.module('app')
                         $scope.items = response;
                     }
                     , function (errorResponse) {
-                        debugger;
                         console.log(errorResponse);
                     });
             };
@@ -2190,7 +2145,6 @@ angular.module('app')
                         $scope.get();
                     }
                     , function (errorResponse) {
-                        debugger;
                         console.log(errorResponse);
                         Flash.create('danger',errorResponse.data.data.fields.reference);
                     });
@@ -2210,7 +2164,6 @@ angular.module('app')
                     $scope.requesting = false;
                 }
                 , function (errorResponse) {
-                    debugger;
                     Flash.create('danger',errorResponse);
                     $scope.requesting = false;
                 });
@@ -2233,15 +2186,12 @@ angular.module('app')
             }
 
             $scope._submit = $scope._create = function(){
-                debugger;
                 ProfileService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.profile
                     , function(response){
-                        debugger;
                         Flash.create('success',response.message);
                         $scope.profile = {name:"", description:"", permissions:{}, active:true};
                         $scope.form.$setPristine();
                     }, function(errorResponse){
-                        debugger;
                         Flash.create('danger',errorResponse.data.message);
                         if(errorResponse.status == 406){ //validations error
 
@@ -2267,7 +2217,6 @@ angular.module('app')
                     , function(response){
                         Flash.create('success',response.message);$scope._init();
                     }, function(errorResponse){
-                        debugger;
                         Flash.create('danger',errorResponse.data.message);
                         if(errorResponse.status == 406){ //validations error
                         }
@@ -2351,14 +2300,14 @@ angular.module('app')
                 PermissionsService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {
                         $scope.permissions = response;
-                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                     });
                 ProfileService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}
                     , function (response) {
                         $scope.profile = response;
                         $scope.original = JSON.parse(JSON.stringify($scope.profile));
                         $scope.requesting = false;
-                    }, function (errorResponse) {debugger;Flash.create('danger',errorResponse);$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                 });
             }
 
