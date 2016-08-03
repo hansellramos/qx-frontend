@@ -3,7 +3,7 @@
     <div class="panel-heading">
       Certificados
       <div style="float: right">
-        <button class="md-btn md-fab m-b blue" ng-click="add()">
+        <button class="md-btn md-fab m-b blue" ng-show="_p.isAdmin() || _p.hasPermission(_pn.CERTIFICATE_CREATE)" ng-click="add()">
           <i class="mdi-content-add i-24"></i>
         </button>
         <button class="md-btn md-fab m-b bg-white" ng-click="get()">

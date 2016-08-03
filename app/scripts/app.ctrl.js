@@ -2215,11 +2215,39 @@ angular.module('app')
                 if($scope.original.description!==$scope.profile.description){
                     changes.description = $scope.profile.description;
                 }
-                if(JSON.stringify($scope.original.permissions)!==JSON.stringify($scope.profile.permissions)){
-                    changes.permissions = $scope.profile.permissions;
+                var diff = $scope._getPermissionsChanges();
+                if(diff){
+                    changes.permissions = diff.permissions;
                 }
                 if($scope.original.active!==$scope.profile.active){
                     changes.active = $scope.profile.active;
+                }
+                return changes;
+            }
+
+            $scope._getPermissionsChanges = function(){
+                var changes = {};
+                var diff = false;
+                for(var i in $scope.original.permissions){
+                    if(!$scope.profile.permissions[i] || $scope.original.permissions[i]!=$scope.profile.permissions[i]){
+                        diff = true;
+                        break;
+                    }
+                }
+                if(!diff) {
+                    for (var i in $scope.profile.permissions) {
+                        if (!$scope.original.permissions[i] || $scope.profile.permissions[i] != $scope.original.permissions[i]) {
+                            diff = true;
+                            break;
+                        }
+                    }
+                }
+                if(diff){
+                    changes.permissions = {};
+                    for (var i in $scope.profile.permissions) {
+                        changes.permissions[i] = $scope.profile.permissions[i];
+                    }
+                    //changes.permissions = $scope.profile.permissions;
                 }
                 return changes;
             }
