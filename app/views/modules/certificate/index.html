@@ -118,6 +118,14 @@
     <script type="text/ng-template" id="detail">
       <div class="panel-heading indigo">
         Certificado de Calidad No. <strong>{{item.no?item.no:item.id}}</strong>
+        <div style="float: right">
+          <button class="md-btn md-fab red btn-danger waves" ng-show="_p.isAdmin() || _p.hasPermission(_pn.CERTIFICATE_DELETE)" ng-click="delete(item)">
+            <i class="icon glyphicon glyphicon-trash i-16"></i>
+          </button>
+          <button class="md-btn md-fab purple btn-accent waves" ng-click="showPrint(item)">
+            <i class="icon glyphicon glyphicon-print i-16"></i>
+          </button>
+        </div>
       </div>
       <div class="panel-body">
         <div class="row" ng-show="item && itemLoading">
@@ -127,38 +135,39 @@
         </div>
         <div ng-show="item && !itemLoading">
           <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center font-bold text-1x indigo-100 panel p-sm m-v-sm">Datos Generales</div>
+            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+              Producto: <span class="font-w100">{{item.product[0].name}} ({{item.product[0].reference}})</span>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-right">
+              Fecha: <span class="font-w100">{{item.date|date:'dd-MM-yyyy'}}</span>
+            </div>
           </div>
           <div class="row">
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-              <strong>Fecha y Hora:</strong> {{item.created|date:'yyyy-MM-dd HH:mm'}}
+              Cliente: <span class="font-w100">{{item.customer[0].name}}</span>
             </div>
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-center">
-              <strong>Usuario:</strong> {{item.creator[0].firstname}} {{item.creator[0].lastname}}
+              Presentación: {{item.presentation}}
             </div>
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-right">
-              <strong>Orden de Despacho No. {{item.remission}}</strong>
+              Hora: <span class="font-w100">{{item.date|date:'HH:mm'}}</span>
             </div>
           </div>
           <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-              <strong>Producto:</strong>
-              {{item.product[0].name}} ({{item.product[0].reference}})
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+              Remisión: <span class="font-w100">{{item.remission}}</span>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4  col-sm-offset-4  col-md-offset-4 col-lg-offset-4 text-right">
+              Código de Verificación: <span class="font-w100 font-bold">{{item.verification}}</span>
             </div>
           </div>
           <div class="row">
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-left">
-              <strong>Cantidad:</strong> {{item.quantity|number:0}}
-            </div>
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-center">
-              <strong>Presentación:</strong> {{item.presentation}}
-            </div>
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-right">
-              <strong>Cliente:</strong> {{item.customer[0].name}}
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+              Cantidad: <span class="font-w100">{{item.quantity|number:0}} KG</span>
             </div>
           </div>
           <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center font-bold text-1x indigo-100 panel p-sm m-v-sm">Propiedades</div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center font-bold text-1x indigo-100 panel p-sm m-v-sm">Especificaciones y Resultados</div>
           </div>
           <div class="row">
             <table class="table table-striped table-scroll-x">
@@ -177,6 +186,33 @@
                 </tr>
               </tbody>
             </table>
+          </div>
+          <div class="row" ng-show="!itemLoading">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                Fecha de Elaboración: {{item.elaboration_date|date:'dd-MM-yyyy'}}
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 text-center">
+              Vencimiento: {{item.due_date}}
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 text-right">
+              Dosis Máxima: {{item.max_dose}}
+            </div>
+          </div>
+          <br />
+          <div class="row" ng-show="!itemLoading && item.clause">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <div ng-bind-html="item.clause"></div><br /><br />
+            </div>
+          </div>
+          <div class="row" ng-show="!itemLoading">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-sm text-center-sm text-center-xs">
+              Creado por: {{item.creator[0].firstname}} {{item.creator[0].lastname}}
+              Fecha de Creación: {{item.created|date:'yyyy-MM-dd HH:mm'}}
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-sm text-right text-center-sm text-center-xs">
+              Modificado por: {{item.modifier[0].firstname}} {{item.modifier[0].lastname}}
+              Última Modificación: {{item.modified|date:'yyyy-MM-dd HH:mm'}}
+            </div>
           </div>
         </div>
       </div>

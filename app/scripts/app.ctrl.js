@@ -1376,7 +1376,7 @@ angular.module('app')
 
             $scope.showPrint = function(item){
                 $scope.item = item;
-                $scope.itemPrintPage = window.open("#/print/certificate/"+item.id,this.target,'width=800,height=600');
+                $scope.itemPrintPage = window.open("#/print/certificate/"+(item._id?item._id:item.id),this.target,'width=800,height=600');
             }
 
             $scope.delete = function(item){
@@ -1394,7 +1394,7 @@ angular.module('app')
             }
 
             $scope._doDelete = function(item){
-                CertificateService.delete({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id: item.id}
+                CertificateService.delete({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id: (item._id?item._id:item.id)}
                     , function (response) {
                         Flash.create('success',response.message);
                         $scope._cancelDelete();
