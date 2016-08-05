@@ -14,6 +14,7 @@
     <table class="table table-striped table-scroll-x">
       <thead>
         <tr>
+          <th></th>
           <th ng-click="sort('no')">
             No.
             <span class="glyphicon sort-icon" ng-show="sortKey=='id'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
@@ -53,6 +54,7 @@
           <th></th>
         </tr>
       <tr>
+        <th></th>
         <th>
           <input ng-model="search.no" class="form-control" placeholder="Buscar por no. certificado">
         </th>
@@ -81,6 +83,11 @@
       </thead>
       <tbody>
         <tr dir-paginate="_item in items|orderBy:sortKey:reverse|filter:search:strict|itemsPerPage:pageSize">
+          <td class="mw-sm">
+            <a href class="text-accent" ng-click="showPrint(_item)"><i class="icon glyphicon glyphicon-print i-16"></i></a>
+            <a href class="text-info" ng-click="showDetail(_item)"><i class="icon glyphicon glyphicon-search i-16"></i></a>
+            <a href class="text-danger" ng-show="_p.isAdmin() || _p.hasPermission(_pn.CERTIFICATE_DELETE)"  ng-click="delete(_item)"><i class="icon glyphicon glyphicon-trash i-16"></i></a>
+          </td>
           <td class="text-right pointer" ng-click="showDetail(_item)">{{_item.no|number:0}}</td>
           <td>{{_item.created|date:'yyyy-MM-dd HH:mm'}}</td>
           <td class="text-right">{{_item.remission|number:0}}</td>
@@ -93,12 +100,10 @@
             <i ng-show="_item.active" class="btn-rounded btn-icon icon mdi-navigation-check green i-24 panel-card"></i>
           </td>
           <td>{{_item.user}}</td>
-          <td class="mw-md">
-            <div class="btn-group btn-group-justified m-b">
-              <a href class="btn btn-rounded btn-accent btn-icon" ng-click="showPrint(_item)"><i class="icon glyphicon glyphicon-print i-16"></i></a>
-              <a href class="btn btn-rounded btn-info btn-icon" ng-click="showDetail(_item)"><i class="icon glyphicon glyphicon-search i-16"></i></a>
-              <a href class="btn btn-rounded btn-danger btn-icon" ng-show="_p.isAdmin() || _p.hasPermission(_pn.CERTIFICATE_DELETE)"  ng-click="delete(_item)"><i class="icon glyphicon glyphicon-trash i-16"></i></a>
-            </div>
+          <td class="mw-sm">
+              <a href class="text-accent" ng-click="showPrint(_item)"><i class="icon glyphicon glyphicon-print i-16"></i></a>
+              <a href class="text-info" ng-click="showDetail(_item)"><i class="icon glyphicon glyphicon-search i-16"></i></a>
+              <a href class="text-danger" ng-show="_p.isAdmin() || _p.hasPermission(_pn.CERTIFICATE_DELETE)"  ng-click="delete(_item)"><i class="icon glyphicon glyphicon-trash i-16"></i></a>
           </td>
         </tr>
       </tbody>
