@@ -1665,6 +1665,11 @@ a.list-group-item.hover {
   background-color: #f6f6f7;
 }
 
+.table-striped > tbody > tr:hover > td,
+.table-striped > tbody > tr:hover > th {
+  background-color: #eee;
+}
+
 .table-striped > thead > th {
   background-color: #f6f6f7;
   border-right: 1px solid #e7e8ea;
@@ -6265,6 +6270,18 @@ a.text-dark:hover {
 
 .mw-xxl {
   min-width: 320px !important;
+}
+
+.mxw-xxs {
+  max-width: 60px !important;
+}
+
+.mxw-xs {
+  max-width: 90px !important;
+}
+
+.mxw-sm {
+  max-width: 120px !important;
 }
 
 .mxw {

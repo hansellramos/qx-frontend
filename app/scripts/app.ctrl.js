@@ -273,6 +273,25 @@ angular.module('app')
 
             $scope.add = function(){
                 $state.go('app.subsidiaryAdd');
+            };
+
+            $scope.showDetail = function(item){
+                $scope.item = item;
+                $scope.itemLoading = true;
+                SubsidiaryService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:item.id}
+                    , function(response){
+                        $scope.item = response;
+                        $scope.itemLoading = false;
+                    }
+                    , function(errorResponse){
+                        $scope.errorMesagge = "Error consultando elemento";
+                        $scope.itemLoading = false;
+                    });
+                ngDialog.open({
+                    template: 'detail',
+                    scope: $scope,
+                    //width: window.innerWidth < 800 ? window.innerWidth-24 : window.innerWidth-384
+                });
             }
 
             $scope.delete = function(item){
@@ -285,7 +304,10 @@ angular.module('app')
             }
 
             $scope.edit = function(item){
-                $state.go('app.subsidiaryEdit', {'_id':item.id});
+                $state.go('app.subsidiaryEdit', {'_id':(item._id?item._id:item.id)});
+                ngDialog.close({
+                    template: 'detail'
+                });
             }
 
             $scope._cancelDelete = function(){
@@ -294,7 +316,7 @@ angular.module('app')
             }
 
             $scope._doDelete = function(item){
-                SubsidiaryService.delete({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id: item.id}
+                SubsidiaryService.delete({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id: (item._id?item._id:item.id)}
                     , function (response) {
                         Flash.create('success',response.message);
                         $scope._cancelDelete();
