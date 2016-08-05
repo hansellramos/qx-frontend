@@ -14,6 +14,7 @@
     <table class="table table-striped">
       <thead>
         <tr>
+          <th></th>
           <th ng-click="sort('username')">
             Usuario
             <span class="glyphicon sort-icon" ng-show="sortKey=='username'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
@@ -37,6 +38,7 @@
           <th></th>
         </tr>
       <tr>
+        <th></th>
         <th>
           <input ng-model="search.username" class="form-control" placeholder="Buscar por usuario">
         </th>
@@ -55,6 +57,11 @@
       </thead>
       <tbody>
         <tr dir-paginate="item in items|orderBy:sortKey:reverse|filter:search:strict|itemsPerPage:pageSize">
+          <td class="w-sm">
+            <a href class="text-info" ng-click="showDetail(item)"><i class="icon glyphicon glyphicon-search i-16"></i></a>
+            <a href class="text-danger" ng-show="_p.isAdmin() || _p.hasPermission(_pn.USER_DELETE)" ng-click="delete(item)"><i class="icon glyphicon glyphicon-trash i-16"></i></a>
+            <a href class="text-warning" ng-show="_p.isAdmin() || _p.hasPermission(_pn.USER_UPDATE)" ng-click="edit(item)"><i class="icon fa fa-pencil-square-o i-16"></i></a>
+          </td>
           <td>{{item.username}}</td>
           <td>{{item.firstname}}</td>
           <td>{{item.lastname}}</td>
@@ -63,12 +70,10 @@
             <i ng-show="!item.active" class="btn-rounded btn-icon icon mdi-action-highlight-remove red i-24 panel-card"></i>
             <i ng-show="item.active" class="btn-rounded btn-icon icon mdi-navigation-check green i-24 panel-card"></i>
           </td>
-          <td class="mw-md mxw-md">
-            <div class="btn-group btn-group-justified m-b">
-              <a href class="btn btn-rounded btn-info btn-icon" ng-click="showDetail(item)"><i class="icon glyphicon glyphicon-search i-16"></i></a>
-              <a href class="btn btn-rounded btn-danger btn-icon" ng-show="_p.isAdmin() || _p.hasPermission(_pn.USER_DELETE)" ng-click="delete(item)"><i class="icon glyphicon glyphicon-trash i-16"></i></a>
-              <a href class="btn btn-rounded btn-warning btn-icon" ng-show="_p.isAdmin() || _p.hasPermission(_pn.USER_UPDATE)" ng-click="edit(item)"><i class="icon fa fa-pencil-square-o i-16"></i></a>
-            </div>
+          <td class="w-sm">
+            <a href class="text-info" ng-click="showDetail(item)"><i class="icon glyphicon glyphicon-search i-16"></i></a>
+            <a href class="text-danger" ng-show="_p.isAdmin() || _p.hasPermission(_pn.USER_DELETE)" ng-click="delete(item)"><i class="icon glyphicon glyphicon-trash i-16"></i></a>
+            <a href class="text-warning" ng-show="_p.isAdmin() || _p.hasPermission(_pn.USER_UPDATE)" ng-click="edit(item)"><i class="icon fa fa-pencil-square-o i-16"></i></a>
           </td>
         </tr>
       </tbody>
@@ -86,6 +91,62 @@
       </tfoot>
     </table>
   </div>
+<script type="text/ng-template" id="detail">
+  <div class="panel-heading indigo">
+    Usuario <strong>{{item.firstname}} {{item.lastname}} ({{item.username}})</strong>
+    <div style="float: right">
+      <button class="md-btn md-fab red btn-danger waves" ng-show="_p.isAdmin() || _p.hasPermission(_pn.STORE_DELETE)" ng-click="delete(item)">
+        <i class="icon glyphicon glyphicon-trash i-16"></i>
+      </button>
+      <button class="md-btn md-fab orange btn-warning waves" ng-show="_p.isAdmin() || _p.hasPermission(_pn.STORE_UPDATE)" ng-click="edit(item)">
+        <i class="icon fa fa-pencil-square-o i-16"></i>
+      </button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="row" ng-show="item && itemLoading">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <md-progress-circular class="m-auto" md-mode="indeterminate"></md-progress-circular>
+      </div>
+    </div>
+    <div ng-show="item && !itemLoading">
+      <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+          Nombre: <span class="font-w100">{{item.firstname}} {{item.lastname}}</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-right">
+          Usuario: <span class="font-w100">{{item.username}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+          Correo Electrónico: <span class="font-w100">{{item.email}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+          Perfil: <span class="font-w100">{{item.profile[0].name}}</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-right">
+          Activo:
+          <i ng-show="!item.active" class="btn-rounded btn-icon icon mdi-action-highlight-remove red i-24 panel-card"></i>
+          <i ng-show="item.active" class="btn-rounded btn-icon icon mdi-navigation-check green i-24 panel-card"></i>
+        </div>
+      </div>
+      <br />
+      <div class="row" ng-show="!itemLoading">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-sm text-center-sm text-center-xs">
+          Creado por: {{item.creator[0].firstname}} {{item.creator[0].lastname}}
+          Fecha de Creación: {{item.created|date:'yyyy-MM-dd HH:mm'}}
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-sm text-right text-center-sm text-center-xs">
+          Modificado por: {{item.modifier[0].firstname}} {{item.modifier[0].lastname}}
+          Última Modificación: {{item.modified|date:'yyyy-MM-dd HH:mm'}}
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
   <script type="text/ng-template" id="delete">
     <div class="panel-heading indigo">
       Preparando borrado de usuario {{_item.firstname}} {{_item.lastname}} ({{_item.username}})

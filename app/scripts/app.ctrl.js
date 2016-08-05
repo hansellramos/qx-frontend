@@ -1944,6 +1944,25 @@ angular.module('app')
                 $state.go('app.userAdd');
             }
 
+            $scope.showDetail = function(item){
+                $scope.item = item;
+                $scope.itemLoading = true;
+                UserService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:(item._id?item._id:item.id)}
+                    , function(response){
+                        $scope.item = response;
+                        $scope.itemLoading = false;
+                    }
+                    , function(errorResponse){
+                        $scope.errorMesagge = "Error consultando elemento";
+                        $scope.itemLoading = false;
+                    });
+                ngDialog.open({
+                    template: 'detail',
+                    scope: $scope,
+                    //width: window.innerWidth < 800 ? window.innerWidth-24 : window.innerWidth-384
+                });
+            }
+
             $scope.get = function () {
                 UserService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {
@@ -1964,7 +1983,7 @@ angular.module('app')
             }
 
             $scope.edit = function(item){
-                $state.go('app.userEdit', {'_id':item._id});
+                $state.go('app.userEdit', {'_id':(item._id?item._id:item.id)});
             }
 
             $scope._cancelDelete = function(){
@@ -1973,7 +1992,7 @@ angular.module('app')
             }
 
             $scope._doDelete = function(item){
-                UserService.delete({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id: item._id}
+                UserService.delete({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id: (item._id?item._id:(item._id?item._id:item.id))}
                     , function (response) {
                         Flash.create('success',response.message);
                         $scope._cancelDelete();
