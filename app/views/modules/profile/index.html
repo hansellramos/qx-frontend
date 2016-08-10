@@ -14,12 +14,13 @@
     <table class="table table-striped">
       <thead>
         <tr>
+          <th></th>
           <th ng-click="sort('name')">
-            Usuario
+            Nombre
             <span class="glyphicon sort-icon" ng-show="sortKey=='name'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
           <th ng-click="sort('description')">
-            Nombres
+            Descripción
             <span class="glyphicon sort-icon" ng-show="sortKey=='description'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
           </th>
           <th ng-click="sort('active')" class="text-center">
@@ -29,6 +30,7 @@
           <th></th>
         </tr>
       <tr>
+        <th></th>
         <th>
           <input ng-model="search.name" class="form-control" placeholder="Buscar por nombre">
         </th>
