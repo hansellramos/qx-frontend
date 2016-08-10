@@ -1,10 +1,11 @@
 <flash-message duration="10000" show-close="true" class="floating-message"></flash-message>
 <div class="panel panel-default">
     <div class="panel-heading">
-        Crear Producto
+        <span ng-hide="original">Crear Producto</span>
+        <span ng-show="original">Modificar Producto {{original.name}} ({{original.reference}})</span>
     </div>
     <div class="panel-body">
-        <form name="form" novalidate ng-submit="_create();">
+        <form name="form" novalidate ng-submit="_submit();">
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                     <div class="qmd-input"  ng-class="{'selected':product.name}">
@@ -240,7 +241,8 @@
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-right">
                     <button class="btn btn-default" ng-click="_goBack()" type="button">Volver</button>
-                    <button class="btn btn-addon btn-primary" ng-disabled="form.$invalid || !product.store || !product.due_date || !validateProperties() || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Producto</button>
+                    <button class="btn btn-addon btn-primary" ng-show="!original" ng-disabled="form.$invalid || !product.store || !product.due_date || !validateProperties() || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Producto</button>
+                    <button class="btn btn-addon btn-primary" ng-show="original" ng-disabled="form.$invalid || !product.store || !product.due_date || !validateProperties() || requesting!=''" type="submit"><i class="fa fa-pencil"></i>Guardar Bodega/Tienda</button>
                 </div>
             </div>
         </form>
