@@ -2146,11 +2146,12 @@ angular.module('app')
             $scope._init();
 
         }])
-    .controller('ProfileCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'ProfileService', 'APPLICATION',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, ProfileService, APPLICATION) {
+    .controller('ProfileCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'PermissionsService', 'ProfileService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, PermissionsService, ProfileService, APPLICATION) {
 
             $scope.items = [];
             $scope._item = null;
+            $scope.permissions = [];
             $scope.sortKey = 'name';
             $scope.reverse = false;
             $scope.pageSize = 10;
@@ -2170,6 +2171,32 @@ angular.module('app')
 
             $scope.add = function(){
                 $state.go('app.profileAdd');
+            }
+
+            $scope.showDetail = function(item){
+                $scope.item = item;
+                $scope.itemLoading = true;
+                PermissionsService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function (response) {
+                        $scope.permissions = response;
+                    }
+                    , function (errorResponse) {
+                        console.log(errorResponse);
+                });
+                ProfileService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:(item._id?item._id:item.id)}
+                    , function(response){
+                        $scope.item = response;
+                        $scope.itemLoading = false;
+                    }
+                    , function(errorResponse){
+                        $scope.errorMesagge = "Error consultando elemento";
+                        $scope.itemLoading = false;
+                    });
+                ngDialog.open({
+                    template: 'detail',
+                    scope: $scope,
+                    //width: window.innerWidth < 800 ? window.innerWidth-24 : window.innerWidth-384
+                });
             }
 
             $scope.get = function () {
@@ -2192,7 +2219,7 @@ angular.module('app')
             }
 
             $scope.edit = function(item){
-                $state.go('app.profileEdit', {'_id':item._id});
+                $state.go('app.profileEdit', {'_id':(item._id?item._id:item.id)});
             }
 
             $scope._cancelDelete = function(){
@@ -2201,7 +2228,7 @@ angular.module('app')
             }
 
             $scope._doDelete = function(item){
-                ProfileService.delete({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id: item._id}
+                ProfileService.delete({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id: (item._id?item._id:item.id)}
                     , function (response) {
                         Flash.create('success',response.message);
                         $scope._cancelDelete();

@@ -5215,6 +5215,14 @@ a.text-dark:hover {
   display: none;
 }
 
+.no-none{
+  display: block;
+}
+
+.none ~ .no-none{
+  display: none;
+}
+
 .active > .inline,
 .active > .auto .inline {
   display: none;
