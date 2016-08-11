@@ -84,6 +84,84 @@
       </tfoot>
     </table>
   </div>
+<script type="text/ng-template" id="detail">
+  <div class="panel-heading indigo">
+    Product <strong>{{item.name}} ({{item.reference}})</strong>
+    <div style="float: right">
+      <button class="md-btn md-fab red btn-danger waves" ng-show="_p.isAdmin() || _p.hasPermission(_pn.PRODUCT_DELETE)" ng-click="delete(item)">
+        <i class="icon glyphicon glyphicon-trash i-16"></i>
+      </button>
+      <button class="md-btn md-fab orange btn-warning waves" ng-show="_p.isAdmin() || _p.hasPermission(_pn.PRODUCT_UPDATE)" ng-click="edit(item)">
+        <i class="icon fa fa-pencil-square-o i-16"></i>
+      </button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="row" ng-show="item && itemLoading">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <md-progress-circular class="m-auto" md-mode="indeterminate"></md-progress-circular>
+      </div>
+    </div>
+    <div ng-show="item && !itemLoading">
+      <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+          Producto: <span class="font-w100">{{item.name}}</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-right text-left-xs">
+          Código: <span class="font-w100">{{item.description}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+          Producto: <span class="font-w100">{{item.name}}</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-right">
+          Código: <span class="font-w100">{{item.description}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+          Activo:
+          <i ng-show="!item.active" class="btn-rounded btn-icon icon mdi-action-highlight-remove red i-24 panel-card"></i>
+          <i ng-show="item.active" class="btn-rounded btn-icon icon mdi-navigation-check green i-24 panel-card"></i>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-sm-offset-3 col-md-offset-3 col-lg-offset-3">
+          <fieldset>
+            <legend><h5>Permisos</h5></legend>
+            <ul class="list-group list-group-alt list-group-sm">
+              <li class="list-group-item" ng-repeat="permission in permissions|filter:_search:'strict'|orderBy:'+name'">
+                <div class="row">
+                  <div class="col-xs-2 col-sm-2 col-md-1 col-lg-1">
+                    <div ng-repeat="(_p, _value) in item.permissions|orderBy:'+name'">
+                      <i ng-show="_value && permission.reference===_p" class="btn-rounded btn-icon icon mdi-navigation-check green i-24 panel-card"></i>
+                    </div>
+                  </div>
+                  <div class="col-xs-10 col-sm-10 col-md-11 col-lg-11">
+                    {{permission.name}}
+                    <br /><small>{{permission.description}}</small>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </fieldset>
+        </div>
+      </div>
+      <br />
+      <div class="row" ng-show="!itemLoading">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-sm text-center-sm text-center-xs">
+          Creado por: {{item.creator[0].firstname}} {{item.creator[0].lastname}}
+          Fecha de Creación: {{item.created|date:'yyyy-MM-dd HH:mm'}}
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-sm text-right text-center-sm text-center-xs">
+          Modificado por: {{item.modifier[0].firstname}} {{item.modifier[0].lastname}}
+          Última Modificación: {{item.modified|date:'yyyy-MM-dd HH:mm'}}
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
 <script type="text/ng-template" id="delete">
   <div class="panel-heading indigo">
     Preparando borrado de producto {{_item.name}} ({{_item.reference}})
