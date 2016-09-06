@@ -6489,6 +6489,9 @@ a.text-dark:hover {
   .w-full-sm {
     width: 100%;
   }
+  .app-aside:not(.folded):not(.hide) ~ .app-content .floating-message{
+    left: 24px;
+  }
 }
 
 @media (max-width: 767px) {

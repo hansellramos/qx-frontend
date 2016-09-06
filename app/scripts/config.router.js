@@ -105,6 +105,13 @@ angular.module('app')
                         controller: 'ProductAddCtrl',
                         resolve: load(['ui.select'])
                     })
+                    .state('app.productEdit', {
+                        url: '/product/edit/:_id',
+                        templateUrl: 'views/modules/product/edit.html',
+                        data: {title: 'Modificar Producto'},
+                        controller: 'ProductEditCtrl',
+                        resolve: load(['ui.select'])
+                    })
                     .state('app.record', {
                         url: '/record',
                         templateUrl: 'views/modules/record/index.html',

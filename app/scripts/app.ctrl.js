@@ -759,6 +759,10 @@ angular.module('app')
                 });
             }
 
+            $scope.edit = function(item){
+                $state.go('app.productEdit', {'_id':item.id});
+            }
+
             $scope._cancelDelete = function(){
                 $scope._item = null;
                 ngDialog.closeAll();
@@ -838,9 +842,9 @@ angular.module('app')
             }
 
             $scope.validateProperties = function(){
-                if($scope.record.product==undefined) return false;
-                for(var i in $scope.record.properties){
-                    if($scope.record.properties[i].value == ""){
+                //if($scope.record.product==undefined) return false;
+                for(var i in $scope.product.properties){
+                    if($scope.product.properties[i].name == "" || $scope.product.properties[i].name == '<p></p>'){
                         return false;
                     }
                 }
@@ -959,11 +963,13 @@ angular.module('app')
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, SubsidiaryService, StoreService, DueListFactory, PropertyTypeFactory, ngDialog, Flash, ProductService, APPLICATION, $sce, $interval) {
 
             $scope.original = undefined;
+            $scope.product = {};
             $scope.selecteds = {
                 subsidiary: undefined
             };
             $scope.subsidiaries = [];
             $scope.stores = [];
+            $scope._stores = [];
             $scope.store = {};
             $scope.dueList = DueListFactory.get();
             $scope.propertyTypeList = PropertyTypeFactory.get();
@@ -992,17 +998,26 @@ angular.module('app')
             }
 
             $scope.validateProperties = function(){
-                if($scope.record.product==undefined) return false;
-                for(var i in $scope.record.properties){
-                    if($scope.record.properties[i].value == ""){
+                for(var i in $scope.product.properties){
+                    if($scope.product.properties[i].name=='' || $scope.product.properties[i].name == '<p></p>'){
                         return false;
                     }
                 }
                 return true;
             }
 
+            $scope.updateStores = function(){
+                $scope.stores = [];
+                for(var i in $scope._stores){
+                    var _store = $scope._stores[i];
+                    if(_store.subsidiary && _store.subsidiary.length>0 &&  _store.subsidiary[0].id==$scope.selecteds.subsidiary){
+                        $scope.stores.push(_store);
+                    }
+                }
+            };
+
             $scope._validate = function(){
-                if(JSON.stringify($scope.original) == JSON.stringify($scope.store)){
+                if(JSON.stringify($scope.original) == JSON.stringify($scope.product)){
                     return false;
                 }else if(Object.keys($scope._getChanges()).length===0){
                     return false;
@@ -1016,6 +1031,7 @@ angular.module('app')
 
             $scope.__construct = function(){
                 $scope.original = undefined;
+                $scope.external = {};
                 $scope.subsidiaries = [];
                 $scope.store = {};
                 //$scope.form.$setPristine();
@@ -1024,28 +1040,25 @@ angular.module('app')
             $scope._getChanges = function(){
                 var changes = {};
                 if($scope.original.store!==$scope.product.store){
-                    changes.name = $scope.store.name;
+                    changes.store = $scope.product.store;
                 }
-                if($scope.original.name!==$scope.store.name){
-                    changes.name = $scope.store.name;
+                if($scope.original.name!==$scope.product.name){
+                    changes.name = $scope.product.name;
                 }
-                if($scope.original.reference!==$scope.store.reference){
-                    changes.reference = $scope.store.reference;
+                if($scope.original.reference!==$scope.product.reference){
+                    changes.reference = $scope.product.reference;
                 }
-                if($scope.original.subsidiary!==$scope.store.subsidiary){
-                    changes.subsidiary = $scope.store.subsidiary;
+                if($scope.product.max_dose && $scope.product.max_dose!=='<p></p>' && $scope.original.max_dose!==$scope.product.max_dose){
+                    changes.max_dose = $scope.product.max_dose;
                 }
-                if($scope.original.address!==$scope.store.address){
-                    changes.address = $scope.store.address;
+                if($scope.original.due_date!==$scope.product.due_date){
+                    changes.due_date = $scope.product.due_date;
                 }
-                if($scope.original.phone!==$scope.store.phone){
-                    changes.phone = $scope.store.phone;
+                if($scope.original.certification_nsf!==$scope.product.certification_nsf){
+                    changes.certification_nsf = $scope.product.certification_nsf;
                 }
-                if($scope.store.notes && $scope.store.notes!=='<p></p>' && $scope.original.notes!==$scope.store.notes){
-                    changes.notes = $scope.store.notes;
-                }
-                if($scope.original.active!==$scope.store.active){
-                    changes.active = $scope.store.active;
+                if($scope.original.active!==$scope.product.active){
+                    changes.active = $scope.product.active;
                 }
                 return changes;
             }
@@ -1062,13 +1075,29 @@ angular.module('app')
                     , function (response) {$scope._stores = response;$scope.requesting = false;
                     }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                     });
+                ProductService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}
+                    , function (response) {
+                        $scope.product = response;
+                        $scope.product.due_date = $scope.product.due_date === 0 ? undefined : $scope.product.due_date;
+                        $scope.selecteds.subsidiary = $scope.product.store[0].subsidiary;
+                        $scope.updateStores();
+                        $scope.product.store = $scope.product.store[0].id;
+                        $scope.original = JSON.parse(JSON.stringify($scope.product));
+                        $scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
+                    });
+            }
+
+            $scope.hola = function(){
+                debugger;
+                $scope.form;
             }
 
             $scope._init();
 
         }])
-    .controller('RecordCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'SubsidiaryService', 'StoreService', 'ProductService', 'ngDialog', 'Flash', 'RecordService', 'APPLICATION', '$sce','$interval',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, SubsidiaryService, StoreService, ProductService, ngDialog, Flash, RecordService, APPLICATION, $sce, $interval) {
+.controller('RecordCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'SubsidiaryService', 'StoreService', 'ProductService', 'ngDialog', 'Flash', 'RecordService', 'APPLICATION', '$sce','$interval',
+function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, SubsidiaryService, StoreService, ProductService, ngDialog, Flash, RecordService, APPLICATION, $sce, $interval) {
 
             $scope.selecteds = {
                 subsidiary: undefined
