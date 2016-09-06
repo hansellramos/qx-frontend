@@ -205,6 +205,12 @@ angular.module('app')
                         controller: 'ProfileEditCtrl',
                         resolve: load(['ui.select'])
                     })
+                    .state('app.light', {
+                        url: '/light',
+                        templateUrl: 'views/modules/light/index.html',
+                        data: {title: 'Luces'},
+                        controller: 'LightCtrl',
+                    })
                     .state('app.analysis', {
                         url: '/analysis',
                         templateUrl: 'views/pages/dashboard.analysis.html',

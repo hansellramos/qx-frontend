@@ -32,7 +32,7 @@ var app =
             .constant('APPLICATION', {
                 CONFIG: {
                     API: {
-                        URL: 'http://localhost:3000/',
+                        URL: 'http://192.168.1.15:3000/',
                         RESOURCES: {
                             AUTH: 'auth/',
                             SUBSIDIARY: 'subsidiaries/',
@@ -44,6 +44,7 @@ var app =
                             USER: 'users/',
                             PROFILE: 'profiles/',
                             PERMISSIONS: 'permissions/',
+                            LIGHT: 'lights/',
                         }
                     }
                     , DEVICE_KEY: 'b4cd45f5b00b326a79ea6121f9cc0db8'

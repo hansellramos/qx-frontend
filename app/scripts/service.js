@@ -46,6 +46,10 @@ angular
         return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.PROFILE + ':token/:id'
             , {token: '@token', id: '@id'}, { update: { method: 'PUT' }})
     }])
+    .factory('LightService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
+        return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.LIGHT + ':token/:id'
+            , {token: '@token', id: '@id'}, { update: { method: 'PUT' }})
+    }])
     .factory('PermissionsService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
         return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.PERMISSIONS + ':token/:id'
             , {token: '@token', id: '@id'})

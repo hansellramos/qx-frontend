@@ -2533,5 +2533,38 @@ angular.module('app')
             $scope._init();
 
         }])
+    .controller('LightCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'LightService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, LightService, APPLICATION) {
+            $scope.lights = [];
 
+            $scope.change = function(light){
+                LightService.update({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:light._id}, {value:light.value}
+                    , function(response){
+                        //Flash.create('success',response.message);$scope._init();
+                        $scope.init();
+                    }, function(errorResponse){
+                        Flash.create('danger',errorResponse.data.message);
+                        if(errorResponse.status == 406){ //validations error
+                        }
+                    });
+            }
+
+            $scope.init = function() {
+                LightService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function (response) {
+                        //debugger;
+                        $scope.lights = response;
+                    }, function (errorResponse) {
+                        Flash.create('danger', errorResponse);
+                        $scope.requesting = false;
+                    });
+            }
+
+            setInterval(function(){
+                $scope.init();
+            },2000);
+
+            $scope.init();
+
+        }])
 ;

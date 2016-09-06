@@ -1,0 +1,19 @@
+<flash-message duration="10000" show-close="true" class="floating-message"></flash-message>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <span ng-hide="original">Luces</span>
+  </div>
+  <div class="panel-body">
+    <form name="form" novalidate ng-submit="">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" ng-repeat="item in lights">
+          <label class="md-switch">
+            <input type="checkbox" ng-model="item.value" ng-change="change(item)">
+            <i class="indigo"></i>
+            {{item.name}}
+          </label>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
