@@ -73,19 +73,21 @@
                         </ui-select>
                     </div>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <div class="qmd-input"  ng-class="{'selected':product.certification_nsf}">
-                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
-                               ng-model="product.certification_nsf"
-                               tabindex="107"  name="certification_nsf">
-                        <label> Certficado NSF</label>
-                    </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 p-sm">
+                    <label class="md-switch">
+                        <input type="checkbox" ng-model="product.certification_nsf" checked>
+                        <i class="green"></i>
+                        <span ng-class="{'text-success':product.certification_nsf, 'text-warning-dk':!product.certification_nsf}">
+                            <span ng-show="product.certification_nsf">Tiene Certficado NSF</span>
+                            <span ng-show="!product.certification_nsf">No Tiene Certficado NSF</span>
+                        </span>
+                    </label>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 p-sm">
                     <label class="md-switch">
                         <input type="checkbox" ng-model="product.active" checked>
                         <i class="green"></i>
-                        <span ng-class="{'text-success':subsidiary.active, 'text-warning-dk':!product.active}">
+                        <span ng-class="{'text-success':product.active, 'text-warning-dk':!product.active}">
                             <span ng-show="product.active">Activo</span>
                             <span ng-show="!product.active">Inactivo</span>
                         </span>
@@ -242,7 +244,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-right">
                     <button class="btn btn-default" ng-click="_goBack()" type="button">Volver</button>
                     <button class="btn btn-addon btn-primary" ng-show="!original" ng-disabled="form.$invalid || !product.store || !product.due_date || !validateProperties() || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Producto</button>
-                    <button class="btn btn-addon btn-primary" ng-show="original" ng-disabled="form.$invalid || !product.store || !product.due_date || !validateProperties() || requesting!=''" type="submit"><i class="fa fa-pencil"></i>Guardar Bodega/Tienda</button>
+                    <button class="btn btn-addon btn-primary" ng-show="original" ng-disabled="form.$invalid || !product.store || typeof(product.due_date) == 'undefined' || !validateProperties() || requesting!=''" type="submit"><i class="fa fa-pencil"></i>Guardar Producto</button>
                     <button type="button" ng-click="hola()">Hola</button>
                 </div>
             </div>

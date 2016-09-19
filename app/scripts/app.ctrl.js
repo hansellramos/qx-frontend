@@ -1063,6 +1063,10 @@ angular.module('app')
                 return changes;
             }
 
+            $scope.typeOf = function(val) {
+                return typeof val;
+            };
+
             $scope._init = function(){
                 $scope.__construct();
                 $scope.subsidiaries = [];

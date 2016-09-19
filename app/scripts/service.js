@@ -53,7 +53,8 @@ angular
     .factory('DueListFactory', function(){
         var $get = function(){
             return [
-                {name:'1 Semana', value:1}
+                {name:'Sin Vencimiento', value:0}
+                , {name:'1 Semana', value:1}
                 , {name:'2 Semanas', value:2}
                 , {name:'1 Mes', value:4}
                 , {name:'2 Meses', value:8}
