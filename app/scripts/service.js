@@ -73,10 +73,21 @@ angular
                 , {name:'9 años', value:468}
                 , {name:'10 años', value:520}
             ];
+        };
+
+        var $one = function(value){
+            var all = $get();
+            for(v in all){
+                if(all[v].value==value){
+                    return all[v].name;
+                }
+            }
+            return "N/R";
         }
 
         return {
-            get: $get
+            get: $get,
+            one: $one
         };
     })
     .factory('PropertyTypeFactory', function(){

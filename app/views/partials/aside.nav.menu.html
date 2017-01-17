@@ -30,7 +30,7 @@
             <span class="font-normal">Nuevo</span>
           </a>
         </li>
-        <li ui-sref-active="active" ng-show="_p.isAdmin() || _p.hasPermission(_pn.RECORD_IMPORT)">
+        <li ui-sref-active="active" ng-show="false && (_p.isAdmin() || _p.hasPermission(_pn.RECORD_IMPORT))">
           <a md-ink-ripple ui-sref="app.recordImport">
             <i class="icon glyphicon glyphicon-import i-16"></i>
             <span class="font-normal">Importar</span>

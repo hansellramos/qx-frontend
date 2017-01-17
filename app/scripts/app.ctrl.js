@@ -48,6 +48,7 @@ angular.module('app')
             $scope._pn = APPLICATION.ENUM.PERMISSIONS;
 
             $scope.signout = function () {
+                ga('send','event','log out',JSON.parse(localStorage.USER_DATA).profile[0].name);
                 LoginService.logout({
                     token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)
                 }, function (response) {
@@ -198,7 +199,7 @@ angular.module('app')
                 $scope.data.errorMessage = $stateParams.message;
                 $stateParams.message = '';
             }
-
+            ga('send','event','login form','');
             $scope.login = function () {
                 $scope.requesting = 'Validando...';
                 LoginService.login({
@@ -213,6 +214,7 @@ angular.module('app')
                         , function (response) {
                             localStorage.setItem(APPLICATION.CONFIG.AUTH.TOKEN_DATA, JSON.stringify(response.data.token));
                             localStorage.setItem(APPLICATION.CONFIG.AUTH.USER_DATA, JSON.stringify(response.data.token.user));
+                            ga('send','event','log in',JSON.parse(localStorage.USER_DATA).profile[0].name);
                             $state.go('app.dashboard');
                         }, errorNotResponse);
                 }, errorNotResponse);
@@ -340,6 +342,7 @@ angular.module('app')
                 , function (response) {$scope.users = response;$scope.requesting = false;
                 }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                 });
+            ga('send','event','subsidiary add',JSON.parse(localStorage.USER_DATA).profile[0].name);
 
             //Obligatory fields
             $scope._form = {
@@ -378,7 +381,7 @@ angular.module('app')
                     reference: false,
                 }
             };
-
+            ga('send','event','subsidiary edit',JSON.parse(localStorage.USER_DATA).profile[0].name);
             $scope._submit = $scope._edit = function(){
                 SubsidiaryService.update({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}, $scope._getChanges()
                     , function(response){
@@ -472,6 +475,8 @@ angular.module('app')
                 }
             }
 
+            ga('send','event','store list',JSON.parse(localStorage.USER_DATA).profile[0].name);
+
             $scope.add = function(){
                 $state.go('app.storeAdd');
             }
@@ -555,6 +560,7 @@ angular.module('app')
             $scope.store = {name:"", reference:"", subsidiary:null, address:"", phone:"", notes:"", active:true};
             $scope.subsidiaries = [];
             $scope.requesting = true;
+            ga('send','event','store add',JSON.parse(localStorage.USER_DATA).profile[0].name);
             SubsidiaryService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                 , function (response) {
                     $scope.subsidiaries = response;
@@ -605,6 +611,7 @@ angular.module('app')
                     reference: false,
                 }
             };
+            ga('send','event','store edit',JSON.parse(localStorage.USER_DATA).profile[0].name);
             $scope._submit = $scope._edit = function(){
                 StoreService.update({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}, $scope._getChanges()
                     , function(response){
@@ -706,6 +713,7 @@ angular.module('app')
                     $scope.reverse = false;
                 }
             }
+            ga('send','event','product list',JSON.parse(localStorage.USER_DATA).profile[0].name);
 
             $scope.add = function(){
                 $state.go('app.productAdd');
@@ -784,9 +792,10 @@ angular.module('app')
             $scope.get();
 
         }])
-    .controller('ProductAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'SubsidiaryService', 'StoreService', 'DueListFactory', 'PropertyTypeFactory', 'ngDialog', 'Flash', 'ProductService', 'APPLICATION', '$sce','$interval',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, SubsidiaryService, StoreService, DueListFactory, PropertyTypeFactory, ngDialog, Flash, ProductService, APPLICATION, $sce, $interval) {
-            $scope.product = { store:undefined, name:'', reference:'', due_date:4, max_dose:'', notes:'', certification_nsf:''
+    .controller('ProductAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'SubsidiaryService', 'StoreService', 'DueListFactory', 'PropertyTypeFactory', 'ngDialog', 'Flash', 'ProductService', 'APPLICATION', '$sce','$interval', 'Permissions',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, SubsidiaryService, StoreService, DueListFactory, PropertyTypeFactory, ngDialog, Flash, ProductService, APPLICATION, $sce, $interval, Permissions) {
+            $scope._p = Permissions;
+            $scope.product = { store:undefined, name:'', reference:'', due_date:4, max_dose:'N/A', notes:'', certification_nsf:false
                 , properties:[{name:'', validation:{type:APPLICATION.ENUM.PROPERTY.TYPE.TEXT}}], active:true
             };
             $scope.selecteds = {
@@ -808,6 +817,7 @@ angular.module('app')
                     general: false
                 }
             };
+            ga('send','event','product add',JSON.parse(localStorage.USER_DATA).profile[0].name);
 
             function initializeData(){
                 $scope.subsidiaries = [];
@@ -955,13 +965,18 @@ angular.module('app')
                     }
                 }
                 return true;
+            };
+
+            $scope.hola = function(){
+                debugger;
+                $scope.form;
             }
 
             initializeData();
         }])
-    .controller('ProductEditCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'SubsidiaryService', 'StoreService', 'DueListFactory', 'PropertyTypeFactory', 'ngDialog', 'Flash', 'ProductService', 'APPLICATION', '$sce','$interval',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, SubsidiaryService, StoreService, DueListFactory, PropertyTypeFactory, ngDialog, Flash, ProductService, APPLICATION, $sce, $interval) {
-
+    .controller('ProductEditCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'SubsidiaryService', 'StoreService', 'DueListFactory', 'PropertyTypeFactory', 'ngDialog', 'Flash', 'ProductService', 'APPLICATION', '$sce','$interval','Permissions',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, SubsidiaryService, StoreService, DueListFactory, PropertyTypeFactory, ngDialog, Flash, ProductService, APPLICATION, $sce, $interval, Permissions) {
+            $scope._p = Permissions;
             $scope.original = undefined;
             $scope.product = {};
             $scope.selecteds = {
@@ -981,6 +996,7 @@ angular.module('app')
                     reference: false,
                 }
             };
+            ga('send','event','product edit',JSON.parse(localStorage.USER_DATA).profile[0].name);
 
             $scope._submit = $scope._edit = function(){
                 ProductService.update({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}, $scope._getChanges()
@@ -1090,12 +1106,7 @@ angular.module('app')
                         $scope.requesting = false;
                     }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                     });
-            }
-
-            $scope.hola = function(){
-                debugger;
-                $scope.form;
-            }
+            };
 
             $scope._init();
 
@@ -1133,6 +1144,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                     $scope.reverse = false;
                 }
             }
+            ga('send','event','record list',JSON.parse(localStorage.USER_DATA).profile[0].name);
 
             $scope.add = function(){
                 $state.go('app.recordAdd');
@@ -1288,6 +1300,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                     general: false
                 }
             };
+            ga('send','event','record add',JSON.parse(localStorage.USER_DATA).profile[0].name);
 
             function initializeData(){
                 $scope.subsidiaries = [];
@@ -1517,6 +1530,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
             $scope.pageSize = 10;
             $scope.all = localStorage.all==="?all=true";
             $scope.from = new Date(new Date().getTime()-(187*24*3600*1000));
+            ga('send','event','certificates list',JSON.parse(localStorage.USER_DATA).profile[0].name);
 
             $scope.sort = function (keyname) {
                 if (keyname == $scope.sortKey) {
@@ -1622,8 +1636,8 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
             $scope.get();
 
         }])
-    .controller('CertificateAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'SubsidiaryService', 'StoreService', 'ProductService', 'RecordService', 'ExternalService', 'CertificateService', 'APPLICATION', '$sce',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, SubsidiaryService, StoreService, ProductService, RecordService, ExternalService, CertificateService, APPLICATION, $sce) {
+    .controller('CertificateAddCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'SubsidiaryService', 'StoreService', 'ProductService', 'RecordService', 'ExternalService', 'CertificateService', 'APPLICATION', '$sce','DueListFactory',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, SubsidiaryService, StoreService, ProductService, RecordService, ExternalService, CertificateService, APPLICATION, $sce, DueListFactory) {
             var _date = new Date();_date.setMilliseconds(0);_date.setSeconds(0);
             $scope.certificate = {date: _date, subsidiary:undefined, store:undefined,
                 product:undefined, properties:[], presentation:"", max_dose:"", elaboration_date:_date, due_date:0,
@@ -1640,6 +1654,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
             $scope.form = {record:undefined};
             $scope.externals = [];
             $scope.requesting = true;
+            ga('send','event','certificates add',JSON.parse(localStorage.USER_DATA).profile[0].name);
             SubsidiaryService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                 , function (response) {$scope.subsidiaries = response;$scope.requesting = false;
                 }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
@@ -1702,7 +1717,9 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                 $scope.certificate.properties['dueDate'] = false;
                 $scope.certificate.properties['quantity'] = false;
                 $scope.certificate.max_dose = $scope.product.max_dose;
-                $scope.certificate.due_date = $scope.product.due_date;
+                debugger;
+                $scope.certificate.certification_nsf = $scope.product.certification_nsf;
+                $scope.certificate.due_date = DueListFactory.one($scope.product.due_date);
                 $scope.updateRecords();
 
             }
@@ -1815,6 +1832,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                     , elaboration_date: $scope.certificate.elaboration_date
                     , max_dose: $scope.certificate.max_dose
                     , due_date: $scope.certificate.due_date
+                    , certification_nsf: $scope.certificate.certification_nsf
                     , leader: getLeader()
                     , clause: $scope.certificate.clause
                     , active: true
@@ -1881,6 +1899,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
             $scope.itemLoading = true;
             $scope._width = 1;
             $scope.qrcode = "http://www.pqp.com.co/";
+            ga('send','event','certificates print',JSON.parse(localStorage.USER_DATA).profile[0].name);
             CertificateService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params.id}
                 , function(response){
                     $scope.item = response;
@@ -1918,7 +1937,8 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                     $scope.sortKey = keyname;
                     $scope.reverse = false;
                 }
-            }
+            };
+            ga('send','event','external list',JSON.parse(localStorage.USER_DATA).profile[0].name);
 
             $scope.add = function(){
                 $state.go('app.externalAdd');
@@ -1988,7 +2008,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                     name: false
                 }
             };
-
+            ga('send','event','external add',JSON.parse(localStorage.USER_DATA).profile[0].name);
             $scope._submit = $scope._create = function(){
                 ExternalService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.external
                     , function(response){
@@ -2018,6 +2038,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                     reference: false,
                 }
             };
+            ga('send','event','external edit',JSON.parse(localStorage.USER_DATA).profile[0].name);
             $scope._submit = $scope._edit = function(){
                 ExternalService.update({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}, $scope._getChanges()
                     , function(response){
@@ -2112,6 +2133,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
             $scope.add = function(){
                 $state.go('app.userAdd');
             }
+            ga('send','event','user list',JSON.parse(localStorage.USER_DATA).profile[0].name);
 
             $scope.showDetail = function(item){
                 $scope.item = item;
@@ -2201,6 +2223,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                     general: false
                 }
             };
+            ga('send','event','user add',JSON.parse(localStorage.USER_DATA).profile[0].name);
 
             $scope._submit = $scope._create = function(){
                 UserService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.user
@@ -2234,6 +2257,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                     repeatPassword: { message: APPLICATION.ENUM.MESSAGES.USER.PASSWORDS_NOT_EQUAL }
                 }
             };
+            ga('send','event','user edit',JSON.parse(localStorage.USER_DATA).profile[0].name);
             $scope._submit = $scope._edit = function(){
                 UserService.update({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}, $scope._getChanges()
                     , function(response){
@@ -2337,6 +2361,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                     $scope.reverse = false;
                 }
             }
+            ga('send','event','profile list',JSON.parse(localStorage.USER_DATA).profile[0].name);
 
             $scope.add = function(){
                 $state.go('app.profileAdd');
@@ -2417,6 +2442,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
             $scope.profile = {name:"", description:"", permissions:{}, active:true};
             $scope.permissions = [];
             $scope.requesting = true;
+            ga('send','event','profile add',JSON.parse(localStorage.USER_DATA).profile[0].name);
             PermissionsService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                 , function (response) {
                     $scope.permissions = response;
@@ -2471,6 +2497,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                 error : {
                 }
             };
+            ga('send','event','profile edit',JSON.parse(localStorage.USER_DATA).profile[0].name);
             $scope._submit = $scope._edit = function(){
                 ProfileService.update({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}, $scope._getChanges()
                     , function(response){

@@ -104,25 +104,25 @@
                 {{item.elaboration_date|date:'dd-MM-yyyy'}}
             </div>
         </div>
-        <div class="row" ng-show="product.certification_nsf && item.due_date">
+        <div class="row" ng-show="item.certification_nsf && item.due_date">
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                 VENCIMIENTO:
             </div>
             <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 font-w100">
-                {{item.due_date}}
+                {{item.due_date}} desde su fecha de elaboración
             </div>
         </div>
-        <div class="row" ng-show="product.certification_nsf && item.max_dose && item.max_dose != 'N/R'">
+        <div class="row" ng-show="item.certification_nsf && item.max_dose && item.max_dose != 'N/R'">
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                 DOSIS MÁXIMA:
             </div>
             <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 font-w100">
-                {{item.max_dose}}
+                <div ng-bind-html="item.max_dose"></div>
             </div>
         </div>
     </div>
     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-center-xs text-right">
-
+        <img src="images/logo/nsf.jpg" title="Certificacion NSF" class="w-40 h-auto">
     </div>
 </div>
 <br />
