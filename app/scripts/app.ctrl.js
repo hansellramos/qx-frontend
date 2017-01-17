@@ -1292,17 +1292,18 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
             $scope._products = [];
             $scope.loading = false;
 
-            $scope._form = {
-                error : {
-                    reference: false,
-                },
-                success: {
-                    general: false
-                }
-            };
+            $scope._form = {};
             ga('send','event','record add',JSON.parse(localStorage.USER_DATA).profile[0].name);
 
             function initializeData(){
+                $scope._form = {
+                    error : {
+                        reference: false,
+                    },
+                    success: {
+                        general: false
+                    }
+                };
                 $scope.subsidiaries = [];
                 SubsidiaryService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                     , function (response) {$scope.subsidiaries = response;$scope.requesting = false;
@@ -1420,6 +1421,14 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                     _p.value = '';
                     $scope.record.properties.push(_p);
                 }
+                $scope._form = {
+                    error : {
+                        reference: false,
+                    },
+                    success: {
+                        general: false
+                    }
+                };
             }
 
             initializeData();
