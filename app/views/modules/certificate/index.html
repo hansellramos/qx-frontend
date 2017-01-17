@@ -118,6 +118,20 @@
             </dir-pagination-controls>
           </td>
         </tr>
+        <tr>
+          <td colspan="9">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <label class="md-switch">
+                <input type="checkbox" ng-model="all" ng-change="setShowAllData()" ng-disabled="itemLoading">
+                <i class="green"></i>
+                <span ng-class="{'text-success':all, 'text-warning-dk':!all}">
+                            <span ng-show="all">Mostrando todos los certificados existentes (Esto puede demorar la carga de la información)</span>
+                            <span ng-show="!all">Mostrando certificados desde elaborados después del {{from|date:'yyyy-MM-dd'}}</span>
+                        </span>
+              </label>
+            </div>
+          </td>
+        </tr>
       </tfoot>
     </table>
     <script type="text/ng-template" id="detail">

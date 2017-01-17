@@ -31,7 +31,7 @@ angular
             , {token: '@token', product:'@product', id: '@id'}, { update: { method: 'PUT' }})
     }])
     .factory('CertificateService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
-        return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.CERTIFICATE + ':token/:id'
+        return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.CERTIFICATE + ':token/:id' + localStorage.all
             , {token: '@token', id: '@id'})
     }])
     .factory('ExternalService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {

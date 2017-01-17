@@ -1515,6 +1515,8 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
             $scope.sortKey = 'id';
             $scope.reverse = true;
             $scope.pageSize = 10;
+            $scope.all = localStorage.all==="?all=true";
+            $scope.from = new Date(new Date().getTime()-(187*24*3600*1000));
 
             $scope.sort = function (keyname) {
                 if (keyname == $scope.sortKey) {
@@ -1610,6 +1612,11 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                         console.log(errorResponse);
                         Flash.create('danger',errorResponse.data.data.fields.reference);
                     });
+            }
+
+            $scope.setShowAllData = function(){
+                localStorage.all = $scope.all ? "?all=true":"";
+                $scope.get();
             }
 
             $scope.get();
