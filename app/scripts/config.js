@@ -78,7 +78,7 @@ var app =
                             PASSWORDS_NOT_EQUAL: 'Las contraseñas no coinciden.'
                         },
                         CERTIFICATE: {
-                            DEFAULT_CLAUSE: "Este certificado es válido por treinta (30) días a partir de su fecha de expedición, en condiciones normales de almacenamiento."
+                            DEFAULT_CLAUSE: ""
                         }
                     }
                     , PROPERTY:{

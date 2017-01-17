@@ -1,7 +1,7 @@
 <title>PQP</title>
 <div class="row header">
     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-        <img class="w-sm" src="images/logo/logo-pqp-title.png" title="Productos Químicos Panamericanos S.A.">
+        <img class="w-sm p-v-md" src="images/logo/logo-pqp-title.png" title="Productos Químicos Panamericanos S.A.">
     </div>
     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-center">
         <h4 class="font-bold">PRODUCTOS QUIMICOS PANAMERICANOS S.A.</h4>
@@ -27,7 +27,7 @@
                 PRODUCTO: <span class="font-w100">{{item.product[0].name}} ({{item.product[0].reference}})</span>
             </div>
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-right">
-                FECHA: <span class="font-w100">{{item.date|date:'dd-MM-yyyy'}}</span>
+                CÓDIGO DE VERIFICACION: <span class="font-w100 font-bold">{{item.verification}}</span>
             </div>
         </div>
         <div class="row">
@@ -38,7 +38,7 @@
                 PRESENTACIÓN: {{item.presentation}}
             </div>
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-right">
-                HORA: <span class="font-w100">{{item.date|date:'HH:mm'}}</span>
+
             </div>
         </div>
         <div class="row">
@@ -46,12 +46,15 @@
                 REMISIÓN: <span class="font-w100">{{item.remission}}</span>
             </div>
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4  col-sm-offset-4  col-md-offset-4 col-lg-offset-4 text-right">
-                CÓDIGO DE VERIFICACION: <span class="font-w100 font-bold">{{item.verification}}</span>
+                FECHA: <span class="font-w100">{{item.date|date:'dd-MM-yyyy'}}</span>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                 CANTIDAD: <span class="font-w100">{{item.quantity|number:0}} KG</span>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4  col-sm-offset-4  col-md-offset-4 col-lg-offset-4 text-right">
+                HORA: <span class="font-w100">{{item.date|date:'HH:mm'}}</span>
             </div>
         </div>
     </div>
