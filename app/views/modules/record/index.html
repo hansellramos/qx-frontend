@@ -58,6 +58,7 @@
     <table class="table table-striped table-scroll-x">
       <thead ng-show="selecteds.product">
         <tr>
+          <th></th>
           <th ng-click="sort('reference')" >
             Lote
             <span class="glyphicon sort-icon" ng-show="sortKey=='reference'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
@@ -112,6 +113,7 @@
           <th></th>
         </tr>
       <tr>
+        <th></th>
         <th>
           <input ng-model="search.reference" class="form-control" placeholder="Buscar por lote">
         </th>
@@ -154,6 +156,11 @@
       </thead>
       <tbody ng-show="selecteds.product && !loading">
         <tr dir-paginate="item in items|orderBy:sortKey:reverse|filter:search:strict|itemsPerPage:pageSize">
+          <td class="w-sm">
+            <a href class="text-info"  ng-click="showDetail(item)"><i class="icon glyphicon glyphicon-search i-16"></i></a>
+            <a href class="text-danger" ng-show="_p.isAdmin() || _p.hasPermission(_pn.RECORD_DELETE)" ng-click="delete(item)"><i class="icon glyphicon glyphicon-trash i-16"></i></a>
+            <a href class="text-warning" ng-show="_p.isAdmin() || _p.hasPermission(_pn.RECORD_UPDATE)"  ng-click="edit(item)"><i class="icon fa fa-pencil-square-o i-16"></i></a>
+          </td>
           <td>{{item.reference}}</td>
           <td>{{item.analysis_date| date:'yyyy-MM-dd'}}</td>
           <td>{{item.elaboration_date| date:'yyyy-MM-dd'}}</td>

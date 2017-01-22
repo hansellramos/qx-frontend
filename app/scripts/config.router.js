@@ -126,6 +126,13 @@ angular.module('app')
                         controller: 'RecordAddCtrl',
                         resolve: load(['ui.select'])
                     })
+                    .state('app.recordEdit', {
+                        url: '/record/edit/:product/:_id',
+                        templateUrl: 'views/modules/record/edit.html',
+                        data: {title: 'Modificar Muestra'},
+                        controller: 'RecordEditCtrl',
+                        resolve: load(['ui.select'])
+                    })
                     .state('app.recordImport', {
                         url: '/record/import/:product',
                         templateUrl: 'views/modules/record/import.html',

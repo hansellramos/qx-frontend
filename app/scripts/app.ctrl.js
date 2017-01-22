@@ -1111,7 +1111,7 @@ angular.module('app')
             $scope._init();
 
         }])
-.controller('RecordCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'SubsidiaryService', 'StoreService', 'ProductService', 'ngDialog', 'Flash', 'RecordService', 'APPLICATION', '$sce','$interval',
+    .controller('RecordCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'SubsidiaryService', 'StoreService', 'ProductService', 'ngDialog', 'Flash', 'RecordService', 'APPLICATION', '$sce','$interval',
 function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, SubsidiaryService, StoreService, ProductService, ngDialog, Flash, RecordService, APPLICATION, $sce, $interval) {
 
             $scope.selecteds = {
@@ -1250,6 +1250,10 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                     scope: $scope,
                     //width: window.innerWidth < 800 ? window.innerWidth-24 : window.innerWidth-384
                 });
+            }
+
+            $scope.edit = function(item){
+                $state.go('app.recordEdit', {'product':$scope.selecteds.product._id,'_id':item.id});
             }
 
             $scope._cancelDelete = function(){
@@ -1432,6 +1436,119 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
             }
 
             initializeData();
+        }])
+
+    .controller('RecordEditCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'RecordService', 'ProductService', 'StoreService', 'ExternalService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, RecordService, ProductService, StoreService, ExternalService, APPLICATION) {
+            $scope.original = undefined;
+            $scope.record = {};
+            $scope.product = {};
+            $scope._form = {
+                error : {
+                    reference: false,
+                }
+            };
+            $scope.externals = [];
+            ga('send','event','record edit',JSON.parse(localStorage.USER_DATA).profile[0].name);
+            $scope._submit = $scope._edit = function(){
+                RecordService.update({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}, $scope._getChanges()
+                    , function(response){
+                        Flash.create('success',response.message);
+                        $scope._init();
+                    }, function(errorResponse){
+                        Flash.create('danger',errorResponse.data.message);
+                        if(errorResponse.status == 406){ //validations error
+
+                        }
+                    });
+            }
+
+            $scope._validate = function(){
+                if(JSON.stringify($scope.original) == JSON.stringify($scope.external)){
+                    return false;
+                }else if(Object.keys($scope._getChanges()).length===0){
+                    return false;
+                }
+                return true;
+            }
+
+            $scope._goBack = function(){
+                $state.go('app.record');
+            }
+
+            $scope.__construct = function(){
+                $scope.original = undefined;
+                $scope.external = {};
+                //$scope.form.$setPristine();
+            }
+
+            $scope._getChanges = function(){
+                var changes = {};
+                if($scope.original.name!==$scope.external.name){
+                    changes.name = $scope.external.name;
+                }
+                if($scope.original.address!==$scope.external.address){
+                    changes.address = $scope.external.address;
+                }
+                if($scope.original.phone!==$scope.external.phone){
+                    changes.phone = $scope.external.phone;
+                }
+                if($scope.external.notes && $scope.external.notes!=='<p></p>' && $scope.original.notes!==$scope.external.notes){
+                    changes.notes = $scope.external.notes;
+                }
+                if($scope.original.contact!==$scope.external.contact){
+                    changes.contact = $scope.external.contact;
+                }
+                if($scope.original.active!==$scope.external.active){
+                    changes.active = $scope.external.active;
+                }
+                return changes;
+            }
+
+            $scope._init = function(){
+                $scope.__construct();
+                RecordService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), product:$state.params.product, id:$state.params._id}
+                    , function (response) {
+                        $scope.record = response;
+                        if($scope.record.analysis_date){ $scope.record.analysis_date = new Date($scope.record.analysis_date); }
+                        if($scope.record.elaboration_date){ $scope.record.elaboration_date = new Date($scope.record.elaboration_date); }
+                        if($scope.record.due_date){ $scope.record.due_date = new Date($scope.record.due_date); }
+                        if($scope.record.reception_date){ $scope.record.reception_date = new Date($scope.record.reception_date); }
+                        ProductService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$scope.record.product[0]._id}
+                            , function (response) {
+                                $scope.product = response;
+                                matchRecordPropertyNames();
+                                StoreService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$scope.product.store[0]._id}
+                                    , function (response) {
+                                        $scope.product.store[0] = response;
+                                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
+                                });
+                            }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
+                        });
+                        $scope.original = JSON.parse(JSON.stringify($scope.record));
+                        $scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
+                });
+                $scope.externals = [];
+                ExternalService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function (response) {$scope.externals = response;$scope.requesting = false;
+                    }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
+                });
+            }
+
+            function matchRecordPropertyNames(){
+                for(var property = 0;property <  $scope.record.properties.length; property++){
+                    for(var productProperty = 0; productProperty < $scope.product.properties.length; productProperty++){
+                        if($scope.record.properties[property].property == $scope.product.properties[productProperty].id){
+                            $scope.record.properties[property].name = $scope.product.properties[productProperty].name;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            $scope._init();
+
         }])
     .controller('RecordImportCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'SubsidiaryService', 'StoreService', 'ProductService', 'ngDialog', 'Flash', 'RecordService', 'APPLICATION', '$sce','$interval',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, SubsidiaryService, StoreService, ProductService, ngDialog, Flash, RecordService, APPLICATION, $sce, $interval) {

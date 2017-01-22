@@ -32,7 +32,7 @@ var app =
             .constant('APPLICATION', {
                 CONFIG: {
                     API: {
-                        URL: 'http://54.175.96.200:8080/',
+                            URL: 'http://localhost:3000/',
                         RESOURCES: {
                             AUTH: 'auth/',
                             SUBSIDIARY: 'subsidiaries/',

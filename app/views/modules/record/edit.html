@@ -1,13 +1,18 @@
 <flash-message duration="60000" show-close="true" class="floating-message"></flash-message>
 <div class="panel panel-default">
     <div class="panel-heading">
-        Nueva Muestra
+        <span ng-hide="original">Nueva Muestra</span>
+        <span ng-show="original">Modificar Muestra {{original.name}} ({{original.reference}})</span>
     </div>
     <div class="panel-body">
         <form name="form" novalidate ng-submit="_create();">
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                    <div class="qmd-select" ng-class="{'selected':selecteds.subsidiary}">
+                    <div ng-show="original" class="qmd-select selected">
+                        <label>Sucursal</label>
+                        <div class="p-h-md">{{product.store[0].subsidiary[0].name}}</div>
+                    </div>
+                    <div ng-hide="original" class="qmd-select" ng-class="{'selected':selecteds.subsidiary}">
                         <label><span class="font-xs text-danger-dk">*</span>Sucursal</label>
                         <ui-select name="subsidiary" ng-model="selecteds.subsidiary" ng-change="updateStores()" tabindex="101">
                             <ui-select-match placeholder="Seleccione Sucursal...">
@@ -20,7 +25,11 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                    <div class="qmd-select" ng-class="{'selected':selecteds.store}">
+                    <div ng-show="original" class="qmd-select selected">
+                        <label>Tienda/Bodega</label>
+                        <div class="p-h-md">{{product.store[0].name}} ({{product.store[0].reference}})</div>
+                    </div>
+                    <div ng-hide="original" class="qmd-select" ng-class="{'selected':selecteds.store}">
                         <label>Tienda/Bodega</label>
                         <ui-select name="store" ng-model="selecteds.store" ng-change="updateProducts()"  tabindex="102">
                             <ui-select-match placeholder="Seleccione Tienda/Bodega...">
@@ -33,7 +42,11 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                    <div class="qmd-select" ng-class="{'selected':selecteds.product}">
+                    <div ng-show="original" class="qmd-select selected">
+                        <label>Producto</label>
+                        <div class="p-h-md">{{product.name}} ({{product.reference}})</div>
+                    </div>
+                    <div ng-hide="original" class="qmd-select" ng-class="{'selected':selecteds.product}">
                         <label><span class="font-xs text-danger-dk">*</span>Producto</label>
                         <ui-select ng-model="selecteds.product" theme="bootstrap" ng-change="updateProperties()" tabindex="103" ng-required="true">
                             <ui-select-match placeholder="Seleccione Producto...">
@@ -48,10 +61,11 @@
             </div>
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                    <div class="qmd-input float-label">
+                    <div class="qmd-input qmd-select selected float-label">
                         <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" name="reference" ng-model="record.reference"
                                ng-required="true" tabindex="104" aria-required="true" aria-invalid="true" style=""
-                               ng-class="{'b-b-danger':_form.error.reference && _form.error.reference.error && _form.error.reference.value==record.reference}" name="reference">
+                               ng-class="{'b-b-danger':_form.error.reference && _form.error.reference.error && _form.error.reference.value==record.reference}"
+                               name="reference">
                         <label><span class="font-xs text-danger-dk">*</span> Lote&nbsp;<span class="label bg-danger pos-rlt m-r-xs"
                             ng-show="_form.error.reference && _form.error.reference.error && _form.error.reference.value==record.reference">
                             <b class="arrow left b-danger pull-in"></b>{{_form.error.reference.message}}</span>
