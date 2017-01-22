@@ -1510,6 +1510,8 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                 RecordService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), product:$state.params.product, id:$state.params._id}
                     , function (response) {
                         $scope.record = response;
+                        $scope.record.provider = $scope.record.supplier[0].id;
+                        //debugger;
                         if($scope.record.analysis_date){ $scope.record.analysis_date = new Date($scope.record.analysis_date); }
                         if($scope.record.elaboration_date){ $scope.record.elaboration_date = new Date($scope.record.elaboration_date); }
                         if($scope.record.due_date){ $scope.record.due_date = new Date($scope.record.due_date); }
