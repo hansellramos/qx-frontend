@@ -1543,6 +1543,9 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                 if($scope.original.active!==$scope.record.active){
                     changes.active = $scope.record.active;
                 }
+                if($scope.original.satisfies!==$scope.record.satisfies){
+                    changes.satisfies = $scope.record.satisfies;
+                }
                 return changes;
             }
 
