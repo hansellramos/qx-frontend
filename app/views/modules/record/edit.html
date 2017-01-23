@@ -1,11 +1,11 @@
-<flash-message duration="60000" show-close="true" class="floating-message"></flash-message>
+<flash-message duration="30000" show-close="true" class="floating-message"></flash-message>
 <div class="panel panel-default">
     <div class="panel-heading">
         <span ng-hide="original">Nueva Muestra</span>
         <span ng-show="original">Modificar Muestra {{original.name}} ({{original.reference}})</span>
     </div>
     <div class="panel-body">
-        <form name="form" novalidate ng-submit="_create();">
+        <form name="form" novalidate ng-submit="_submit();">
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                     <div ng-show="original" class="qmd-select selected">
@@ -48,7 +48,7 @@
                     </div>
                     <div ng-hide="original" class="qmd-select" ng-class="{'selected':selecteds.product}">
                         <label><span class="font-xs text-danger-dk">*</span>Producto</label>
-                        <ui-select ng-model="selecteds.product" theme="bootstrap" ng-change="updateProperties()" tabindex="103" ng-required="true">
+                        <ui-select ng-model="selecteds.product" theme="bootstrap" ng-change="updateProperties()" tabindex="103">
                             <ui-select-match placeholder="Seleccione Producto...">
                                 {{$select.selected.name}} ({{$select.selected.reference}})
                             </ui-select-match>
@@ -225,7 +225,8 @@
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-right">
                     <button class="btn btn-default" ng-click="_goBack()" type="button">Volver</button>
-                    <button class="btn btn-addon btn-primary" ng-disabled="form.$invalid || !validateProperties() || requesting!=''" type="submit"><i class="fa fa-plus"></i>Guardar Muestra</button>
+                    <button class="btn btn-addon btn-primary" ng-hide="original" ng-disabled="form.$invalid || !validateProperties() || requesting!=''" type="submit"><i class="fa fa-plus"></i>Guardar Muestra</button>
+                    <button class="btn btn-addon btn-primary" ng-show="original" ng-disabled="form.$invalid || !_validate() || requesting!=''" type="submit"><i class="fa fa-pencil"></i>Guardar Muestra</button>
                 </div>
             </div>
         </form>

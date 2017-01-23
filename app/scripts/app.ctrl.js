@@ -1200,6 +1200,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                                 , existing_quantity: response[i].existing_quantity
                                 , supplier: response[i].supplier[0].name
                                 , satisfies: response[i].satisfies
+                                , notes: response[i].notes
                                 , active: response[i].active
                                 , clause: response[i].clause
                             });
@@ -1454,11 +1455,16 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                 RecordService.update({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}, $scope._getChanges()
                     , function(response){
                         Flash.create('success',response.message);
+                        $scope._form.error.reference = false;
                         $scope._init();
                     }, function(errorResponse){
-                        Flash.create('danger',errorResponse.data.message);
                         if(errorResponse.status == 406){ //validations error
-
+                            if(errorResponse.data.data.fields.reference){
+                                $scope._form.error.reference = errorResponse.data.data.fields.reference;
+                            }
+                            Flash.create('danger',errorResponse.data.data.fields.reference.message);
+                        }else{
+                            Flash.create('danger',errorResponse.data.message);
                         }
                     });
             }
@@ -1467,6 +1473,8 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                 if(JSON.stringify($scope.original) == JSON.stringify($scope.external)){
                     return false;
                 }else if(Object.keys($scope._getChanges()).length===0){
+                    return false;
+                }else if(!$scope.validateProperties()){
                     return false;
                 }
                 return true;
@@ -1482,27 +1490,86 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                 //$scope.form.$setPristine();
             }
 
+            $scope.validateProperties = function(){
+                for(var i in $scope.record.properties){
+                    if($scope.record.properties[i].value.trim() == ""){
+                        return false;
+                    }
+                }
+                return true;
+            }
+
             $scope._getChanges = function(){
                 var changes = {};
-                if($scope.original.name!==$scope.external.name){
-                    changes.name = $scope.external.name;
+                if(!$scope.original) return changes;
+                if($scope.original.reference!==$scope.record.reference){
+                    changes.reference = $scope.record.reference;
                 }
-                if($scope.original.address!==$scope.external.address){
-                    changes.address = $scope.external.address;
+                if(getDateWithoutPartialDays(new Date($scope.original.analysis_date)).getTime()
+                    !==getDateWithoutPartialDays($scope.record.analysis_date).getTime()){
+                    changes.analysis_date = $scope.record.analysis_date;
                 }
-                if($scope.original.phone!==$scope.external.phone){
-                    changes.phone = $scope.external.phone;
+                if(getDateWithoutPartialDays(new Date($scope.original.elaboration_date)).getTime()
+                    !==getDateWithoutPartialDays($scope.record.elaboration_date).getTime()){
+                    changes.elaboration_date = $scope.record.elaboration_date;
                 }
-                if($scope.external.notes && $scope.external.notes!=='<p></p>' && $scope.original.notes!==$scope.external.notes){
-                    changes.notes = $scope.external.notes;
+                if(getDateWithoutPartialDays(new Date($scope.original.due_date)).getTime()
+                    !==getDateWithoutPartialDays($scope.record.due_date).getTime()){
+                    changes.due_date = $scope.record.due_date;
                 }
-                if($scope.original.contact!==$scope.external.contact){
-                    changes.contact = $scope.external.contact;
+                if(getDateWithoutPartialDays(new Date($scope.original.reception_date)).getTime()
+                    !==getDateWithoutPartialDays($scope.record.reception_date).getTime()){
+                    changes.reception_date = $scope.record.reception_date;
                 }
-                if($scope.original.active!==$scope.external.active){
-                    changes.active = $scope.external.active;
+                if($scope.original.provider!==$scope.record.provider){
+                    changes.supplier = $scope.record.provider;
+                }
+                if($scope.original.remission!==$scope.record.remission){
+                    changes.remission = $scope.record.remission;
+                }
+                if($scope.original.quantity!==$scope.record.quantity){
+                    changes.quantity = $scope.record.quantity;
+                }
+                if($scope.original.veredict!==$scope.record.veredict){
+                    changes.veredict = $scope.record.veredict;
+                }
+                var propertiesChanges = $scope._getPropertiesChanges();
+                if(propertiesChanges.length>0){
+                    changes.properties = propertiesChanges;
+                }
+                if($scope.original.notes!==$scope.record.notes){
+                    changes.notes = $scope.record.notes;
+                }
+                if($scope.original.active!==$scope.record.active){
+                    changes.active = $scope.record.active;
                 }
                 return changes;
+            }
+
+            $scope._getPropertiesChanges = function(){
+                var changes = [];
+                //debugger;
+                for(var property = 0;property <  $scope.record.properties.length; property++){
+                    for(var originalProperty = 0;originalProperty <  $scope.original.properties.length; originalProperty++){
+                        if($scope.record.properties[property].property
+                            ==$scope.original.properties[originalProperty].property
+                            && $scope.record.properties[property].value
+                            !=$scope.original.properties[originalProperty].value
+                        ){
+                            changes.push({
+                                property:$scope.record.properties[property].property
+                                , value:$scope.record.properties[property].value
+                            });
+                        }
+                    }
+                }
+                //$scope.record.properties[0].value = "hansel";
+                return changes;
+            }
+
+            function getDateWithoutPartialDays(date){
+                if(!date) date = new Date(date);
+                return new Date(date.getYear(), date.getMonth(), date.getDate());
             }
 
             $scope._init = function(){
@@ -1511,7 +1578,6 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                     , function (response) {
                         $scope.record = response;
                         $scope.record.provider = $scope.record.supplier[0].id;
-                        //debugger;
                         if($scope.record.analysis_date){ $scope.record.analysis_date = new Date($scope.record.analysis_date); }
                         if($scope.record.elaboration_date){ $scope.record.elaboration_date = new Date($scope.record.elaboration_date); }
                         if($scope.record.due_date){ $scope.record.due_date = new Date($scope.record.due_date); }
@@ -1520,6 +1586,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                             , function (response) {
                                 $scope.product = response;
                                 matchRecordPropertyNames();
+                                $scope.original = JSON.parse(JSON.stringify($scope.record));
                                 StoreService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$scope.product.store[0]._id}
                                     , function (response) {
                                         $scope.product.store[0] = response;
