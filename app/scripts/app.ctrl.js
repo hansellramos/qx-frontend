@@ -189,6 +189,20 @@ angular.module('app')
 
         }
     ])
+    .controller('AboutController', ['$scope', '$translate', '$stateParams', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'APPLICATION', '$sce', '$http',
+        function ($scope, $translate, $stateParams, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, APPLICATION, $sce, $http) {
+            $scope.apiContentUri = '';
+
+            $scope.init = function(){
+                $scope.apiContentUri = $sce.trustAsResourceUrl('http://localhost:8080/');
+                $http.get('../package.json')
+                    .then(function(res){
+                        $scope.package = res.data;
+                    });
+            };
+
+            $scope.init();
+    }])
     .controller('AuthController', ['$scope', '$translate', '$stateParams', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'LoginService', 'APPLICATION',
         function ($scope, $translate, $stateParams, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, LoginService, APPLICATION) {
             $scope.data = {error: false, errorMessage: ''

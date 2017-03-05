@@ -1,13 +1,15 @@
 {
-  "name": "Materil",
-  "version": "1.0.3",
-  "description": "Admin web application template with Bootstrap 3 and AngularJS.",
+  "name": "qx-frontend",
+  "version": "0.8.1",
+  "release": "0086",
+  "description": "Developed for Productos Químicos Panamericanos S.A.",
+  "year": "2017",
   "scripts": {
     "start": "node node_modules/http-server/bin/http-server -o"
   },
   "keywords": [],
   "repository": "",
-  "author": "Flatfull",
+  "author": "Qualitrix Systems Inc. <hansell.ramos@gmail.com>",
   "license": "Envato REGULAR LICENSE",
   "devDependencies": {
     "grunt": "^0.4.5",

@@ -53,6 +53,12 @@ angular.module('app')
                         data: {title: 'Dashboard', folded: true},
                         resolve: load(['scripts/controllers/chart.js', 'scripts/controllers/vectormap.js'])
                     })
+                    .state('app.about', {
+                        url: '/about',
+                        templateUrl: 'views/pages/about.html',
+                        data: {title: 'Acerca del Sistema'},
+                        controller: 'AboutController'
+                    })
                     .state('app.subsidiary', {
                         url: '/subsidiary',
                         templateUrl: 'views/modules/subsidiary/index.html',
