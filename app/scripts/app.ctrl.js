@@ -194,7 +194,7 @@ angular.module('app')
             $scope.apiContentUri = '';
 
             $scope.init = function(){
-                $scope.apiContentUri = $sce.trustAsResourceUrl('http://localhost:8080/');
+                $scope.apiContentUri = $sce.trustAsResourceUrl(APPLICATION.CONFIG.API.URL);
                 $http.get('../package.json')
                     .then(function(res){
                         $scope.package = res.data;
