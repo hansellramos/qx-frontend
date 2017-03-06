@@ -38,7 +38,7 @@
                                ng-model="user.password" type="password" ng-minlength="4"
                                tabindex="103"
                                name="password">
-                        <label><span ng-show="user.password!=='' || user.repeatPassword!==''" class="font-xs text-danger-dk">*</span>Contraseña{{user.password}}</label>
+                        <label><span ng-show="user.password!=='' || user.repeatPassword!==''" class="font-xs text-danger-dk">*</span>Contraseña</label>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -46,7 +46,7 @@
                         <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" name="repeatPasword" ng-model="user.repeatPassword"
                                tabindex="104" type="password" ng-minlength="4"
                                ng-class="{'b-b-danger':user.password != user.repeatPassword && user.password != ''}">
-                        <label><span ng-show="user.password!='' || user.repeatPassword!=''" class="font-xs text-danger-dk">*</span>Repetir Contraseña{{user.repeatPassword}}
+                        <label><span ng-show="user.password!='' || user.repeatPassword!=''" class="font-xs text-danger-dk">*</span>Repetir Contraseña
                             &nbsp;<span class="label bg-danger pos-rlt m-r-xs" ng-show="user.password != user.repeatPassword && user.password != ''"><b class="arrow left b-danger pull-in"></b>{{_form.error.repeatPassword.message}}</span>
                         </label>
                     </div>

@@ -202,7 +202,58 @@ angular.module('app')
             };
 
             $scope.init();
-    }])
+        }])
+    .controller('UserProfileController', ['$scope', '$translate', '$stateParams', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'APPLICATION', '$sce', 'LoginService', 'PasswordService', 'Flash', 'UserService', 'ProfileService', 'PermissionsService',
+        function ($scope, $translate, $stateParams, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, APPLICATION, $sce, LoginService, PasswordService, Flash, UserService, ProfileService, PermissionsService) {
+
+            $scope.user = {};
+            $scope.passwordChange = {old:'', new:'', repeat:''};
+            $scope.permissions = [];
+
+            $scope.currentPage = 'general';
+
+            $scope.init = function(){
+                LoginService.info({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function (response) {
+                        $scope.user = response.data.token.user;
+                    }, function (errorResponse) {
+
+                });
+                PermissionsService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
+                    , function (response) {
+                        $scope.permissions = response;
+                    }, function (errorResponse) {
+
+                });
+            };
+
+            $scope.showPage = function(page){
+                $scope.currentPage = page;
+                $scope.init();
+            };
+
+            $scope.hasPermission = function(value){
+
+            };
+
+            $scope._updatePassword = function(){
+                PasswordService.update({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, $scope.passwordChange
+                    , function(response){
+                        console.log(response);
+                        Flash.create('success',response.message);
+                        $scope.passwordChange = {old:'', new:'', repeat:''};
+                    }, function(errorResponse){
+                        Flash.create('danger',errorResponse.data.message);
+                        if(errorResponse.status == 406){ //validations error
+                            if(errorResponse.data.data.fields.reference){
+                                $scope._form.error.reference = errorResponse.data.data.fields.reference;
+                            }
+                        }
+                    });
+            };
+
+            $scope.init();
+        }])
     .controller('AuthController', ['$scope', '$translate', '$stateParams', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'LoginService', 'APPLICATION',
         function ($scope, $translate, $stateParams, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, LoginService, APPLICATION) {
             $scope.data = {error: false, errorMessage: ''

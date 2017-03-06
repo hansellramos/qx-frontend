@@ -18,12 +18,8 @@
     <div class="box-cell scrollable hover">
       <div class="box-inner">
         <div class="p hidden-folded" ng-class="$state.current.data.theme ? $state.current.data.theme.primary+'-50' : app.setting.theme.primary+'-50'" style="background-image:url(images/bg.png); background-size:cover">
-          <a class="block m-t-sm" ui-toggle-class="hide, show" target="#_nav, #_account, #_menu">
-            <span ng-show="false" class="pull-right auto">
-              <i class="fa inline fa-caret-down"></i>
-              <i class="fa none fa-caret-up"></i>
-            </span>
-            <span>{{app.auth.name}}</span>
+          <a class="block m-t-sm" ui-sref="app.userProfile">
+            <span><i class="icon fa fa-cog i-20" style="opacity: 0.75;"></i>&nbsp;{{app.auth.name}}</span>
           </a>
         </div>
         <div id="menu" ng-include="'views/partials/aside.nav.menu.html'"></div>

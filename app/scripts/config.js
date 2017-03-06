@@ -44,6 +44,7 @@ var app =
                             USER: 'users/',
                             PROFILE: 'profiles/',
                             PERMISSIONS: 'permissions/',
+                            PASSWORD: 'password/',
                         }
                     }
                     , DEVICE_KEY: 'b4cd45f5b00b326a79ea6121f9cc0db8'

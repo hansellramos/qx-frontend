@@ -42,6 +42,10 @@ angular
         return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.USER + ':token/:id'
             , {token: '@token', id: '@id'}, { update: { method: 'PUT' }})
     }])
+    .factory('PasswordService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
+        return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.PASSWORD + ':token/:id'
+            , {token: '@token', id: '@id'}, { update: { method: 'PUT' }})
+    }])
     .factory('ProfileService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
         return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.PROFILE + ':token/:id'
             , {token: '@token', id: '@id'}, { update: { method: 'PUT' }})

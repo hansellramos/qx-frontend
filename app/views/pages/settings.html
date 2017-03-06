@@ -1,79 +1,112 @@
+<flash-message duration="10000" show-close="true" class="floating-message"></flash-message>
 <div class="padding-out">
   <div class="p-h-md p-v bg-white box-shadow pos-rlt">
-    <h3 class="no-margin">Settings</h3>
+    <h3 class="no-margin">Perfil del Usuario</h3>
   </div>
   <div class="box">
     <div class="col-md-3">
-      <div style="background:url(images/a1.jpg) center center; background-size:cover">
-        <div class="p-lg bg-white-overlay text-center">
-          <a href class="w-xs inline">
-            <img src="images/a1.jpg" class="img-circle img-responsive">
-          </a>
-          <div class="m-b m-t-sm h2">
-            <span class="text-black">Mike</span>
-          </div>
-          <p>
-            Great day, Great life
-          </p>
-        </div>
-      </div>
       <ul class="nav nav-lists b-t" ui-nav>
-        <li class="active">
-          <a href>Profile</a>
+        <li>
+          <a ng-click="showPage('general')">General</a>
         </li>
         <li>
-          <a href>Account Settings</a>
+          <a ng-click="showPage('password')">Contraseña</a>
         </li>
         <li>
-          <a href>Emails</a>
+          <a ng-click="showPage('profile')">Perfil y Permisos</a>
         </li>
         <li>
-          <a href>Notifications</a>
+          <a ng-show="false" ng-click="showPage('subsidiaries')">Sucursales</a>
         </li>
         <li>
-          <a href>Security</a>
-        </li>
-        <li>
-          <a href>Organizations</a>
-        </li>
       </ul>
     </div>
-    <div class="col-md-9 b-l bg-white bg-auto">
-      <div class="p-md bg-light lt b-b font-bold">Public profile</div>
+    <div class="col-md-9 b-l bg-white bg-auto" ng-show="currentPage == 'general';">
+      <div class="p-md bg-light lt b-b font-bold">Perfil General</div>
       <form role="form" class="p-md col-md-6">
         <div class="form-group">
-          <label>Profile picture</label>
-          <div class="form-file">
-            <input type="file">
-            <button class="btn btn-default">Upload new picture</button>
+          <label class="font-bold">Nombre: </label> <span>{{user.firstname}}</span>
+        </div>
+        <div class="form-group">
+          <label class="font-bold">Apellido: </label> <span>{{user.lastname}}</span>
+        </div>
+        <div class="form-group">
+          <label class="font-bold">Usuario: </label> <span>{{user.username}}</span>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-9 b-l bg-white bg-auto" ng-show="currentPage == 'password';">
+      <div class="p-md bg-light lt b-b font-bold">Contraseña</div>
+      <form role="form" name="passwordChangeForm" class="p-md col-md-6" ng-submit="_updatePassword();" novalidate>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input class="form-control" class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                 ng-model="passwordChange.old" type="password" ng-minlength="4" name="old"
+                 type="password" ng-required="true">
+        </div>
+        <div class="form-group">
+          <label>Nueva Contrase{a</label>
+          <input class="form-control" class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                 ng-model="passwordChange.new" type="password" ng-minlength="4" name="new"
+                 type="password" ng-required="true">
+        </div>
+        <div class="form-group">
+          <label>Repetir Nueva Contraseña</label>&nbsp;<span class="label bg-danger pos-rlt m-r-xs" ng-show="passwordChange.new != passwordChange.repeat && passwordChange.new != ''">
+            <b class="arrow left b-danger pull-in"></b>Las contraseñas deben ser iguales</span>
+          <input class="form-control" class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                 ng-model="passwordChange.repeat" type="password" ng-minlength="4" name="repeat"
+                 type="password" ng-required="true">
+        </div>
+        <button class="btn btn-addon btn-primary"
+                ng-disabled="passwordChangeForm.$invalid || passwordChange.new!=passwordChange.repeat"
+                type="submit"><i class="fa fa-pencil"></i>Actualizar Contraseña</button>
+      </form>
+    </div>
+    <div class="col-md-9 b-l bg-white bg-auto" ng-show="currentPage == 'profile';">
+      <div class="p-md bg-light lt b-b font-bold">Perfil y Permisos</div>
+      <form role="form" class="p-md col-md-12 col-sm-12 col-xs-12 col-lg-12">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <span class="font-bold">Perfil:</span> {{user.profile[0].name}}
+          </div>
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <fieldset>
+              <legend>
+                <div class="row">
+                  <div class="col-xs-6 col-sm-6 col-md-8 col-lg-8">
+                    <h4>Permisos</h4>
+                  </div>
+                  <div class="col-xs-6 col-sm-6 col-md-8 col-lg-4 text-right">
+                    <div class="input-group">
+                      <input type="search" ng-model="_search" placeholder="Filtrar" class="form-control">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" ng-click="_search = ''">
+                          <i class="icon fa fa-remove"></i>
+                        </button>
+                        </span>
+                    </div>
+                  </div>
+                </div>
+              </legend>
+              <ul class="list-group list-group-alt">
+                <li class="list-group-item" ng-repeat="permission in permissions|filter:_search:'strict'|orderBy:'+name'">
+                  {{permission.name}}<br/>
+                  <small>{{permission.description}}</small>
+                  <span class="pull-right">
+                    <i ng-show="!user.profile[0].permissions[permission.reference]" class="btn-rounded btn-icon icon mdi-action-highlight-remove red i-24 panel-card"></i>
+                    <i ng-show="user.profile[0].permissions[permission.reference] || user.isAdmin" class="btn-rounded btn-icon icon mdi-navigation-check green i-24 panel-card"></i>
+                  </span>
+                </li>
+              </ul>
+            </fieldset>
           </div>
         </div>
-        <div class="form-group">
-          <label>Name</label>
-          <input type="text" class="form-control">
-        </div>
-        <div class="form-group">
-          <label>Email address</label>
-          <input type="email" class="form-control">
-        </div>
-        <div class="form-group">
-          <label>URL</label>
-          <input type="text" class="form-control">
-        </div>
-        <div class="form-group">
-          <label>Company</label>
-          <input type="text" class="form-control">
-        </div>
-        <div class="form-group">
-          <label>Location</label>
-          <input type="text" class="form-control">
-        </div>
-        <div class="checkbox">
-          <label class="ui-checks">
-            <input type="checkbox"><i></i> Available for hire
-          </label>
-        </div>
-        <button type="submit" class="btn btn-info m-t">Submit</button>
+      </form>
+    </div>
+    <div class="col-md-9 b-l bg-white bg-auto" ng-show="currentPage == 'subsidiaries';">
+      <div class="p-md bg-light lt b-b font-bold">Sucursales</div>
+      <form role="form" class="p-md col-md-6">
+
       </form>
     </div>
   </div>

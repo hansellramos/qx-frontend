@@ -59,6 +59,12 @@ angular.module('app')
                         data: {title: 'Acerca del Sistema'},
                         controller: 'AboutController'
                     })
+                    .state('app.userProfile', {
+                        url: '/userProfile',
+                        templateUrl: 'views/pages/settings.html',
+                        data: {title: 'Perfil de Usuario'},
+                        controller: 'UserProfileController'
+                    })
                     .state('app.subsidiary', {
                         url: '/subsidiary',
                         templateUrl: 'views/modules/subsidiary/index.html',
