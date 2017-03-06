@@ -93,7 +93,7 @@
                   {{permission.name}}<br/>
                   <small>{{permission.description}}</small>
                   <span class="pull-right">
-                    <i ng-show="!user.profile[0].permissions[permission.reference]" class="btn-rounded btn-icon icon mdi-action-highlight-remove red i-24 panel-card"></i>
+                    <i ng-show="!user.profile[0].permissions[permission.reference] && !user.isAdmin" class="btn-rounded btn-icon icon mdi-action-highlight-remove red i-24 panel-card"></i>
                     <i ng-show="user.profile[0].permissions[permission.reference] || user.isAdmin" class="btn-rounded btn-icon icon mdi-navigation-check green i-24 panel-card"></i>
                   </span>
                 </li>
