@@ -32,5 +32,5 @@ angular
     'oc.lazyLoad',
     'angular-loading-bar',
     'angularUtils.directives.dirPagination',
-    'ja.qr'
+    'monospaced.qrcode'
   ]);

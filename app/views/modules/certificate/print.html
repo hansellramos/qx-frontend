@@ -9,7 +9,7 @@
         <h5 class="font-bold">No. {{item.subsidiary[0].reference}}{{item.id}}</h5>
     </div>
     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-right">
-        <qr text="qrcode" correction-level="'H'" size="96"></qr>
+        <qrcode data="{{qrcode}}" error-correction-level="'H'" size="96"></qrcode>
         <button class="md-btn md-fab m-b blue no-print" onclick="window.print()">
             <i class="icon glyphicon glyphicon-print i-24"></i>
         </button>
