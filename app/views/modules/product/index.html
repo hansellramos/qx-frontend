@@ -86,7 +86,7 @@
   </div>
 <script type="text/ng-template" id="detail">
   <div class="panel-heading indigo">
-    Product <strong>{{item.name}} ({{item.reference}})</strong>
+    Producto <strong>{{item.name}} ({{item.reference}})</strong>
     <div style="float: right">
       <button class="md-btn md-fab red btn-danger waves" ng-show="_p.isAdmin() || _p.hasPermission(_pn.PRODUCT_DELETE)" ng-click="delete(item)">
         <i class="icon glyphicon glyphicon-trash i-16"></i>
@@ -108,15 +108,32 @@
           Producto: <span class="font-w100">{{item.name}}</span>
         </div>
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-right text-left-xs">
-          Código: <span class="font-w100">{{item.description}}</span>
+          Código: <span class="font-w100">{{item.reference}}</span>
         </div>
       </div>
       <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-          Producto: <span class="font-w100">{{item.name}}</span>
+          Bodega/Tienda: <span class="font-w100">{{item.store[0].name}} ({{item.store[0].reference}})</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-right" ng-show="false">
+          Sucursal: <span class="font-w100">{{item.subsidiary[0].name}} ({{item.subsidiary[0].reference}})</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+          Certfication NSF:
+          <i ng-show="!item.certification_nsf" class="btn-rounded btn-icon icon mdi-action-highlight-remove red i-24 panel-card"></i>
+          <i ng-show="item.certification_nsf" class="btn-rounded btn-icon icon mdi-navigation-check green i-24 panel-card"></i>
         </div>
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-right">
-          Código: <span class="font-w100">{{item.description}}</span>
+          Vencimiento:
+          <span class="font-w100" ng-show="item.due_date">{{item.due_date}} desde su fecha de elaboración</span>
+          <span class="font-w100" ng-hide="item.due_date">Sin Vencimiento</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-right">
+          Dosis Máxima: <span class="font-w100" ng-bind-html="item.max_dose"></span>
         </div>
       </div>
       <div class="row">
@@ -129,18 +146,12 @@
       <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-sm-offset-3 col-md-offset-3 col-lg-offset-3">
           <fieldset>
-            <legend><h5>Permisos</h5></legend>
+            <legend><h5>Propiedades</h5></legend>
             <ul class="list-group list-group-alt list-group-sm">
-              <li class="list-group-item" ng-repeat="permission in permissions|filter:_search:'strict'|orderBy:'+name'">
+              <li class="list-group-item" ng-repeat="property in item.properties|filter:_search:'strict'|orderBy:'+name'">
                 <div class="row">
-                  <div class="col-xs-2 col-sm-2 col-md-1 col-lg-1">
-                    <div ng-repeat="(_p, _value) in item.permissions|orderBy:'+name'">
-                      <i ng-show="_value && permission.reference===_p" class="btn-rounded btn-icon icon mdi-navigation-check green i-24 panel-card"></i>
-                    </div>
-                  </div>
-                  <div class="col-xs-10 col-sm-10 col-md-11 col-lg-11">
-                    {{permission.name}}
-                    <br /><small>{{permission.description}}</small>
+                  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div ng-bind-html="property.name"></div>
                   </div>
                 </div>
               </li>

@@ -85,7 +85,8 @@
             <tbody class="font-w100 text-right">
             <tr ng-repeat="reference in item.values">
                 <td ng-repeat="property in item.properties">
-                    <span ng-repeat="v in reference.values|filter:property.property:strict">{{v.value}}</span>
+                    <span ng-hide="property.name.indexOf('Fecha')>=0" ng-repeat="v in reference.values|filter:property.property:strict">{{v.value}}</span>
+                    <span ng-show="property.name.indexOf('Fecha')>=0" ng-repeat="v in reference.values|filter:property.property:strict">{{v.value| date:'yyyy-MM-dd'}}</span>
                     <span ng-show="property.name.indexOf('Cantidad')>=0"> KG</span>
                 </td>
             </tr>
@@ -192,6 +193,7 @@
             border-bottom: 3px double #aFaFaF;
             border-top: 1px double lightgray;
             border-left: 1px double lightgray;
+            text-align: center;
         }
         .properties thead th:last-child{
             border-right: 1px double lightgray;
@@ -201,6 +203,7 @@
         }
         .properties tr td, .properties tr th{
             padding: 2px;
+            padding-right: 12px;
             width: {{_width}}%;
         }
     .properties tbody tr td:nth-child(1), .properties thead tr th:nth-child(1),

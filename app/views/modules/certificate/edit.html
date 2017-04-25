@@ -155,6 +155,17 @@
                                 <tr>
                                     <th><div class="p-v-sm">Lote</div><br /></th>
                                     <th>
+                                        <div class="p-v-sm text-capitalize text-center">Fecha Análisis</div>
+                                        <label class="md-switch text-capitalize text-center">
+                                            <input type="checkbox" ng-model="certificate.properties['analysisDate']">
+                                            <i class="green"></i>
+                                            <span ng-class="{'text-success':certificate.properties['analysisDate'], 'text-warning-dk':!certificate.properties['analysisDate']}">
+                                                <span ng-show="certificate.properties['analysisDate']">Visible</span>
+                                                <span ng-show="!certificate.properties['analysisDate']">Invisible</span>
+                                            </span>
+                                        </label>
+                                    </th>
+                                    <th>
                                         <div class="p-v-sm text-capitalize text-center">Fecha Elaboración</div>
                                         <label class="md-switch text-capitalize text-center">
                                             <input type="checkbox" ng-model="certificate.properties['elaborationDate']">
@@ -173,6 +184,17 @@
                                             <span ng-class="{'text-success':certificate.properties['dueDate'], 'text-warning-dk':!certificate.properties['dueDate']}">
                                                 <span ng-show="certificate.properties['dueDate']">Visible</span>
                                                 <span ng-show="!certificate.properties['dueDate']">Invisible</span>
+                                            </span>
+                                        </label>
+                                    </th>
+                                    <th>
+                                        <div class="p-v-sm text-capitalize text-center">Fecha de Recepción</div>
+                                        <label class="md-switch">
+                                            <input type="checkbox" ng-model="certificate.properties['receptionDate']">
+                                            <i class="green"></i>
+                                            <span ng-class="{'text-success':certificate.properties['receptionDate'], 'text-warning-dk':!certificate.properties['receptionDate']}">
+                                                <span ng-show="certificate.properties['receptionDate']">Visible</span>
+                                                <span ng-show="!certificate.properties['receptionDate']">Invisible</span>
                                             </span>
                                         </label>
                                     </th>
@@ -203,8 +225,10 @@
                             <tbody>
                                 <tr ng-repeat="item in certificate.values">
                                     <td>{{item.reference}}</td>
+                                    <td>{{item.analysis_date| date:'yyyy-MM-dd'}}</td>
                                     <td>{{item.elaboration_date| date:'yyyy-MM-dd'}}</td>
                                     <td>{{item.due_date| date:'yyyy-MM-dd'}}</td>
+                                    <td>{{item.reception_date| date:'yyyy-MM-dd'}}</td>
                                     <td class="text-right">
                                         <div class="input-group m-b">
                                             <input type="text" class="form-control text-right w-sm" ng-required="true"

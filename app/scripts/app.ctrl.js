@@ -757,14 +757,15 @@ angular.module('app')
             $scope._init();
 
         }])
-    .controller('ProductCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'ProductService', 'APPLICATION',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, ProductService, APPLICATION) {
+    .controller('ProductCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'ProductService', 'DueListFactory', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, ProductService, DueListFactory, APPLICATION) {
 
             $scope.items = [];
             $scope._item = null;
             $scope.sortKey = 'name';
             $scope.reverse = false;
             $scope.pageSize = 10;
+            $scope.dueList = [];
             $scope.sort = function (keyname) {
                 if (keyname == $scope.sortKey) {
                     if (!$scope.reverse) {
@@ -785,11 +786,13 @@ angular.module('app')
             }
 
             $scope.showDetail = function(item){
+
                 $scope.item = item;
                 $scope.itemLoading = true;
                 ProductService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:(item._id?item._id:item.id)}
                     , function(response){
                         $scope.item = response;
+                        $scope.item.due_date = DueListFactory.one($scope.item.due_date);
                         $scope.itemLoading = false;
                     }
                     , function(errorResponse){
@@ -1921,19 +1924,19 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
             SubsidiaryService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                 , function (response) {$scope.subsidiaries = response;$scope.requesting = false;
                 }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
-            });
+                });
             StoreService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                 , function (response) {$scope._stores = response;$scope.requesting = false;
                 }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
-            });
+                });
             ProductService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                 , function (response) {$scope._products = response;$scope.requesting = false;
                 }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
-            });
+                });
             ExternalService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}
                 , function (response) {$scope.externals = response;$scope.requesting = false;
                 }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
-            });
+                });
 
             $scope.validateCertificateProperties = function(){
                 for(var i in $scope.certificate.properties){
@@ -1976,11 +1979,12 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                     var _p = $scope.product.properties[i];
                     $scope.certificate.properties[_p.id] = true;
                 }
+                $scope.certificate.properties['analysisDate'] = false;
                 $scope.certificate.properties['elaborationDate'] = false;
                 $scope.certificate.properties['dueDate'] = false;
+                $scope.certificate.properties['receptionDate'] = false;
                 $scope.certificate.properties['quantity'] = false;
                 $scope.certificate.max_dose = $scope.product.max_dose;
-                debugger;
                 $scope.certificate.certification_nsf = $scope.product.certification_nsf;
                 $scope.certificate.due_date = DueListFactory.one($scope.product.due_date);
                 $scope.updateRecords();
@@ -2038,6 +2042,8 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
             }
 
             $scope._create = function(){
+                console.log(formatCertificate());
+                return;
                 CertificateService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, formatCertificate()
                     , function(response){
                         Flash.create('success',response.message
@@ -2104,9 +2110,19 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
 
             function formatCertificateProperties(){
                 var _p = [];
+                debugger;
                 _p.push({property:'reference', name:"Lote"});
+                if($scope.certificate.properties['analysisDate']===true){
+                    _p.push({property:'analysisDate', name:"Fecha de Análisis"});
+                }
+                if($scope.certificate.properties['elaborationDate']===true){
+                    _p.push({property:'elaborationDate', name:"Fecha de Elaboración"});
+                }
                 if($scope.certificate.properties['dueDate']===true){
                     _p.push({property:'dueDate', name:"Fecha de Vencimiento"});
+                }
+                if($scope.certificate.properties['receptionDate']===true){
+                    _p.push({property:'receptionDate', name:"Fecha de Recepción"});
                 }
                 for(var i in $scope.certificate.properties){
                     if($scope.certificate.properties[i]===true){
@@ -2133,6 +2149,31 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                         property: 'reference'
                         , value: _record.reference
                     });
+                    debugger;
+                    if($scope.certificate.properties['analysisDate']===true){
+                        _values.push({
+                            property: 'analysisDate'
+                            , value: _record.analysis_date
+                        });
+                    }
+                    if($scope.certificate.properties['elaborationDate']===true){
+                        _values.push({
+                            property: 'elaborationDate'
+                            , value: _record.elaboration_date
+                        });
+                    }
+                    if($scope.certificate.properties['dueDate']===true){
+                        _values.push({
+                            property: 'dueDate'
+                            , value: _record.due_date
+                        });
+                    }
+                    if($scope.certificate.properties['receptionDate']===true){
+                        _values.push({
+                            property: 'receptionDate'
+                            , value: _record.reception_date
+                        });
+                    }
                     for(var v in _record.properties){
                         var _value = _record.properties[v];
                         for(var pr in $scope.certificate.properties){
