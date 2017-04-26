@@ -2042,8 +2042,6 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
             }
 
             $scope._create = function(){
-                console.log(formatCertificate());
-                return;
                 CertificateService.save({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY)}, formatCertificate()
                     , function(response){
                         Flash.create('success',response.message
@@ -2149,7 +2147,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                         property: 'reference'
                         , value: _record.reference
                     });
-                    debugger;
+
                     if($scope.certificate.properties['analysisDate']===true){
                         _values.push({
                             property: 'analysisDate'
