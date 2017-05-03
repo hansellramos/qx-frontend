@@ -40,6 +40,7 @@ var app =
                             PRODUCT: 'products/',
                             RECORD: 'records/',
                             CERTIFICATE: 'certificates/',
+                            CERTIFICATE_VALIDATION: 'certificates/validate/',
                             EXTERNAL: 'externals/',
                             USER: 'users/',
                             PROFILE: 'profiles/',

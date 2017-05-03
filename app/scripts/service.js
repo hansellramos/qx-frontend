@@ -41,6 +41,10 @@ angular
         return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.CERTIFICATE + ':token/:id'
             , {token: '@token', id: '@id'})
     }])
+    .factory('CertificateValidationService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
+        return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.CERTIFICATE_VALIDATION + ':id/:verification'
+            , {id: '@id', verification: '@verification'})
+    }])
     .factory('ExternalService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
         return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.EXTERNAL + ':token/:id'
             , {token: '@token', id: '@id'}, { update: { method: 'PUT' }})

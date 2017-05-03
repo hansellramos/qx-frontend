@@ -149,7 +149,12 @@ angular.module('app')
             }
 
             function verifyActiveSession() {
-                if (!($state.current.name = '' || $state.is('access.signin') || $state.is('forgot-password'))) {
+                console.log($state.is('print'));
+                if (!($state.current.name = ''
+                        || $state.is('access.signin')
+                        || $state.is('forgot-password')
+                        || $state.is('validateCertificate')
+                        || $state.is('print'))) {
                     var session = localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_DATA);
                     if (session == null) {
                         removeSessionData();
@@ -2345,13 +2350,32 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                 $state.go('app.certificate');
             }
         }])
+    .controller('CertificateValidationCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'CertificateValidationService', 'APPLICATION', '$sce',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, CertificateValidationService, APPLICATION, $sce) {
+            $scope.certificate = { id:$state.params.id, verification: $state.params.verification != '-' ? $state.params.verification : '' };
+            $scope.requesting = '';
+            ga('send','event','certificates validation',localStorage.USER_DATA ? JSON.parse(localStorage.USER_DATA).profile[0].name : 'anon');
+            $scope._submit = function(){
+                $scope.requesting = 'Consultando...';
+                CertificateValidationService.get({id: $scope.certificate.id, verification: $scope.certificate.verification}
+                ,function(response){
+                    $scope.requesting = '';
+                    $window.open("#/print/certificate/"+(response._id?response._id:response.id),'_blank');
+                }
+                ,function(errorResponse){
+                    $scope.errorMessage = "No se ha podido verificar su certificado con los datos proporcionados, verifique o contacte con su proveedor";
+                    $scope.requesting = '';
+                    $timeout(function(){$scope.errorMessage = '';},10000);
+                });
+            }
+        }])
     .controller('CertificatePrintController', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'CertificateService', 'APPLICATION',
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, CertificateService, APPLICATION) {
             $scope.item = null;
             $scope.itemLoading = true;
             $scope._width = 1;
             $scope.qrcode = "http://www.pqp.com.co/";
-            ga('send','event','certificates print',JSON.parse(localStorage.USER_DATA).profile[0].name);
+            ga('send','event','certificates print',localStorage.USER_DATA ? JSON.parse(localStorage.USER_DATA).profile[0].name : 'anon');
             CertificateService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params.id}
                 , function(response){
                     $scope.item = response;

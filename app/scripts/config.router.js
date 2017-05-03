@@ -162,6 +162,11 @@ angular.module('app')
                         url: '/print',
                         template: '<div class="bg-big"><div ui-view class="fade-in-down smooth"></div></div>'
                     })
+                    .state('validateCertificate', {
+                        url: '/validate/:verification/certificate/:id',
+                        templateUrl: 'views/modules/certificate/validate.html',
+                        controller: 'CertificateValidationCtrl'
+                    })
                     .state('print.certificate', {
                         url: '/certificate/:id',
                         templateUrl: 'views/modules/certificate/print.html',

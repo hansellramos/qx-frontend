@@ -1,0 +1,67 @@
+<div class="app bg-img-size-cover bg-img-pos-y-c login">
+    <header class="navbar col-md-12 white-50 no-radius box-shadow-md item top fixed">
+        <div class="brand pull-left m-b-sm m-t-sm">
+            <a href="/#" title="Qualitrix">
+                <img class="w-md" src="images/logo/logo-title.png" title="Qualitrix">
+            </a>
+        </div>
+        <div class="client-brand pull-right m-b-sm m-t-sm">
+            <a href="http://web.pqp.com.co/" title="Productos Químicos Panamericanos S.A." target="_blank">
+                <img class="w-sm" src="images/logo/logo-pqp-title.png" title="Productos Químicos Panamericanos S.A.">
+            </a>
+        </div>
+    </header>
+    <div class="center-block w-xxl w-auto-sm p-v-md m-t-lg">
+        <div class="navbar">
+            <div class="p-lg panel md-whiteframe-z1 text-color m m-t-lg login-form-panel white-60">
+                <div class="m-b text-lg text-center text.black-lt">Plataforma de Verificación de Certificados de Calidad</div>
+                <form name="form" novalidate ng-submit="_submit()">
+                    <div class="md-form-group p-v-xs">
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="fa fa-certificate" title="Número de Certificado">&nbsp;</i></div>
+                            <input type="text" class="form-control" ng-model="certificate.id" name="id"
+                                   ng-required="true" autofocus placeholder="Número de Certificado" title="Número de Certificado">
+                        </div>
+                    </div>
+                    <div ng-show="form.id.$invalid" class="text-danger-dk p-b-sm text-right">
+                        <i class="icon mdi-navigation-close i-20"></i>
+                        <span>Para relizar la verificación del certificado, es necesario que su número</span>
+                    </div>
+                    <div class="md-form-group p-v-xs">
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="fa fa-key" title="Código de Verificación"></i></div>
+                            <input type="text" class="form-control" ng-model="certificate.verification"
+                                   ng-minlength="6" ng-maxlength="6" name="verification"
+                                   ng-required="true" placeholder="Código de Verificación" title="Código de Verificación">
+                        </div>
+                    </div>
+                    <div ng-show="form.verification.$invalid" class="text-danger-dk p-b-sm text-right">
+                        <i class="icon mdi-navigation-close i-20"></i>
+                        <span>Para relizar la verificación del certificado, indica por favor el código de verificación</span>
+                    </div>
+                    <div ng-show="errorMessage" class="text-danger-dk p-v-sm text-center">
+                        <i class="icon mdi-navigation-close i-20"></i>
+                        <span>{{errorMessage}}</span>
+                    </div>
+                    <button type="submit" md-ink-ripple type="submit"
+                            class="md-btn md-raised blue-A200 btn-block p-h-md m-v-md waves" ng-disabled="form.$invalid || requesting!=''">
+                        {{requesting==''?'Verificar Certificado':requesting}}
+                    </button>
+                    <div class="p-v-sm text-center">
+                        <div class=""><a ui-sref="access.signin" target="_blank" class="md-btn text.black-lt">Entrar al sistema</a></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    body{
+        background: url(images/login/chemical02.jpg) center center no-repeat fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+    .indigo{background-color: transparent !important;}
+</style>

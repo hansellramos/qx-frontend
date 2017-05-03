@@ -1,0 +1,2 @@
+RewriteEngine On
+RewriteRule ^q/c/([0-9]+)/v/([a-z0-9]{6}) qualitrix.php?certificate=$1&validation=$2
