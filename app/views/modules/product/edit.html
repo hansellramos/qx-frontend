@@ -113,7 +113,7 @@
                             </div>
                         </legend>
                         <ul class="list-group list-group-alt">
-                            <li class="list-group-item" ng-repeat="property in product.properties">
+                            <li class="list-group-item" ng-repeat="property in product.properties|filter:{deleted:false}">
                                 <div class="row">
                                     <div class="col-lg-1">
                                         <button type="button" class="btn btn-icon btn-rounded btn-default waves" ng-click="removeProperty($index)">
@@ -124,22 +124,43 @@
                                         <div class="qmd-textarea selected">
                                             <textarea ckeditor class="md-input ng-invalid ng-invalid-required ng-touched"
                                               ng-model="property.name" tabindex="{{200+($index*100)}}"
-                                              name="property[{{$index}}].name" rows="2"></textarea>
+                                              name="property[{{$index}}].name" rows="2" ng-change="updatePropertyStatus($index);"></textarea>
                                             <label><span class="font-xs text-danger-dk">*</span>Descripción</label>
                                         </div>
                                     </div>
                                     <div class="col-lg-2">
-                                        <div class="qmd-select" ng-class="{'selected':property.validation.type}">
-                                            <label><span class="font-xs text-danger-dk">*</span>Tipo de propiedad</label>
-                                            <ui-select name="store" ng-model="property.validation.type" ng-change="updateProperty($index)"
-                                                       tabindex="{{200+($index*100)+1}}" name="property[{{$index}}].type">
-                                                <ui-select-match placeholder="Seleccione tipo de propiedad...">
-                                                    {{$select.selected.name}}
-                                                </ui-select-match>
-                                                <ui-select-choices repeat="type.value as type in propertyTypeList|orderBy:'+name' | filter: $select.search">
-                                                    <div ng-bind-html="type.name | highlight: $select.search"></div>
-                                                </ui-select-choices>
-                                            </ui-select>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="qmd-select" ng-class="{'selected':property.validation.type}">
+                                                    <label><span class="font-xs text-danger-dk">*</span>Tipo de propiedad</label>
+                                                    <ui-select name="store" ng-model="property.validation.type" ng-change="updateProperty($index)"
+                                                               tabindex="{{200+($index*100)+1}}" name="property[{{$index}}].type">
+                                                        <ui-select-match placeholder="Seleccione tipo de propiedad...">
+                                                            {{$select.selected.name}}
+                                                        </ui-select-match>
+                                                        <ui-select-choices repeat="type.value as type in propertyTypeList|orderBy:'+name' | filter: $select.search">
+                                                            <div ng-bind-html="type.name | highlight: $select.search"></div>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <label class="md-switch">
+                                                    <input type="checkbox" ng-model="property.active" checked>
+                                                    <i class="green"></i>
+                                                    <span ng-class="{'text-success':property.active, 'text-warning-dk':!property.active}">
+                                                        <span ng-show="property.active">Activo</span>
+                                                        <span ng-show="!property.active">Inactivo</span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12 text-danger-dk m-sm">
+                                                <span>{{property.error}}</span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-5" ng-show="property.validation.type==propertyTypeEnum.BOOLEAN">
@@ -169,7 +190,7 @@
                                             <i class="mdi-content-add i-20"></i>
                                         </button>
                                         <ul class="list-group">
-                                            <li class="list-group-item" ng-repeat="item in property.validation.list">
+                                            <li class="list-group-item" ng-repeat="item in property.validation.list| filter:{deleted:false}">
                                                 <div class="row">
                                                     <div class="col-lg-6">
                                                         <div class="qmd-input" ng-class="{'selected':item.label}">
@@ -244,7 +265,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-right">
                     <button class="btn btn-default" ng-click="_goBack()" type="button">Volver</button>
                     <button class="btn btn-addon btn-primary" ng-show="!original" ng-disabled="form.$invalid || !product.store || typeof(product.due_date) == 'undefined' || !validateProperties() || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Producto</button>
-                    <button class="btn btn-addon btn-primary" ng-show="original" ng-disabled="form.$invalid || !product.store || typeof(product.due_date) == 'undefined' || !validateProperties() || requesting!=''" type="submit"><i class="fa fa-pencil"></i>Guardar Producto</button>
+                    <button class="btn btn-addon btn-primary" ng-show="original" ng-disabled="form.$invalid || !product.store || typeof(product.due_date) == 'undefined' || requesting!='' || !validateChanges()" type="submit"><i class="fa fa-pencil"></i>Guardar Producto</button>
                     <button type="button" ng-show="false" ng-click="hola()">Hola</button>
                 </div>
             </div>

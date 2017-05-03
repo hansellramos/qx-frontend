@@ -1,5 +1,12 @@
 angular
     .module('app')
+    .factory('Common',[function(){
+        return {
+            stripHtmlTags : function(value){
+                return value ? String(value).replace(/<[^>]+>/gm, '').trim() : '';
+            }
+        };
+    }])
     .factory('LoginService', ['$resource', 'APPLICATION', function ($resource, APPLICATION) {
         return $resource(APPLICATION.CONFIG.API.URL + APPLICATION.CONFIG.API.RESOURCES.AUTH + ':token'
             , {token: '@token'}, {

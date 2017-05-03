@@ -951,7 +951,8 @@ angular.module('app')
                     {
                         name:'',
                         validation:{
-                            type:'text'
+                            type:'text',
+                            list:[]
                         },
                         active:true,
                         remission_editable:false
@@ -1042,8 +1043,8 @@ angular.module('app')
 
             initializeData();
         }])
-    .controller('ProductEditCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'SubsidiaryService', 'StoreService', 'DueListFactory', 'PropertyTypeFactory', 'ngDialog', 'Flash', 'ProductService', 'APPLICATION', '$sce','$interval','Permissions',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, SubsidiaryService, StoreService, DueListFactory, PropertyTypeFactory, ngDialog, Flash, ProductService, APPLICATION, $sce, $interval, Permissions) {
+    .controller('ProductEditCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ExternalService', 'SubsidiaryService', 'StoreService', 'DueListFactory', 'PropertyTypeFactory', 'ngDialog', 'Common', 'Flash', 'ProductService', 'APPLICATION', '$sce','$interval','Permissions',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, SubsidiaryService, StoreService, DueListFactory, PropertyTypeFactory, ngDialog, Common, Flash, ProductService, APPLICATION, $sce, $interval, Permissions) {
             $scope._p = Permissions;
             $scope.original = undefined;
             $scope.product = {};
@@ -1067,6 +1068,9 @@ angular.module('app')
             ga('send','event','product edit',JSON.parse(localStorage.USER_DATA).profile[0].name);
 
             $scope._submit = $scope._edit = function(){
+                // debugger;
+                // console.log($scope._getChanges());
+                // return;
                 ProductService.update({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}, $scope._getChanges()
                     , function(response){
                         Flash.create('success',response.message);
@@ -1083,8 +1087,48 @@ angular.module('app')
 
             $scope.validateProperties = function(){
                 for(var i in $scope.product.properties){
-                    if($scope.product.properties[i].name=='' || $scope.product.properties[i].name == '<p></p>'){
+                    if(!$scope.validateProperty(i)){
                         return false;
+                    }
+                }
+                return true;
+            };
+
+            $scope.validateProperty = function(index){
+                var property = $scope.product.properties[index];
+                if(Common.stripHtmlTags(property.name).length === 0){
+                    property.error = "La descripción de la propiedad no puede estar vacía";
+                    return false;
+                }else if(property.error && property.error === "La descripción de la propiedad no puede estar vacía"){
+                    property.error = "";
+                }
+                if(property.validation.type === 'range'){
+                    if(property.validation.min_value > property.validation.max_value){
+                        property.error = "El valor mínimo de la propiedad debe ser menor a su contraparte";
+                        return false;
+                    }else if(property.error && property.error === "El valor mínimo de la propiedad debe ser menor a su contraparte"){
+                        property.error = "";
+                    }
+                }else if(property.validation.type === 'boolean'){
+                    if(property.validation.yes_value.trim() === '' || property.validation.no_value.trim() === ''){
+                        property.error = "Ninguno de los valores para la propiedad deben estar vacíos";
+                        return false;
+                    }else if(property.error && property.error === "Ninguno de los valores para la propiedad deben estar vacíos"){
+                        property.error = "";
+                    }
+                }else if(property.validation.type === 'list'){
+                    var error = false;
+                    for(var i in property.validation.list){
+                        if(property.validation.list[i].deleted == false && property.validation.list[i].label.trim() === ''){
+                            property.error = "Ninguno de los valores para la propiedad deben estar vacíos";
+                            error = true;
+                            break;
+                        }
+                    }
+                    if(error){
+                        return false;
+                    }else if(property.error && property.error === "Ninguno de los valores para la propiedad deben estar vacíos"){
+                        property.error = "";
                     }
                 }
                 return true;
@@ -1107,11 +1151,11 @@ angular.module('app')
                     return false;
                 }
                 return true;
-            }
+            };
 
             $scope._goBack = function(){
                 $state.go('app.product');
-            }
+            };
 
             $scope.__construct = function(){
                 $scope.original = undefined;
@@ -1121,30 +1165,57 @@ angular.module('app')
                 //$scope.form.$setPristine();
             }
 
+            $scope.validateChanges = function(){
+                return Object.keys($scope._getChanges()).length > 0;
+            };
+
             $scope._getChanges = function(){
                 var changes = {};
-                if($scope.original.store!==$scope.product.store){
-                    changes.store = $scope.product.store;
-                }
-                if($scope.original.name!==$scope.product.name){
-                    changes.name = $scope.product.name;
-                }
-                if($scope.original.reference!==$scope.product.reference){
-                    changes.reference = $scope.product.reference;
-                }
-                if($scope.product.max_dose && $scope.product.max_dose!=='<p></p>' && $scope.original.max_dose!==$scope.product.max_dose){
-                    changes.max_dose = $scope.product.max_dose;
-                }
-                if($scope.original.due_date!==$scope.product.due_date){
-                    changes.due_date = $scope.product.due_date;
-                }
-                if($scope.original.certification_nsf!==$scope.product.certification_nsf){
-                    changes.certification_nsf = $scope.product.certification_nsf;
-                }
-                if($scope.original.active!==$scope.product.active){
-                    changes.active = $scope.product.active;
+                if($scope.original) {
+                    if ($scope.original.store !== $scope.product.store) {
+                        changes.store = $scope.product.store;
+                    }
+                    if ($scope.original.name !== $scope.product.name) {
+                        changes.name = $scope.product.name;
+                    }
+                    if ($scope.original.reference !== $scope.product.reference) {
+                        changes.reference = $scope.product.reference;
+                    }
+                    if (Common.stripHtmlTags($scope.product.max_dose).length > 0 && $scope.original.max_dose !== $scope.product.max_dose) {
+                        changes.max_dose = $scope.product.max_dose;
+                    }
+                    if ($scope.original.due_date !== $scope.product.due_date) {
+                        changes.due_date = $scope.product.due_date;
+                    }
+                    if ($scope.original.certification_nsf !== $scope.product.certification_nsf) {
+                        changes.certification_nsf = $scope.product.certification_nsf;
+                    }
+                    if ($scope.original.active !== $scope.product.active) {
+                        changes.active = $scope.product.active;
+                    }
+                    for (var p in $scope.product.properties) {
+                        if ($scope.product.properties[p].status != 'none') {
+                            changes.properties = getPropertiesChanged();
+                        }
+                    }
                 }
                 return changes;
+            };
+
+            function getPropertiesChanged(){
+                var properties = [];
+                for(var i in $scope.product.properties){
+                    var property = $scope.product.properties[i];
+                    if(!property.id && !property.removed && property.name){
+                        property.status = 'added';
+                    } else if(property.id && property.deleted){
+                        property.status = 'removed';
+                    }
+                    if(Common.stripHtmlTags(property.name).length > 0){
+                        properties.push(property);
+                    }
+                }
+                return properties;
             }
 
             $scope.typeOf = function(val) {
@@ -1165,6 +1236,9 @@ angular.module('app')
                     });
                 ProductService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params._id}
                     , function (response) {
+                        if(CKEDITOR.instances["property[{{$index}}].name"]){
+                            CKEDITOR.instances["property[{{$index}}].name"].destroy();
+                        }
                         $scope.product = response;
                         $scope.product.due_date = $scope.product.due_date === 0 ? undefined : $scope.product.due_date;
                         $scope.selecteds.subsidiary = $scope.product.store[0].subsidiary;
@@ -1172,8 +1246,53 @@ angular.module('app')
                         $scope.product.store = $scope.product.store[0].id;
                         $scope.original = JSON.parse(JSON.stringify($scope.product));
                         $scope.requesting = false;
+                        for(var property in $scope.product.properties){
+                            $scope.product.properties[property].status = 'none';
+                            if($scope.product.properties[property].active === null){
+                                $scope.product.properties[property].active = true;
+                                $scope.product.properties[property].status = 'updated';
+                            }
+                        }
                     }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                     });
+            };
+
+            $scope.addProperty = function(){
+                $scope.product.properties.push(
+                    {
+                        name:'',
+                        validation:{
+                            type:'text',
+                            list:[]
+                        },
+                        active:true,
+                        remission_editable:false,
+                        deleted:false,
+                        status:'added'
+                    }
+                );
+            };
+
+            $scope.removeProperty = function(index){
+                if($scope.product.properties.length-1<=index){
+                    $scope.product.properties[index].deleted = true;
+                }
+            };
+
+            $scope.updatePropertyStatus = function(index){
+                if($scope.product.properties[index].status == 'none'){
+                    $scope.product.properties[index].status = 'updated';
+                }
+            };
+
+            $scope.addPropertyListItem = function(index){
+                $scope.product.properties[index].validation.list.push({
+                    label: '', valid: true, deleted:false
+                });
+            };
+
+            $scope.removePropertyListItem = function(parent, index){
+                $scope.product.properties[parent].validation.list[index].deleted = true;
             };
 
             $scope._init();
