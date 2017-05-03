@@ -148,7 +148,7 @@
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <label class="md-switch">
-                                                    <input type="checkbox" ng-model="property.active" checked>
+                                                    <input type="checkbox" ng-model="property.active" checked ng-change="updatePropertyStatus($index);">
                                                     <i class="green"></i>
                                                     <span ng-class="{'text-success':property.active, 'text-warning-dk':!property.active}">
                                                         <span ng-show="property.active">Activo</span>
@@ -168,7 +168,7 @@
                                             <div class="col-lg-12">
                                                 <div class="qmd-input" ng-class="{'selected':property.validation.yes_value}">
                                                     <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
-                                                           ng-model="property.validation.yes_value"
+                                                           ng-model="property.validation.yes_value" ng-change="updatePropertyStatus($index);"
                                                            tabindex="{{200+($index*100)+2}}" name="property[{{$index}}].yes_value">
                                                     <label><span class="font-xs text-danger-dk">*</span> Valor Aceptado</label>
                                                 </div>
@@ -178,7 +178,7 @@
                                             <div class="col-lg-12">
                                                 <div class="qmd-input" ng-class="{'selected':property.validation.no_value}">
                                                     <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
-                                                           ng-model="property.validation.no_value"
+                                                           ng-model="property.validation.no_value" ng-change="updatePropertyStatus($index);"
                                                            tabindex="{{200+($index*100)+3}}" name="property[{{$index}}].no_value">
                                                     <label><span class="font-xs text-danger-dk">*</span> Valor Rechazado</label>
                                                 </div>
@@ -195,7 +195,7 @@
                                                     <div class="col-lg-6">
                                                         <div class="qmd-input" ng-class="{'selected':item.label}">
                                                             <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
-                                                                   ng-model="item.label"
+                                                                   ng-model="item.label"  ng-change="updatePropertyStatus($parent.$index);"
                                                                    tabindex="{{200+($parent.$index*100)+10+($index)}}"
                                                                    name="property[{{$parent.$index}}].list[{{$index}}].label">
                                                             <label><span class="font-xs text-danger-dk">*</span> Valor</label>
@@ -228,7 +228,8 @@
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="qmd-input" ng-class="{'selected':property.validation.min_value!==''}">
-                                                    <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" tabindex="{{200+($index*100)+11}}"
+                                                    <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                                                           tabindex="{{200+($index*100)+11}}" ng-change="updatePropertyStatus($index);"
                                                            ng-model="property.validation.min_value" type="number" name="property[{{$index}}].min_value">
                                                     <label>Mínimo</label>
                                                 </div>
@@ -237,7 +238,8 @@
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="qmd-input" ng-class="{'selected':property.validation.max_value!==''}">
-                                                    <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" tabindex="{{200+($index*100)+12}}"
+                                                    <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                                                           tabindex="{{200+($index*100)+12}}" ng-change="updatePropertyStatus($index);"
                                                            ng-model="property.validation.max_value" type="number"  name="property[{{$index}}].max_value">
                                                     <label>Máximo</label>
                                                 </div>
@@ -266,7 +268,7 @@
                     <button class="btn btn-default" ng-click="_goBack()" type="button">Volver</button>
                     <button class="btn btn-addon btn-primary" ng-show="!original" ng-disabled="form.$invalid || !product.store || typeof(product.due_date) == 'undefined' || !validateProperties() || requesting!=''" type="submit"><i class="fa fa-plus"></i>Crear Producto</button>
                     <button class="btn btn-addon btn-primary" ng-show="original" ng-disabled="form.$invalid || !product.store || typeof(product.due_date) == 'undefined' || requesting!='' || !validateChanges()" type="submit"><i class="fa fa-pencil"></i>Guardar Producto</button>
-                    <button type="button" ng-show="false" ng-click="hola()">Hola</button>
+                    <button type="button" ng-show="true" ng-click="hola()">Hola</button>
                 </div>
             </div>
         </form>

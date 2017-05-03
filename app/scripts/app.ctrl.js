@@ -1102,21 +1102,21 @@ angular.module('app')
                 }else if(property.error && property.error === "La descripción de la propiedad no puede estar vacía"){
                     property.error = "";
                 }
-                if(property.validation.type === 'range'){
+                if(property.validation.type === APPLICATION.ENUM.PROPERTY.TYPE.RANGE){
                     if(property.validation.min_value > property.validation.max_value){
                         property.error = "El valor mínimo de la propiedad debe ser menor a su contraparte";
                         return false;
                     }else if(property.error && property.error === "El valor mínimo de la propiedad debe ser menor a su contraparte"){
                         property.error = "";
                     }
-                }else if(property.validation.type === 'boolean'){
+                }else if(property.validation.type === APPLICATION.ENUM.PROPERTY.TYPE.BOOLEAN){
                     if(property.validation.yes_value.trim() === '' || property.validation.no_value.trim() === ''){
                         property.error = "Ninguno de los valores para la propiedad deben estar vacíos";
                         return false;
                     }else if(property.error && property.error === "Ninguno de los valores para la propiedad deben estar vacíos"){
                         property.error = "";
                     }
-                }else if(property.validation.type === 'list'){
+                }else if(property.validation.type === APPLICATION.ENUM.PROPERTY.TYPE.LIST){
                     var error = false;
                     for(var i in property.validation.list){
                         if(property.validation.list[i].deleted == false && property.validation.list[i].label.trim() === ''){
@@ -1143,6 +1143,34 @@ angular.module('app')
                     }
                 }
             };
+
+            $scope.updateProperty = function(index) {
+                $scope.updatePropertyStatus(index);
+                if($scope.product.properties[index].validation.type==APPLICATION.ENUM.PROPERTY.TYPE.LIST){
+                    $scope.product.properties[index].validation = {
+                        type:APPLICATION.ENUM.PROPERTY.TYPE.LIST,
+                        list:[{
+                            label: '', valid: true
+                        }]
+                    };
+                }else if($scope.product.properties[index].validation.type==APPLICATION.ENUM.PROPERTY.TYPE.RANGE){
+                    $scope.product.properties[index].validation = {
+                        type:APPLICATION.ENUM.PROPERTY.TYPE.RANGE,
+                        max_value:1.00,
+                        min_value:0.00
+                    };
+                }else if($scope.product.properties[index].validation.type==APPLICATION.ENUM.PROPERTY.TYPE.BOOLEAN){
+                    $scope.product.properties[index].validation = {
+                        type:APPLICATION.ENUM.PROPERTY.TYPE.BOOLEAN,
+                        yes_value:'Cumple',
+                        no_value:'No Cumple'
+                    };
+                }else if($scope.product.properties[index].validation.type==APPLICATION.ENUM.PROPERTY.TYPE.TEXT){
+                    $scope.product.properties[index].validation = {
+                        type:APPLICATION.ENUM.PROPERTY.TYPE.TEXT
+                    };
+                }
+            }
 
             $scope._validate = function(){
                 if(JSON.stringify($scope.original) == JSON.stringify($scope.product)){
@@ -1204,18 +1232,16 @@ angular.module('app')
 
             function getPropertiesChanged(){
                 var properties = [];
+                var changesInProperties = false;
                 for(var i in $scope.product.properties){
-                    var property = $scope.product.properties[i];
-                    if(!property.id && !property.removed && property.name){
-                        property.status = 'added';
-                    } else if(property.id && property.deleted){
-                        property.status = 'removed';
-                    }
-                    if(Common.stripHtmlTags(property.name).length > 0){
-                        properties.push(property);
+                    if($scope.validateProperty(i)){
+                        if($scope.product.properties[i].status != 'none'){
+                            changesInProperties = true;
+                        }
+                        properties.push($scope.product.properties[i]);
                     }
                 }
-                return properties;
+                return changesInProperties ? properties : [];
             }
 
             $scope.typeOf = function(val) {
@@ -1262,8 +1288,7 @@ angular.module('app')
                     {
                         name:'',
                         validation:{
-                            type:'text',
-                            list:[]
+                            type:'text'
                         },
                         active:true,
                         remission_editable:false,
@@ -1276,6 +1301,7 @@ angular.module('app')
             $scope.removeProperty = function(index){
                 if($scope.product.properties.length-1<=index){
                     $scope.product.properties[index].deleted = true;
+                    $scope.product.properties[index].status = 'removed';
                 }
             };
 
@@ -1294,6 +1320,11 @@ angular.module('app')
             $scope.removePropertyListItem = function(parent, index){
                 $scope.product.properties[parent].validation.list[index].deleted = true;
             };
+
+            $scope.hola = function(){
+                debugger;
+                $scope._getChanges();
+            }
 
             $scope._init();
 
