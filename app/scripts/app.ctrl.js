@@ -171,7 +171,9 @@ angular.module('app')
                                     Permissions.setPermissions(response.data.token.user.profile[0].permissions);
                                     Permissions.setIsAdmin(response.data.token.user.isAdmin);
                                     $scope.app.auth = getCurrentUser();
-                                    $state.go('app.dashboard');
+                                    if($state.is('access.signin')) {
+                                        $state.go('app.dashboard');
+                                    }
                                 }, function (errorResponse) {
                                     removeSessionData();
                                     ngDialog.closeAll();
