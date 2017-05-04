@@ -151,12 +151,11 @@ angular.module('app')
             function verifyActiveSession() {
                 console.log($state.is('print'));
                 if (!($state.current.name = ''
-                        || $state.is('access.signin')
-                        || $state.is('forgot-password')
+                        || $state.is('access.forgot-password')
                         || $state.is('validateCertificate')
-                        || $state.is('print'))) {
+                        || $state.is('print.certificate'))) {
                     var session = localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_DATA);
-                    if (session == null) {
+                    if (session == null && !$state.is('access.signin')) {
                         removeSessionData();
                         $state.go('access.signin', {message: APPLICATION.ENUM.MESSAGES.AUTH.NOT_AUTHENTICATED});
                     } else {
@@ -172,6 +171,7 @@ angular.module('app')
                                     Permissions.setPermissions(response.data.token.user.profile[0].permissions);
                                     Permissions.setIsAdmin(response.data.token.user.isAdmin);
                                     $scope.app.auth = getCurrentUser();
+                                    $state.go('app.dashboard');
                                 }, function (errorResponse) {
                                     removeSessionData();
                                     ngDialog.closeAll();
@@ -288,6 +288,11 @@ angular.module('app')
                             $state.go('app.dashboard');
                         }, errorNotResponse);
                 }, errorNotResponse);
+            };
+
+            $scope.reset = function(){
+                $scope.data.error = true;
+                $scope.data.errorMessage = "No se ha podido realizar el proceso de recuperación de su cuenta, por favor contacte con su administrador."
             }
 
             $scope.background = Math.floor(Math.random() * 9);
@@ -1939,8 +1944,8 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
             initializeData();
 
         }])
-    .controller('CertificateCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'CertificateService', 'APPLICATION', '$sce',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, CertificateService, APPLICATION, $sce) {
+    .controller('CertificateCtrl', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'CertificateService', 'CertificateGetService', 'APPLICATION', '$sce',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, CertificateService, CertificateGetService, APPLICATION, $sce) {
 
             $scope.items = [];
             $scope.item = null;
@@ -2001,7 +2006,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
             $scope.showDetail = function(item){
                 $scope.item = item;
                 $scope.itemLoading = true;
-                CertificateService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:item.id}
+                CertificateGetService.get({id:item.id}
                 , function(response){
                         $scope.item = response;
                         $scope.itemLoading = false;
@@ -2369,14 +2374,14 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                 });
             }
         }])
-    .controller('CertificatePrintController', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'CertificateService', 'APPLICATION',
-        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, CertificateService, APPLICATION) {
+    .controller('CertificatePrintController', ['$scope', '$translate', '$state', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'ngDialog', 'Flash', 'CertificateGetService', 'APPLICATION',
+        function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, CertificateGetService, APPLICATION) {
             $scope.item = null;
             $scope.itemLoading = true;
             $scope._width = 1;
             $scope.qrcode = "http://www.pqp.com.co/";
             ga('send','event','certificates print',localStorage.USER_DATA ? JSON.parse(localStorage.USER_DATA).profile[0].name : 'anon');
-            CertificateService.get({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), id:$state.params.id}
+            CertificateGetService.get({id:$state.params.id}
                 , function(response){
                     $scope.item = response;
                     //$scope.qrcode = "http://www.pqp.com.co/q/?c=";

@@ -632,6 +632,7 @@ angular.module('app')
                     })
                     .state('access.forgot-password', {
                         url: '/forgot-password',
+                        controller: 'AuthController',
                         templateUrl: 'views/pages/forgot-password.html'
                     })
                     .state('access.lockme', {
