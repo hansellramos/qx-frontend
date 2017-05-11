@@ -149,7 +149,6 @@ angular.module('app')
             }
 
             function verifyActiveSession() {
-                console.log($state.is('print'));
                 if (!($state.current.name = ''
                         || $state.is('access.forgot-password')
                         || $state.is('validateCertificate')
@@ -1600,8 +1599,8 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                     reception_date:$scope.record.reception_date,
                     supplier:$scope.record.provider,
                     remission:$scope.record.remission,
-                    quantity:$scope.record.quantity,
-                    existent_quantity:$scope.record.quantity,
+                    quantity:$scope.record.existing_quantity,
+                    existing_quantity:$scope.record.existing_quantity,
                     veredict:$scope.record.veredict,
                     active:$scope.record.active,
                     satisfies:$scope.record.active,
@@ -1756,6 +1755,9 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                 }
                 if($scope.original.remission!==$scope.record.remission){
                     changes.remission = $scope.record.remission;
+                }
+                if($scope.original.existing_quantity!==$scope.record.existing_quantity){
+                    changes.existing_quantity = $scope.record.existing_quantity;
                 }
                 if($scope.original.quantity!==$scope.record.quantity){
                     changes.quantity = $scope.record.quantity;
@@ -2144,7 +2146,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                 $scope.certificate.properties['analysisDate'] = false;
                 $scope.certificate.properties['elaborationDate'] = false;
                 $scope.certificate.properties['dueDate'] = false;
-                $scope.certificate.properties['receptionDate'] = false;
+                $scope.certificate.properties['receptionDate'] = false;p
                 $scope.certificate.properties['quantity'] = false;
                 $scope.certificate.max_dose = $scope.product.max_dose;
                 $scope.certificate.certification_nsf = $scope.product.certification_nsf;
@@ -2157,7 +2159,11 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                 $scope.records = [];
                 $scope.requesting = true;
                 RecordService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), product:$scope.product._id}
-                    , function (response) {$scope._records = response; $scope.records = $scope._records; $scope.requesting = false;}
+                , function (response) {
+                    $scope._records = response;
+                    $scope.records = $scope._records.filter(function(record){ return record.existing_quantity > 0 && record.active && record.satisfies; });
+                    $scope.requesting = false;
+                }
                     , function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;}
                 );
                 $scope.certificate.values = [];

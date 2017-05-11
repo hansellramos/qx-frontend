@@ -137,13 +137,13 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="qmd-input"  ng-class="{'selected':record.quantity!==''}">
+                    <div class="qmd-input"  ng-class="{'selected':record.existing_quantity!==''}">
                         <div class="input-group m-b">
                             <input class="form-control md-input ng-pristine ng-invalid ng-invalid-required ng-touched text-right"
-                               ng-model="record.quantity" type="number"
+                               ng-model="record.existing_quantity" type="number"
                                ng-required="true" ng-minlength="1" tabindex="112" aria-required="true"
-                               aria-invalid="true"
-                               name="quantity">
+                               aria-invalid="true" ng-readonly="!_p.hasPermission(_pn.RECORD_EDIT_QUANTITY)"
+                               name="quantity" title="{{!_p.hasPermission(_pn.RECORD_EDIT_QUANTITY) ? 'No tiene permisos para modificar la cantidad existente de un lote' : 'Cantidad existente de un lote'}}">
                             <span class="input-group-addon">KG</span>
                             </div>
                         <label><span class="font-xs text-danger-dk">*</span> Cantidad</label>
