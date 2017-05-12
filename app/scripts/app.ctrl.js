@@ -2146,7 +2146,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                 $scope.certificate.properties['analysisDate'] = false;
                 $scope.certificate.properties['elaborationDate'] = false;
                 $scope.certificate.properties['dueDate'] = false;
-                $scope.certificate.properties['receptionDate'] = false;p
+                $scope.certificate.properties['receptionDate'] = false;
                 $scope.certificate.properties['quantity'] = false;
                 $scope.certificate.max_dose = $scope.product.max_dose;
                 $scope.certificate.certification_nsf = $scope.product.certification_nsf;
@@ -2160,8 +2160,8 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                 $scope.requesting = true;
                 RecordService.query({token: localStorage.getItem(APPLICATION.CONFIG.AUTH.TOKEN_KEY), product:$scope.product._id}
                 , function (response) {
-                    $scope._records = response;
-                    $scope.records = $scope._records.filter(function(record){ return record.existing_quantity > 0 && record.active && record.satisfies; });
+                    $scope._records = response.filter(function(record){ record.quantity = record.existing_quantity; return record.existing_quantity > 0 && record.active && record.satisfies; });
+                    $scope.records = $scope._records;
                     $scope.requesting = false;
                 }
                     , function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;}
@@ -2190,6 +2190,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                 $scope.certificate.values.push($scope.form.record);
                 $scope.form.record = undefined;
                 $scope.updateRecordsList();
+                $scope.updateCertificateQuantity();
             }
 
             $scope._form = {
@@ -2206,6 +2207,22 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                     if($scope.profile.permissions[i]===false){
                         delete $scope.profile.permissions[i];
                     }
+                }
+            }
+
+            $scope.updateCertificateQuantity = function(){
+                var total = 0;
+                for(var i in $scope.certificate.values){
+                    total += $scope.certificate.values[i].quantity;
+                }
+                $scope.certificate.quantity = total;
+            }
+
+            $scope.validateCertificateQuantity = function(index){
+                if ( typeof $scope.certificate.values[index].quantity === 'undefined'
+                    || $scope.certificate.values[index].quantity > $scope.certificate.values[index].existing_quantity){
+                    $scope.certificate.values[index].quantity = $scope.certificate.values[index].existing_quantity;
+                    $scope.updateCertificateQuantity();
                 }
             }
 
@@ -2271,12 +2288,12 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                     , leader: getLeader()
                     , clause: $scope.certificate.clause
                     , active: true
+                    , records: getRecords()
                 };
             }
 
             function formatCertificateProperties(){
                 var _p = [];
-                debugger;
                 _p.push({property:'reference', name:"Lote"});
                 if($scope.certificate.properties['analysisDate']===true){
                     _p.push({property:'analysisDate', name:"Fecha de Análisis"});
@@ -2289,6 +2306,9 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                 }
                 if($scope.certificate.properties['receptionDate']===true){
                     _p.push({property:'receptionDate', name:"Fecha de Recepción"});
+                }
+                if($scope.certificate.properties['quantity']===true){
+                    _p.push({property:'quantity', name:"Cantidad"});
                 }
                 for(var i in $scope.certificate.properties){
                     if($scope.certificate.properties[i]===true){
@@ -2304,6 +2324,17 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                     }
                 }
                 return _p;
+            }
+
+            function getRecords(){
+                var records = [];
+                for(var i in $scope.certificate.values){
+                    records.push({
+                        _id: $scope.certificate.values[i]._id
+                        , quantity: $scope.certificate.values[i].quantity
+                    });
+                }
+                return records;
             }
 
             function formatCertificateValues(){
@@ -2338,6 +2369,12 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                         _values.push({
                             property: 'receptionDate'
                             , value: _record.reception_date
+                        });
+                    }
+                    if($scope.certificate.properties['quantity']===true){
+                        _values.push({
+                            property: 'quantity'
+                            , value: _record.quantity
                         });
                     }
                     for(var v in _record.properties){
@@ -2397,7 +2434,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                     $scope._width = 80/($scope.item.properties.length-2);
                     setTimeout(function(){
                         $scope.qrcode = "http://www.pqp.com.co/q/c/"+$scope.item.id+"/v/"+$scope.item.verification;
-                        setTimeout(function(){window.print();},500);
+                        setTimeout(function(){window.print();window.close();},500);
                     },100);
                     $("title").html("Certificado de Calidad "+ $scope.item.id +" "+$("title").html())
                 }

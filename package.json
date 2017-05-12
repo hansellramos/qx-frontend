@@ -1,10 +1,10 @@
 {
   "name": "qx-frontend",
-  "version": "1.0.2",
-  "release": "0107",
+  "version": "1.0.3",
+  "release": "0108",
   "description": "Developed for Productos Químicos Panamericanos S.A.",
   "year": "2017",
-  "lastUpdateDate": "May 11th/2017",
+  "lastUpdateDate": "May 12th/2017",
   "scripts": {
     "start": "node node_modules/http-server/bin/http-server -o",
     "gitCount": "git rev-list --all --count"

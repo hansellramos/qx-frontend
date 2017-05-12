@@ -231,8 +231,10 @@
                                     <td>{{item.reception_date| date:'yyyy-MM-dd'}}</td>
                                     <td class="text-right">
                                         <div class="input-group m-b">
-                                            <input type="text" class="form-control text-right w-sm" ng-required="true"
+                                            <input class="form-control text-right w-sm" ng-required="true"
                                                    min="0" max="{{item.existing_quantity}}" name="quantity_{{item._id}}"
+                                                   ng-change="updateCertificateQuantity()"
+                                                   ng-blur="validateCertificateQuantity($index)"
                                                    ng-model="item.quantity" type="number">
                                             <span class="input-group-addon">KG/{{item.existing_quantity|number:0}}KG</span>
                                         </div>
