@@ -213,7 +213,7 @@
                     <label class="md-switch">
                         <input type="checkbox" ng-model="record.satisfies" checked
                                ng-disabled="!_p.hasPermission(_pn.RECORD_EDIT_SATISFIES)"
-                               name="active" title="{{!_p.hasPermission(_pn.RECORD_EDIT_SATISFIES) ? 'No tiene permisos para modificar si un lote se encuentra disponible para agregarse a un certificado o no' : 'Modifique para liberar o bloquear este lote'}}">>
+                               name="active" title="{{!_p.hasPermission(_pn.RECORD_EDIT_SATISFIES) ? 'No tiene permisos para modificar si un lote se encuentra disponible para agregarse a un certificado o no' : 'Modifique para liberar o bloquear este lote'}}">
                         <i class="green"></i>
                         <span ng-class="{'text-success':record.satisfies, 'text-danger-dk':!record.satisfies}">
                             <span ng-show="record.satisfies">Cumple</span>
