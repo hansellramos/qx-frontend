@@ -129,6 +129,8 @@ var app =
 
                         USER_RESET_PASSWORD: 'userResetPassword',
                         RECORD_EDIT_QUANTITY: 'recordEditQuantity',
+                        RECORD_EDIT_ACTIVE: 'recordEditActive',
+                        RECORD_EDIT_SATISFIES: 'recordEditSatisfies',
 
                         RECORD_IMPORT: 'recordImport',
                     }
