@@ -875,7 +875,7 @@ angular.module('app')
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, SubsidiaryService, StoreService, DueListFactory, PropertyTypeFactory, ngDialog, Flash, ProductService, APPLICATION, $sce, $interval, Permissions) {
             $scope._p = Permissions;
             $scope.product = { store:undefined, name:'', reference:'', due_date:4, max_dose:'N/A', notes:'', certification_nsf:false
-                , properties:[{name:'', validation:{type:APPLICATION.ENUM.PROPERTY.TYPE.TEXT}}], active:true
+                , properties:[], active:true
             };
             $scope.selecteds = {
                 subsidiary: undefined
@@ -909,6 +909,7 @@ angular.module('app')
                     , function (response) {$scope._stores = response;$scope.requesting = false;
                     }, function (errorResponse) {Flash.create('danger',errorResponse);$scope.requesting = false;
                     });
+                $scope.addProperty();
             }
 
             $scope._goBack = function(){
@@ -966,6 +967,7 @@ angular.module('app')
                             list:[]
                         },
                         active:true,
+                        deleted:false,
                         remission_editable:false
                     }
                 );
