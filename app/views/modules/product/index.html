@@ -127,7 +127,7 @@
         </div>
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-right">
           Vencimiento:
-          <span class="font-w100" ng-show="item.due_date">{{item.due_date}} desde su fecha de elaboración</span>
+          <span class="font-w100" ng-show="item.due_date">{{item.due_date}} {{item.due_label}}</span>
           <span class="font-w100" ng-hide="item.due_date">Sin Vencimiento</span>
         </div>
       </div>

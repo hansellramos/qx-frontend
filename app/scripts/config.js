@@ -81,6 +81,9 @@ var app =
                         },
                         CERTIFICATE: {
                             DEFAULT_CLAUSE: ""
+                        },
+                        PRODUCT: {
+                            DEFAULT_DUE_LABEL: "desde su fecha de elaboración"
                         }
                     }
                     , PROPERTY:{

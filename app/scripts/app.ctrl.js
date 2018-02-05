@@ -804,6 +804,7 @@ angular.module('app')
                     , function(response){
                         $scope.item = response;
                         $scope.item.due_date = DueListFactory.one($scope.item.due_date);
+                        $scope.item.due_label = $scope.item.due_label ? $scope.item.due_label : APPLICATION.ENUM.MESSAGES.PRODUCT.DEFAULT_DUE_LABEL;
                         $scope.itemLoading = false;
                     }
                     , function(errorResponse){
@@ -875,7 +876,7 @@ angular.module('app')
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ExternalService, SubsidiaryService, StoreService, DueListFactory, PropertyTypeFactory, ngDialog, Flash, ProductService, APPLICATION, $sce, $interval, Permissions) {
             $scope._p = Permissions;
             $scope.product = { store:undefined, name:'', reference:'', due_date:4, max_dose:'N/A', notes:'', certification_nsf:false
-                , properties:[], active:true
+                , properties:[], active:true, due_label: APPLICATION.ENUM.MESSAGES.PRODUCT.DEFAULT_DUE_LABEL
             };
             $scope.selecteds = {
                 subsidiary: undefined
@@ -1228,6 +1229,9 @@ angular.module('app')
                     if ($scope.original.due_date !== $scope.product.due_date) {
                         changes.due_date = $scope.product.due_date;
                     }
+                    if ($scope.original.due_label !== $scope.product.due_label) {
+                        changes.due_label = $scope.product.due_label;
+                    }
                     if ($scope.original.certification_nsf !== $scope.product.certification_nsf) {
                         changes.certification_nsf = $scope.product.certification_nsf;
                     }
@@ -1284,6 +1288,7 @@ angular.module('app')
                         $scope.updateStores();
                         $scope.product.store = $scope.product.store[0].id;
                         $scope.original = JSON.parse(JSON.stringify($scope.product));
+                        $scope.product.due_label = $scope.product.due_label ? $scope.product.due_label : APPLICATION.ENUM.MESSAGES.PRODUCT.DEFAULT_DUE_LABEL;
                         $scope.requesting = false;
                         for(var property in $scope.product.properties){
                             $scope.product.properties[property].status = 'none';
@@ -2015,6 +2020,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                 CertificateGetService.get({id:item.id}
                 , function(response){
                         $scope.item = response;
+                        $scope.item.due_label = $scope.item.due_label ? $scope.item.due_label : APPLICATION.ENUM.MESSAGES.PRODUCT.DEFAULT_DUE_LABEL;
                         $scope.itemLoading = false;
                     }
                 , function(errorResponse){
@@ -2072,7 +2078,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
         function ($scope, $translate, $state, $localStorage, $window, $document, $location, $rootScope, $timeout, $mdSidenav, $mdColorPalette, $anchorScroll, ngDialog, Flash, SubsidiaryService, StoreService, ProductService, RecordService, ExternalService, CertificateService, APPLICATION, $sce, DueListFactory) {
             var _date = new Date();_date.setMilliseconds(0);_date.setSeconds(0);
             $scope.certificate = {date: _date, subsidiary:undefined, store:undefined,
-                product:undefined, properties:[], presentation:"", max_dose:"", elaboration_date:_date, due_date:0,
+                product:undefined, properties:[], presentation:"", max_dose:"", elaboration_date:_date, due_date:0, due_label: APPLICATION.ENUM.MESSAGES.PRODUCT.DEFAULT_DUE_LABEL,
                 values:[], customer:undefined, quantity:0
                 , remission:"", clause:APPLICATION.ENUM.MESSAGES.CERTIFICATE.DEFAULT_CLAUSE, active:true};
             $scope.subsidiaries = [];
@@ -2153,6 +2159,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                 $scope.certificate.max_dose = $scope.product.max_dose;
                 $scope.certificate.certification_nsf = $scope.product.certification_nsf;
                 $scope.certificate.due_date = DueListFactory.one($scope.product.due_date);
+                $scope.certificate.due_label = $scope.product.due_label ? $scope.product.due_label : APPLICATION.ENUM.MESSAGES.PRODUCT.DEFAULT_DUE_LABEL;
                 $scope.updateRecords();
 
             }
@@ -2286,6 +2293,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                     , elaboration_date: $scope.certificate.elaboration_date
                     , max_dose: $scope.certificate.max_dose
                     , due_date: $scope.certificate.due_date
+                    , due_label: $scope.certificate.due_label
                     , certification_nsf: $scope.certificate.certification_nsf
                     , leader: getLeader()
                     , clause: $scope.certificate.clause
@@ -2431,6 +2439,7 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
             CertificateGetService.get({id:$state.params.id}
                 , function(response){
                     $scope.item = response;
+                    $scope.item.due_label = $scope.item.due_label ? $scope.item.due_label : APPLICATION.ENUM.MESSAGES.PRODUCT.DEFAULT_DUE_LABEL;
                     //$scope.qrcode = "http://www.pqp.com.co/q/?c=";
                     $scope.itemLoading = false;
                     $scope._width = 80/($scope.item.properties.length-2);

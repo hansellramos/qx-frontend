@@ -213,7 +213,7 @@
                 Fecha de Elaboración: {{item.elaboration_date|date:'dd-MM-yyyy'}}
             </div>
             <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 text-center">
-              Vencimiento: {{item.due_date}}
+              Vencimiento: {{item.due_date}} {{item.due_label}}
             </div>
             <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 text-right">
               Dosis Máxima: <div ng-bind-html="item.max_dose"></div>

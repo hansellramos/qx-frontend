@@ -110,7 +110,7 @@
                 VENCIMIENTO:
             </div>
             <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 font-w100">
-                {{item.due_date}} desde su fecha de elaboración
+                {{item.due_date}} {{item.due_label}}
             </div>
         </div>
         <div class="row" ng-show="item.certification_nsf && item.max_dose && item.max_dose != 'N/R'">

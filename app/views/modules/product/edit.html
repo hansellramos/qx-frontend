@@ -73,6 +73,15 @@
                         </ui-select>
                     </div>
                 </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="qmd-input"  ng-class="{'selected': product.due_label}">
+                        <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched"
+                               ng-model="product.due_label"
+                               ng-required="true" ng-minlength="3" tabindex="106" autofocus aria-required="true"
+                               aria-invalid="true" name="name">
+                        <label><span class="font-xs text-danger-dk">*</span> Etiqueta de vencimiento</label>
+                    </div>
+                </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 p-sm">
                     <label class="md-switch">
                         <input type="checkbox" ng-model="product.certification_nsf" checked ng-disabled="!_p.isAdmin()">
