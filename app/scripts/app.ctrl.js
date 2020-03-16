@@ -1421,6 +1421,9 @@ function ($scope, $translate, $state, $localStorage, $window, $document, $locati
                     , function (response) {
                         var items = [];
                         for (var i = 0; i < response.length; i++) {
+                            if (!response[i].supplier || response[i].supplier.length < 1) {
+                                continue;
+                            }
                             items.push({
                                 id: response[i]._id
                                 , reference: response[i].reference
