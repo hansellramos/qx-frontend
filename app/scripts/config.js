@@ -32,7 +32,7 @@ var app =
             .constant('APPLICATION', {
                 CONFIG: {
                     API: {
-                            URL: 'http://localhost:8080/',
+                            URL: 'https://qualitrix-backend.herokuapp.com/',
                         RESOURCES: {
                             AUTH: 'auth/',
                             SUBSIDIARY: 'subsidiaries/',

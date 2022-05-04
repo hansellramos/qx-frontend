@@ -20,7 +20,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                     <div class="qmd-select" ng-class="{'selected':user.profile}">
                         <label><span class="font-xs text-danger-dk">*</span>Perfil</label>
-                        <ui-select name="subsidiary" ng-model="user.profile" tabindex="103" ng-required="true">
+                        <ui-select name="profile" ng-model="user.profile" tabindex="103" ng-required="true">
                             <ui-select-match placeholder="Seleccione Perfil...">
                                 {{$select.selected.name}}
                             </ui-select-match>
