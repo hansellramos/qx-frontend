@@ -16,7 +16,7 @@
   "license": "Envato REGULAR LICENSE",
   "devDependencies": {
     "grunt": "^0.4.5",
-    "grunt-bower-install-simple": "^0.9.3",
+    "grunt-bower-install-simple": "^1.2.8",
     "grunt-bump": "0.0.15",
     "grunt-changelog": "^0.2.2",
     "grunt-contrib-clean": "^0.6.0",
@@ -27,7 +27,7 @@
     "grunt-recess": "^1.0.0",
     "grunt-swig": "^0.2.1",
     "gruntfile-gtx": "^0.3.0",
-    "http-server": "^0.6.1",
+    "http-server": "^14.1.1",
     "require-directory": "^2.0.0",
     "angular-utils-pagination": "^0.11.1"
   },
